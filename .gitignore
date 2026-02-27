@@ -10,6 +10,8 @@ lerna-debug.log*
 node_modules
 dist
 .env
+# 100MB 넘는 CSV (GitHub 제한). 로컬에만 두고 city-tree-summary.json 사용
+public/data/csv/도시숲가로수관리*.csv
 dist-ssr
 *.local
 

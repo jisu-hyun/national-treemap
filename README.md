@@ -25,3 +25,4 @@ npm run dev
    ```
 3. 저장소 **Settings → Pages → Build and deployment** 에서 Source를 **GitHub Actions** 로 선택
 4. 푸시할 때마다 자동으로 빌드·배포됨. 주소: `https://내계정.github.io/national-treemap/`
+# national-treemap
