@@ -1,0 +1,722 @@
+{
+  "total": 949638,
+  "sidoCounts": [
+    {
+      "id": "11",
+      "name": "서울특별시",
+      "count": 2
+    },
+    {
+      "id": "26",
+      "name": "부산광역시",
+      "count": 0
+    },
+    {
+      "id": "27",
+      "name": "대구광역시",
+      "count": 25878
+    },
+    {
+      "id": "28",
+      "name": "인천광역시",
+      "count": 154136
+    },
+    {
+      "id": "29",
+      "name": "광주광역시",
+      "count": 36880
+    },
+    {
+      "id": "30",
+      "name": "대전광역시",
+      "count": 43
+    },
+    {
+      "id": "31",
+      "name": "울산광역시",
+      "count": 23
+    },
+    {
+      "id": "36",
+      "name": "세종특별자치시",
+      "count": 66908
+    },
+    {
+      "id": "41",
+      "name": "경기도",
+      "count": 169994
+    },
+    {
+      "id": "42",
+      "name": "강원특별자치도",
+      "count": 37799
+    },
+    {
+      "id": "43",
+      "name": "충청북도",
+      "count": 42471
+    },
+    {
+      "id": "44",
+      "name": "충청남도",
+      "count": 110054
+    },
+    {
+      "id": "45",
+      "name": "전북특별자치도",
+      "count": 0
+    },
+    {
+      "id": "46",
+      "name": "전라남도",
+      "count": 41189
+    },
+    {
+      "id": "47",
+      "name": "경상북도",
+      "count": 89124
+    },
+    {
+      "id": "48",
+      "name": "경상남도",
+      "count": 159590
+    },
+    {
+      "id": "50",
+      "name": "제주특별자치도",
+      "count": 15547
+    }
+  ],
+  "species": [
+    {
+      "name": "은행나무",
+      "count": 255637,
+      "ratio": 26.9,
+      "color": "#F4D03F"
+    },
+    {
+      "name": "벚나무",
+      "count": 131933,
+      "ratio": 13.9,
+      "color": "#E8D5D5"
+    },
+    {
+      "name": "느티나무",
+      "count": 83336,
+      "ratio": 8.8,
+      "color": "#D4A84B"
+    },
+    {
+      "name": "이팝나무",
+      "count": 82237,
+      "ratio": 8.7,
+      "color": "#48C9B0"
+    },
+    {
+      "name": "기타활엽수",
+      "count": 60969,
+      "ratio": 6.4,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "왕벚나무",
+      "count": 56006,
+      "ratio": 5.9,
+      "color": "#E8D5D5"
+    },
+    {
+      "name": "버즘나무",
+      "count": 50905,
+      "ratio": 5.4,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "메타세쿼이아",
+      "count": 36767,
+      "ratio": 3.9,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "미분류",
+      "count": 25346,
+      "ratio": 2.7,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "단풍나무",
+      "count": 21550,
+      "ratio": 2.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "회화나무",
+      "count": 11604,
+      "ratio": 1.2,
+      "color": "#7DCEA0"
+    },
+    {
+      "name": "후박나무",
+      "count": 11026,
+      "ratio": 1.2,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "양버즘나무",
+      "count": 10246,
+      "ratio": 1.1,
+      "color": "#8B4513"
+    },
+    {
+      "name": "중국단풍",
+      "count": 9965,
+      "ratio": 1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "소나무",
+      "count": 8420,
+      "ratio": 0.9,
+      "color": "#2E86AB"
+    },
+    {
+      "name": "산수유",
+      "count": 6747,
+      "ratio": 0.7,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "칠엽수",
+      "count": 6664,
+      "ratio": 0.7,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "대왕참나무",
+      "count": 5612,
+      "ratio": 0.6,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "배롱나무(목백일홍)",
+      "count": 5593,
+      "ratio": 0.6,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "감나무",
+      "count": 5234,
+      "ratio": 0.6,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "히말라야시다",
+      "count": 5015,
+      "ratio": 0.5,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "플라타너스",
+      "count": 3937,
+      "ratio": 0.4,
+      "color": "#A9CCE3"
+    },
+    {
+      "name": "꽃사과",
+      "count": 3610,
+      "ratio": 0.4,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "느릅나무",
+      "count": 3510,
+      "ratio": 0.4,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "복자기",
+      "count": 3488,
+      "ratio": 0.4,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "주목",
+      "count": 3313,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "구실잣밤나무",
+      "count": 2997,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "곰솔(해송)",
+      "count": 2921,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "살구나무",
+      "count": 2858,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "청단풍",
+      "count": 2736,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "매실나무(매화나무)",
+      "count": 2720,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "종가시나무",
+      "count": 2681,
+      "ratio": 0.3,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "산벚나무",
+      "count": 2038,
+      "ratio": 0.2,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "무궁화나무",
+      "count": 1786,
+      "ratio": 0.2,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "동백나무",
+      "count": 1567,
+      "ratio": 0.2,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "종려나무",
+      "count": 1203,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "참나무",
+      "count": 1110,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "먼나무",
+      "count": 1106,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "목백합",
+      "count": 1046,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "산딸나무",
+      "count": 1034,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "루브라참나무",
+      "count": 987,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "노각나무",
+      "count": 864,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "팽나무",
+      "count": 863,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "둥근소나무",
+      "count": 849,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "백합나무",
+      "count": 711,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "스트로브잣나무",
+      "count": 702,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "전나무(젓나무)",
+      "count": 663,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "가시나무류",
+      "count": 584,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "복자기나무",
+      "count": 562,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "기타소나무",
+      "count": 498,
+      "ratio": 0.1,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "아카시나무",
+      "count": 457,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "반송",
+      "count": 421,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "버드나무",
+      "count": 399,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "향나무",
+      "count": 363,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "팥배나무",
+      "count": 350,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "녹나무",
+      "count": 305,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "기타",
+      "count": 288,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "백일홍",
+      "count": 276,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "능수버들",
+      "count": 242,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "상수리나무",
+      "count": 225,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "측백나무",
+      "count": 225,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "벽오동",
+      "count": 208,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "겹벚나무",
+      "count": 170,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "박태기나무",
+      "count": 163,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "모감주나무",
+      "count": 160,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "목련",
+      "count": 154,
+      "ratio": 0,
+      "color": "#F8B500"
+    },
+    {
+      "name": "계수나무",
+      "count": 142,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "두충나무",
+      "count": 142,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "아왜나무",
+      "count": 108,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "화살나무",
+      "count": 105,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "낙우송",
+      "count": 101,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "수양버들",
+      "count": 99,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "쉬땅나무(개쉬땅나무)",
+      "count": 93,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "튤립나무",
+      "count": 82,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "마가목",
+      "count": 78,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "잣나무",
+      "count": 75,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "물푸레나무",
+      "count": 72,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "자작나무",
+      "count": 54,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "당단풍",
+      "count": 53,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "이태리포플러",
+      "count": 48,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "공작단풍",
+      "count": 35,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "오동나무",
+      "count": 33,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "편백나무",
+      "count": 31,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "고욤나무",
+      "count": 20,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "비자나무",
+      "count": 14,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "침엽수",
+      "count": 12,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "워싱턴야자",
+      "count": 12,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "개잎갈나무",
+      "count": 11,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "미루나무",
+      "count": 9,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "광나무",
+      "count": 9,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "포플러",
+      "count": 9,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "만첩홍도(꽃복숭아)",
+      "count": 5,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "대추나무",
+      "count": 4,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "백목련",
+      "count": 4,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "뽕나무",
+      "count": 3,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "호도나무",
+      "count": 3,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "구실밤나무",
+      "count": 2,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "쉬나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "무화과",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "헛개나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "산사나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "모과나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "싸리",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "사철나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    },
+    {
+      "name": "밤나무",
+      "count": 1,
+      "ratio": 0,
+      "color": "#BDC3C7"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #1a1a1a;
+  background-color: #f0f5ee;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.leaflet-container {
+  font-family: inherit;
+}
+
+/* 지도 클릭 시 파란 테두리 안 나오게 */
+.leaflet-interactive:focus,
+.leaflet-interactive:focus-visible {
+  outline: none !important;
+}
+.leaflet-interactive {
+  outline: none !important;
+}
