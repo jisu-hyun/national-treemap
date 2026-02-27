@@ -39,7 +39,6 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
   const regionLabel = SIDO_OPTIONS.find((o) => o.value === region)?.label ?? "전국"
   const totalLabel = region === "00" ? "전국에는" : `${regionLabel}에는`
   const totalCountFormatted = displayTotal.toLocaleString()
-  const totalForRatio = displayTotal > 0 ? displayTotal : 1
   const sortedSpecies = [...displaySpecies].sort((a, b) => b.count - a.count)
   const top5Species = sortedSpecies.slice(0, 5).map((s) => ({
     name: s.name,
