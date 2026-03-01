@@ -106,7 +106,7 @@ export function parseCityTreeCsv(csvText: string): CityTreeData {
 
 let cached: CityTreeData | null = null
 
-const SUMMARY_JSON_URL = "/data/city-tree-summary.json"
+const SUMMARY_JSON_URL = `${import.meta.env.BASE_URL}data/city-tree-summary.json`
 
 export async function loadCityTreeData(): Promise<CityTreeData> {
   if (cached) return cached

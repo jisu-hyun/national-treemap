@@ -73,7 +73,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
           className="flex items-center justify-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
         >
           <img
-            src="/data/logo.png"
+            src={`${import.meta.env.BASE_URL}data/logo.png`}
             alt=""
             className="h-7 w-auto object-contain block shrink-0"
           />

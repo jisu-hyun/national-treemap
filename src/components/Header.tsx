@@ -7,7 +7,7 @@ export function Header() {
         className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
       >
         <img
-          src="/data/logo.png"
+          src={`${import.meta.env.BASE_URL}data/logo.png`}
           alt=""
           className="h-7 w-auto object-contain block shrink-0"
         />
