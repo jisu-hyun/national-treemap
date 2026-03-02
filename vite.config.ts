@@ -2,6 +2,8 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 // dev 서버에서 /api 루트로 뉴스·서울 나무수 프록시
 function newsApiPlugin() {
   return {
@@ -94,7 +96,7 @@ const base = isGhPages ? `/${process.env.GITHUB_REPOSITORY!.split('/')[1]}/` : '
 
 export default defineConfig({
   base,
-  plugins: [react(), tailwindcss(), newsApiPlugin()],
+  plugins: [react(), tailwindcss(), newsApiPlugin(), cloudflare()],
   server: {
     port: 8000,
     proxy: {
