@@ -9,13 +9,13 @@
     "build": "tsc -b && vite build",
     "deploy:worker": "wrangler deploy",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "split:sido": "node scripts/split-by-sido.mjs",
+    "aggregate:city-tree": "node scripts/aggregate-city-tree.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
-    "@turf/center": "^7.3.4",
     "@turf/centroid": "^7.3.4",
-    "@turf/point-on-feature": "^7.3.4",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "iconv-lite": "^0.7.2",

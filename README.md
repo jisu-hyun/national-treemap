@@ -9,7 +9,18 @@ npm install
 npm run dev
 ```
 
-`public/data/csv/` 에 CSV 넣어두면 그걸로 쓰고, 없으면 목업 데이터로 돌아갑니다.
+## 데이터
+
+- **실제 데이터**: `public/data/city-tree-summary.json` (앱이 fetch)
+- **생성**: `npm run aggregate:city-tree` — `public/data/csv/sido/*.csv` 또는 원본 CSV에서 집계
+- **시도별 분할**: `npm run split:sido -- "경로/원본.csv"` — 100MB+ CSV를 시도별로 나눠 Git 커밋 가능하게
+- **폴백**: JSON 없으면 `src/data/mock.ts` 목업 사용
+
+## SEO (검색 노출)
+
+- `index.html`: title, meta description, keywords, Open Graph
+- `public/robots.txt`: 크롤러 허용
+- `public/sitemap.xml`: 배포 후 실제 도메인으로 `<loc>` URL 수정 권장
 
 ## Cloudflare Pages 배포 (Private 저장소 지원)
 

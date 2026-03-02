@@ -1,6 +1,10 @@
 /**
  * 도시숲 CSV를 읽어 시도별·수종별 집계 JSON 생성
  * 실행: node scripts/aggregate-city-tree.mjs
+ *
+ * 입력 (우선순위):
+ *   1) public/data/csv/sido/*.csv (시도별 분할, Git 커밋 가능)
+ *   2) public/data/csv/ 도시숲 가로수 현황 원본 CSV (100MB+, .gitignore)
  * 출력: public/data/city-tree-summary.json
  */
 
@@ -11,7 +15,8 @@ import iconv from "iconv-lite"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, "..")
-const csvPath = path.join(root, "public/data/csv/도시숲가로수관리 가로수 현황20241014.csv")
+const sidoDir = path.join(root, "public/data/csv/sido")
+const csvDir = path.join(root, "public/data/csv")
 const outPath = path.join(root, "public/data/city-tree-summary.json")
 
 const SIDO_TREE_COUNTS = [
@@ -85,10 +90,37 @@ function sigunguToSido(sigungu) {
   return null
 }
 
-console.log("Reading CSV...")
-const csvBuffer = fs.readFileSync(csvPath)
-const csvText = iconv.decode(csvBuffer, "euc-kr")
-const lines = csvText.trim().split(/\r?\n/).filter(Boolean)
+function gatherCsvLines() {
+  if (fs.existsSync(sidoDir)) {
+    const files = fs.readdirSync(sidoDir).filter((f) => f.endsWith(".csv"))
+    if (files.length > 0) {
+      console.log("Reading 시도별 CSV from", sidoDir)
+      let header = null
+      const allLines = []
+      for (const f of files.sort()) {
+        const p = path.join(sidoDir, f)
+        const text = fs.readFileSync(p, "utf-8")
+        const fileLines = text.trim().split(/\r?\n/).filter(Boolean)
+        if (fileLines.length < 2) continue
+        if (!header) header = fileLines[0]
+        allLines.push(...fileLines.slice(1))
+      }
+      return header ? [header, ...allLines] : []
+    }
+  }
+  if (!fs.existsSync(csvDir)) throw new Error("public/data/csv 폴더 없음")
+  // 산림청 '도시숲가로수관리 가로수 현황' 원본 파일 (시도별 분할 전)
+  const legacyFiles = fs.readdirSync(csvDir).filter((f) => f.includes("도시숲가로수관리") && f.endsWith(".csv"))
+  if (legacyFiles.length > 0) {
+    const csvPath = path.join(csvDir, legacyFiles[0])
+    console.log("Reading legacy CSV:", csvPath)
+    const csvBuffer = fs.readFileSync(csvPath)
+    return iconv.decode(csvBuffer, "euc-kr").trim().split(/\r?\n/).filter(Boolean)
+  }
+  throw new Error("CSV 없음. 시도별 분할: node scripts/split-by-sido.mjs <원본CSV>")
+}
+
+const lines = gatherCsvLines()
 const sidoSum = {}
 const speciesSum = {}
 let total = 0

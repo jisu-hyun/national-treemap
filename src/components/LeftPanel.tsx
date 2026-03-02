@@ -86,7 +86,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
           ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-      <div className="relative flex items-center justify-center h-10 pl-4 pr-4 bg-[#f0f5ee] border-b border-green-600/30">
+      <div className="relative flex items-center justify-center min-h-10 p-4 bg-[#f0f5ee] border-b border-green-600/30">
         <button
           type="button"
           onClick={() => window.location.reload()}
@@ -116,14 +116,20 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
       </div>
 
       <div className="p-4 bg-[#f0f5ee] border-b border-green-600/20">
-        <div className="rounded-xl sm:rounded-2xl border border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-4 py-4 sm:px-5 sm:py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] text-center">
-          <p className="text-xs sm:text-sm font-bold text-white tracking-wide">
+        <div
+          className="group rounded-xl sm:rounded-2xl border border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-4 py-4 sm:px-5 sm:py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] text-center cursor-default
+            transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+            hover:scale-[1.02] hover:shadow-[0_12px_40px_rgba(5,46,22,0.35)] hover:-translate-y-0.5 hover:border-white/30"
+        >
+          <p className="text-xs sm:text-sm font-bold text-white tracking-wide transition-transform duration-300 group-hover:translate-x-0.5">
             {totalLabel} 가로수가
           </p>
           <p className="mt-1.5 sm:mt-2 flex items-baseline justify-center gap-1 sm:gap-1.5 flex-wrap">
-            <span className="text-2xl sm:text-3xl font-bold text-white">총 </span>
-            <span className="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight text-white">{totalCountFormatted}</span>
-            <span className="text-xs sm:text-sm font-medium text-white">그루 식재되어 있습니다.</span>
+            <span className="text-2xl sm:text-3xl font-bold text-white transition-all duration-300 group-hover:tracking-wide">총 </span>
+            <span className="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight text-white transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
+              {totalCountFormatted}
+            </span>
+            <span className="text-xs sm:text-sm font-medium text-white transition-opacity duration-300 group-hover:opacity-90">그루 식재되어 있습니다.</span>
           </p>
         </div>
         <div className="relative mt-3">
@@ -149,7 +155,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-4 pb-4">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4">
         {treeData === null && !treeDataError && (
           <div className="py-3 text-base text-gray-600">
             데이터 불러오는 중…

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react"
 import { MapContainer, TileLayer, GeoJSON, useMap, useMapEvents, ZoomControl } from "react-leaflet"
+import { centroid } from "@turf/centroid"
 import L from "leaflet"
 import type { Feature } from "geojson"
 import "leaflet/dist/leaflet.css"
@@ -14,30 +15,22 @@ import {
   FOUR_STEP_COLORS,
   NO_DATA_COLOR,
 } from "../data/mapClusterUtils"
-const KOREA_GEOJSON_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/gadm/json/skorea-provinces-geo.json"
+/** KOSTAT 2013: 통계청 행정경계, GADM 대비 인천 등 좌표 정확 */
+const KOREA_GEOJSON_URL = "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/kostat/2013/json/skorea_provinces_geo_simple.json"
 const SEOUL_TREEMAP_URL = "https://map.seoul.go.kr/smgis2/extMap/sttree"
 const KOREA_MAX_BOUNDS = L.latLngBounds([32.9, 124.6], [38.9, 132.2])
 
 const regionBoundsRef: { current: Record<string, L.LatLngBounds> } = { current: {} }
 
-const NAME_1_TO_KOR: Record<string, string> = {
-  Seoul: "서울특별시",
-  "Busan": "부산광역시",
-  "Daegu": "대구광역시",
-  "Incheon": "인천광역시",
-  "Gwangju": "광주광역시",
-  "Daejeon": "대전광역시",
-  "Ulsan": "울산광역시",
-  "Sejong": "세종특별자치시",
-  "Gyeonggi-do": "경기도",
-  "Gangwon-do": "강원특별자치도",
-  "Chungcheongbuk-do": "충청북도",
-  "Chungcheongnam-do": "충청남도",
-  "Jeollabuk-do": "전북특별자치도",
-  "Jeollanam-do": "전라남도",
-  "Gyeongsangbuk-do": "경상북도",
-  "Gyeongsangnam-do": "경상남도",
-  "Jeju-do": "제주특별자치도",
+/** KOSTAT 시도명 → 앱 시도명 (강원도→강원특별자치도 등) */
+const KOSTAT_NAME_TO_APP: Record<string, string> = {
+  강원도: "강원특별자치도",
+  전라북도: "전북특별자치도",
+}
+
+function getFeatureName(props: Record<string, unknown> | null): string {
+  const raw = (props?.name as string) ?? ""
+  return KOSTAT_NAME_TO_APP[raw] ?? raw
 }
 
 function getColorNational(count: number, scale: { breaks: [number, number, number, number]; colors: string[] }): string {
@@ -53,7 +46,7 @@ function GrayMaskLayer() {
 
   useEffect(() => {
     fetch(KOREA_GEOJSON_URL)
-      .then((res) => res.json())
+      .then((r) => r.json())
       .then((data: GeoJSON.FeatureCollection) => {
         const mask = buildGrayMaskGeoJSON(data.features ?? [])
         setMaskGeoJson(mask)
@@ -139,10 +132,8 @@ function KoreaGeoJSONLayer({
   const nameToId = Object.fromEntries(sidoCounts.map((s) => [s.name, s.id]))
 
   useEffect(() => {
-    const url =
-      "https://raw.githubusercontent.com/southkorea/southkorea-maps/master/gadm/json/skorea-provinces-geo.json"
-    fetch(url)
-      .then((res) => res.json())
+    fetch(KOREA_GEOJSON_URL)
+      .then((r) => r.json())
       .then((data) => {
         setGeojson(data)
         const layer = L.geoJSON(data)
@@ -161,8 +152,7 @@ function KoreaGeoJSONLayer({
     const boundsMap: Record<string, L.LatLngBounds> = {}
     const features = (geojson as GeoJSON.FeatureCollection).features ?? []
     for (const f of features) {
-      const nameEn = (f.properties as { NAME_1?: string })?.NAME_1 ?? ""
-      const name = NAME_1_TO_KOR[nameEn] ?? nameEn
+      const name = getFeatureName(f.properties as Record<string, unknown>)
       const id = nameToId[name]
       if (!id) continue
       try {
@@ -186,8 +176,7 @@ function KoreaGeoJSONLayer({
       key="sido-layer"
       data={geojson}
       style={(feature) => {
-        const nameEn = feature?.properties?.NAME_1 ?? ""
-        const name = NAME_1_TO_KOR[nameEn] ?? nameEn
+        const name = getFeatureName(feature?.properties as Record<string, unknown>)
         const count = sidoCountsMap[name] ?? 0
         return {
           fillColor: getColorNational(count, nationalScale),
@@ -198,8 +187,7 @@ function KoreaGeoJSONLayer({
         }
       }}
       onEachFeature={(feature, layer) => {
-        const nameEn = feature?.properties?.NAME_1 ?? ""
-        const name = NAME_1_TO_KOR[nameEn] ?? nameEn
+        const name = getFeatureName(feature?.properties as Record<string, unknown>)
         const count = sidoCountsMap[name] ?? 0
         layer.bindTooltip(
           `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong></div>`,
@@ -212,8 +200,14 @@ function KoreaGeoJSONLayer({
         layer.on("tooltipopen", function (this: L.GeoJSON) {
           const tooltip = this.getTooltip()
           if (tooltip?.setLatLng) {
-            const bounds = this.getBounds()
-            if (bounds.isValid()) tooltip.setLatLng(bounds.getCenter())
+            try {
+              const pt = centroid(feature as GeoJSON.Feature)
+              const [lng, lat] = pt.geometry.coordinates
+              tooltip.setLatLng([lat, lng])
+            } catch {
+              const bounds = this.getBounds()
+              if (bounds.isValid()) tooltip.setLatLng(bounds.getCenter())
+            }
           }
         })
         layer.on("click", () => {
@@ -221,7 +215,7 @@ function KoreaGeoJSONLayer({
           if (id) onRegionSelect(id)
           try {
             const b = L.geoJSON(feature as Feature).getBounds()
-            if (b && b.isValid()) {
+            if (b?.isValid?.()) {
               map.fitBounds(b, { padding: [40, 40], maxZoom: 11 })
             }
           } catch {}

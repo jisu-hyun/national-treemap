@@ -49,7 +49,11 @@ function formatDate(pubDate: string): string {
   }
 }
 
-export function NewsDashboard() {
+interface NewsDashboardProps {
+  refreshKey?: number
+}
+
+export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
   const [items, setItems] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -94,34 +98,11 @@ export function NewsDashboard() {
 
   useEffect(() => {
     fetchNews()
-  }, [retry])
-
-  const refreshButton = (
-    <button
-      type="button"
-      onClick={() => setRetry((r) => r + 1)}
-      disabled={loading}
-      className="p-2 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50 transition-colors"
-      title="새로고침"
-      aria-label="뉴스 새로고침"
-    >
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-      </svg>
-    </button>
-  )
-
-  const sectionHeader = (
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-base font-semibold text-slate-800">가로수 뉴스</h3>
-      {refreshButton}
-    </div>
-  )
+  }, [retry, refreshKey])
 
   if (loading) {
     return (
       <div className="border-t border-slate-100 pt-0">
-        {sectionHeader}
         <p className="text-xs text-slate-500">뉴스 불러오는 중…</p>
       </div>
     )
@@ -130,13 +111,14 @@ export function NewsDashboard() {
   if (error || items.length === 0) {
     return (
       <div className="border-t border-slate-100 pt-0">
-        {sectionHeader}
-        <a
-          href={NAVER_NEWS_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-slate-50 transition-colors"
-        >
+          <a
+            href={NAVER_NEWS_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm
+              transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+              hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(5,46,22,0.15)] hover:border-emerald-200 hover:bg-slate-50"
+          >
           <span className="text-emerald-600">📰</span>
           가로수 최신 뉴스 보기
           <span className="text-slate-400 text-xs">(네이버 뉴스)</span>
@@ -167,7 +149,6 @@ export function NewsDashboard() {
 
   return (
     <div className="border-t border-slate-100 pt-0">
-      {sectionHeader}
       <ul className="space-y-3">
         {items.map((item, i) => (
           <li key={i}>
@@ -175,12 +156,14 @@ export function NewsDashboard() {
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block rounded-xl border-2 border-emerald-200 bg-white px-4 py-3 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all duration-200"
+              className="group block rounded-xl border-2 border-emerald-200 bg-white px-4 py-3 shadow-sm
+                transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+                hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(5,46,22,0.2)] hover:border-emerald-300"
             >
-              <p className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-slate-900 leading-snug">
+              <p className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-slate-900 leading-snug transition-colors duration-300">
                 {stripHtml(item.title)}
               </p>
-              <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
+              <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed group-hover:text-slate-600 transition-colors duration-300">
                 {stripHtml(item.description)}
               </p>
               <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-400">
@@ -197,7 +180,9 @@ export function NewsDashboard() {
         href={NAVER_NEWS_LINK}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700 transition-colors"
+        className="group mt-4 flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 shadow-sm
+          transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+          hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(5,46,22,0.15)] hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700"
       >
         가로수 뉴스 더보기
         <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
