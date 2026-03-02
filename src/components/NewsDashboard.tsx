@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getApiBase } from "../config"
+import { getApiBase, isStaticHost } from "../config"
 
 const NAVER_NEWS_LINK = "https://search.naver.com/search.naver?where=news&query=가로수&sort=date&nso=so%3Ad%2Cp%3Aall%2Ca%3Aall"
 
@@ -55,7 +55,7 @@ export function NewsDashboard() {
 
   const fetchNews = () => {
     const apiUrl = getNewsApiUrl()
-    if (typeof window !== "undefined" && window.location.hostname.endsWith(".github.io") && !getApiBase()) {
+    if (typeof window !== "undefined" && isStaticHost() && !getApiBase()) {
       setLoading(false)
       setError(null)
       setItems([])
@@ -133,13 +133,11 @@ export function NewsDashboard() {
             <p className="text-xs text-slate-500">
               {error === "API 미설정"
                 ? ".env에 네이버 API 키를 넣었다면 개발 서버(npm run dev)를 재시작한 뒤 아래 버튼을 눌러 보세요."
-                : error === "로드 실패" &&
-                  window.location.hostname.endsWith(".github.io") &&
-                  !getApiBase()
-                  ? "Cloudflare Worker 배포 후 VITE_CF_API_URL을 설정하고 다시 빌드하세요. 아래 버튼에서 네이버 뉴스로 이동할 수 있어요."
+                : error === "로드 실패" && isStaticHost() && !getApiBase()
+                  ? "Cloudflare Worker 배포 후 Pages 환경변수에 VITE_CF_API_URL을 설정하고 다시 배포하세요. 아래 버튼에서 네이버 뉴스로 이동할 수 있어요."
                   : "연결에 실패했어요. 아래에서 다시 시도해 보세요."}
             </p>
-            {(!window.location.hostname.endsWith(".github.io") || getApiBase()) && (
+            {(!isStaticHost() || getApiBase()) && (
               <button
                 type="button"
                 onClick={() => setRetry((r) => r + 1)}
