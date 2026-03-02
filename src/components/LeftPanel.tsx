@@ -22,9 +22,11 @@ interface LeftPanelProps {
   treeData: CityTreeData | null
   treeDataError: string | null
   seoulTreeCount: number
+  mobileOpen?: boolean
+  onMobileClose?: () => void
 }
 
-export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount }: LeftPanelProps) {
+export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, mobileOpen = false, onMobileClose }: LeftPanelProps) {
   const sidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const species = treeData?.species ?? SPECIES_DATA
   const totalTrees = treeData?.total ?? TOTAL_TREES
@@ -65,8 +67,26 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
       : "0"
 
   return (
-    <aside className="w-[360px] shrink-0 flex flex-col bg-[#f0f5ee] border-r border-gray-200 overflow-hidden">
-      <div className="flex items-center justify-center h-10 pl-4 pr-4 bg-[#f0f5ee] border-b border-green-600/30">
+    <>
+      {/* 백드롭: 모바일에서 패널 열렸을 때 */}
+      {(mobileOpen) && (
+        <button
+          type="button"
+          aria-label="패널 닫기"
+          className="lg:hidden fixed inset-0 bg-black/40 z-40"
+          onClick={onMobileClose}
+        />
+      )}
+      <aside
+        className={`
+          flex flex-col bg-[#f0f5ee] border-r border-gray-200 overflow-hidden
+          w-[min(320px,85vw)] lg:w-[360px] shrink-0
+          fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+          transform transition-transform duration-300 ease-out
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        `}
+      >
+      <div className="relative flex items-center justify-center h-10 pl-4 pr-4 bg-[#f0f5ee] border-b border-green-600/30">
         <button
           type="button"
           onClick={() => window.location.reload()}
@@ -75,23 +95,35 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
           <img
             src={`${import.meta.env.BASE_URL}data/logo.png`}
             alt=""
-            className="h-7 w-auto object-contain block shrink-0"
+            className="h-6 sm:h-7 w-auto object-contain block shrink-0"
           />
-          <span className="text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
+          <span className="text-sm sm:text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
             전국 가로수 현황 지도
           </span>
         </button>
+        {onMobileClose && (
+          <button
+            type="button"
+            aria-label="패널 닫기"
+            className="lg:hidden absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-black/5"
+            onClick={onMobileClose}
+          >
+            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
       </div>
 
       <div className="p-4 bg-[#f0f5ee] border-b border-green-600/20">
-        <div className="rounded-2xl border border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-5 py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] text-center">
-          <p className="text-sm font-bold text-white tracking-wide">
+        <div className="rounded-xl sm:rounded-2xl border border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-4 py-4 sm:px-5 sm:py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] text-center">
+          <p className="text-xs sm:text-sm font-bold text-white tracking-wide">
             {totalLabel} 가로수가
           </p>
-          <p className="mt-2 flex items-baseline justify-center gap-1.5 flex-wrap">
-            <span className="text-3xl font-bold text-white">총 </span>
-            <span className="text-3xl font-bold tabular-nums tracking-tight text-white">{totalCountFormatted}</span>
-            <span className="text-sm font-medium text-white">그루 식재되어 있습니다.</span>
+          <p className="mt-1.5 sm:mt-2 flex items-baseline justify-center gap-1 sm:gap-1.5 flex-wrap">
+            <span className="text-2xl sm:text-3xl font-bold text-white">총 </span>
+            <span className="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight text-white">{totalCountFormatted}</span>
+            <span className="text-xs sm:text-sm font-medium text-white">그루 식재되어 있습니다.</span>
           </p>
         </div>
         <div className="relative mt-3">
@@ -131,7 +163,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         <div className="p-4 bg-white rounded-lg mb-4">
         <div>
           <p className="text-base font-semibold text-gray-800 mb-2">수종별 (상위 5개)</p>
-          <div className="h-[220px] w-full rounded-lg border border-gray-200 overflow-hidden bg-white">
+          <div className="h-[180px] sm:h-[220px] w-full rounded-lg border border-gray-200 overflow-hidden bg-white">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={top5Species}
@@ -208,5 +240,6 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         </div>
       </div>
     </aside>
+    </>
   )
 }

@@ -11,20 +11,85 @@ npm run dev
 
 `public/data/csv/` 에 CSV 넣어두면 그걸로 쓰고, 없으면 목업 데이터로 돌아갑니다.
 
-## GitHub Pages 배포
+## Cloudflare Pages 배포 (Private 저장소 지원)
 
-1. GitHub에서 새 저장소 생성 (예: `national-treemap`)
-2. 로컬에서 푸시:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/내계정/national-treemap.git
-   git push -u origin main
-   ```
-3. 저장소 **Settings → Pages → Build and deployment** 에서 Source를 **GitHub Actions** 로 선택
-4. 푸시할 때마다 자동으로 빌드·배포됨. 주소: `https://내계정.github.io/national-treemap/`
+**Private 저장소** 그대로 두고 배포할 수 있어요.
+
+### 1. Cloudflare Dashboard 설정
+
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages**
+2. **Create** → **Pages** → **Connect to Git**
+3. GitHub 인증 후 **national-treemap** 저장소 선택
+4. **Begin setup** 후 빌드 설정:
+
+| 항목 | 값 |
+|------|-----|
+| Project name | `national-treemap` (또는 원하는 이름) |
+| Production branch | `main` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Root directory | (비워두거나 `/`) |
+
+### 2. 환경 변수 (Build time)
+
+**Settings** → **Environment variables** → **Add variable**:
+
+| 이름 | 값 | 적용 |
+|------|-----|------|
+| `VITE_CF_API_URL` | `https://national-treemap-api.내계정.workers.dev` | Production |
+| `NODE_VERSION` | `20` | (선택) Node 18 기본값 |
+
+Worker URL은 `npm run deploy:worker` 후 wrangler가 알려주는 주소를 넣으세요.
+
+### 3. 배포
+
+- **Save** 후 자동 빌드 시작
+- 이후 `main` 브랜치에 push할 때마다 자동 배포
+- 배포된 URL: `https://national-treemap.내계정.pages.dev`
+
+### 4. GitHub Actions 비활성화 (선택)
+
+Cloudflare Pages로 완전 전환했다면 GitHub 저장소 **Settings** → **Actions** → **General**에서 워크플로를 비활성화하거나, `.github/workflows/deploy.yml`을 삭제/수정할 수 있어요.
+
+---
+
+## GitHub Pages 배포 (대안, Public 저장소 필요)
+
+**구조:** `national-treemap` (🔒 Private, 소스) → `national-treemap-pages` 또는 `jisu-hyun.github.io` (🌍 Public, 빌드물만)
+
+### 1. 저장소 준비
+
+- **national-treemap**: Private 저장소 (소스 코드)
+- **Pages 저장소** (둘 중 하나):
+  - `national-treemap-pages` → `https://내계정.github.io/national-treemap-pages/`
+  - `jisu-hyun.github.io` → `https://jisu-hyun.github.io/` (루트 도메인)
+
+### 2. Pages 저장소 설정
+
+1. Public 저장소 생성 (`national-treemap-pages` 또는 `jisu-hyun.github.io`)
+2. **Settings → Pages**: Source를 **Deploy from a branch**로, Branch를 **gh-pages**로 설정 (최초 push 후 생성됨)
+
+### 3. Private 저장소에 설정
+
+**Settings → Secrets and variables → Actions**에서:
+
+| 종류 | 이름 | 값 |
+|------|------|-----|
+| Secret | `PAGES_DEPLOY_TOKEN` | repo 권한 있는 Personal Access Token |
+| Secret | `CF_API_URL` | Cloudflare Worker URL (선택) |
+| Variable | `PAGES_REPO` | `내계정/national-treemap-pages` 또는 `내계정/jisu-hyun.github.io` |
+| Variable | `PAGES_BASE_PATH` | `/national-treemap-pages/` 또는 `/` |
+
+### 4. 토큰(PAGES_DEPLOY_TOKEN) 발급
+
+1. GitHub → **Settings → Developer settings → Personal access tokens**
+2. **Tokens (classic)** → **Generate new token**
+3. `repo` 체크
+4. 생성한 토큰을 `PAGES_DEPLOY_TOKEN` Secret에 저장
+
+### 5. 배포
+
+`national-treemap`의 main 브랜치에 push하면 자동으로 Pages 저장소의 gh-pages에 배포됨.
 
 ## 뉴스·서울 가로수 API (Cloudflare Worker)
 

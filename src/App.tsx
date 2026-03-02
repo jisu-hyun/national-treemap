@@ -16,6 +16,8 @@ function App() {
   const [treeData, setTreeData] = useState<CityTreeData | null>(null)
   const [treeDataError, setTreeDataError] = useState<string | null>(null)
   const [seoulTreeCount, setSeoulTreeCount] = useState<number | null>(null)
+  const [leftOpen, setLeftOpen] = useState(false)
+  const [rightOpen, setRightOpen] = useState(false)
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
@@ -39,22 +41,26 @@ function App() {
   }, [])
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="flex flex-1 min-h-0">
+    <div className="flex flex-col h-full w-full overflow-hidden">
+      <div className="flex flex-1 min-h-0 relative">
         <LeftPanel
           region={region}
           onRegionChange={handleRegionChange}
           treeData={treeData}
           treeDataError={treeDataError}
           seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+          mobileOpen={leftOpen}
+          onMobileClose={() => setLeftOpen(false)}
         />
         <MapPanel
           region={region}
           onRegionChange={handleRegionChange}
           treeData={treeData}
           seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+          onOpenLeft={() => setLeftOpen(true)}
+          onOpenRight={() => setRightOpen(true)}
         />
-        <RightPanel />
+        <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />
       </div>
     </div>
   )

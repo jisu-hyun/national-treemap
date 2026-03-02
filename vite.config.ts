@@ -86,9 +86,14 @@ function newsApiPlugin() {
   }
 }
 
-const isGhPages =
-  process.env.GITHUB_ACTIONS === 'true' && process.env.GITHUB_REPOSITORY
-const base = isGhPages ? `/${process.env.GITHUB_REPOSITORY!.split('/')[1]}/` : '/'
+const base = (() => {
+  const p = process.env.VITE_BASE_PATH
+  if (p != null && p !== '') return p
+  if (process.env.GITHUB_ACTIONS === 'true' && process.env.GITHUB_REPOSITORY) {
+    return `/${process.env.GITHUB_REPOSITORY!.split('/')[1]}/`
+  }
+  return '/'
+})()
 
 export default defineConfig({
   base,

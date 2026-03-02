@@ -19,6 +19,8 @@ interface NewsItem {
 interface NaverNewsResponse {
   items?: NewsItem[]
   error?: string
+  errorMessage?: string
+  errorCode?: string
 }
 
 function stripHtml(html: string): string {
@@ -55,7 +57,8 @@ export function NewsDashboard() {
 
   const fetchNews = () => {
     const apiUrl = getNewsApiUrl()
-    if (typeof window !== "undefined" && isStaticHost() && !getApiBase()) {
+    const base = getApiBase()
+    if (typeof window !== "undefined" && isStaticHost() && !base) {
       setLoading(false)
       setError(null)
       setItems([])
@@ -63,13 +66,23 @@ export function NewsDashboard() {
     }
     setLoading(true)
     setError(null)
-    fetch(`${apiUrl}?query=가로수&display=10&sort=date`)
-      .then((res) => {
-        if (!res.ok) throw new Error(res.status === 503 ? "API 미설정" : "로드 실패")
+    fetch(`${apiUrl}?query=가로수&display=10&sort=date`, { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) {
+          const text = await res.text()
+          let errMsg = res.status === 503 ? "API 미설정" : "로드 실패"
+          try {
+            const json = JSON.parse(text)
+            if (json?.error) errMsg = json.error
+            else if (json?.errorMessage) errMsg = json.errorMessage
+          } catch {}
+          throw new Error(errMsg)
+        }
         return res.json()
       })
       .then((data: NaverNewsResponse) => {
         if (data.error) throw new Error(data.error)
+        if (data.errorMessage) throw new Error(data.errorMessage)
         setItems(data.items ?? [])
       })
       .catch((e) => {
@@ -162,9 +175,9 @@ export function NewsDashboard() {
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="group block rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm hover:border-emerald-200 hover:shadow-md transition-all duration-200"
+              className="group block rounded-xl border-2 border-emerald-200 bg-white px-4 py-3 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all duration-200"
             >
-              <p className="text-[13px] font-semibold text-slate-800 line-clamp-2 group-hover:text-slate-900">
+              <p className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-slate-900 leading-snug">
                 {stripHtml(item.title)}
               </p>
               <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed">
