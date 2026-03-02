@@ -4,6 +4,12 @@ import { MapPanel } from "./components/MapPanel"
 import { RightPanel } from "./components/RightPanel"
 import { loadCityTreeData, type CityTreeData } from "./data/cityTreeData"
 import { SEOUL_TREE_COUNT_FROM_SITE } from "./data/mock"
+import { getApiBase } from "./config"
+
+function getSeoulTreeCountUrl() {
+  const base = getApiBase()
+  return base ? `${base}/api/seoul-tree-count` : "/api/seoul-tree-count"
+}
 
 function App() {
   const [region, setRegion] = useState("00")
@@ -22,7 +28,7 @@ function App() {
   }, [])
 
   useEffect(() => {
-    fetch("/api/seoul-tree-count")
+    fetch(getSeoulTreeCountUrl())
       .then((r) => r.json())
       .then((data: { count?: number | null }) => {
         if (typeof data?.count === "number" && data.count > 0) {

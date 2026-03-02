@@ -1,5 +1,3 @@
-// 시도별 가로수 목업
-
 export interface SidoItem {
   id: string
   name: string
@@ -13,10 +11,8 @@ export interface SpeciesItem {
   color: string
 }
 
-// 서울 쪽 API 안 될 때 쓰는 기본값 (사이트에 288878 나옴)
 export const SEOUL_TREE_COUNT_FROM_SITE = 288_878
 
-// 시도별 그루 수
 export const SIDO_TREE_COUNTS: SidoItem[] = [
   { id: "11", name: "서울특별시", count: 294668 },
   { id: "26", name: "부산광역시", count: 142300 },
@@ -37,7 +33,6 @@ export const SIDO_TREE_COUNTS: SidoItem[] = [
   { id: "50", name: "제주특별자치도", count: 87600 },
 ]
 
-// 수종별 비율
 export const SPECIES_DATA: SpeciesItem[] = [
   { name: "은행나무", count: 312000, ratio: 28.2, color: "#F4D03F" },
   { name: "양버즘나무", count: 198000, ratio: 17.9, color: "#8B4513" },
@@ -50,12 +45,10 @@ export const SPECIES_DATA: SpeciesItem[] = [
 
 export const TOTAL_TREES = SIDO_TREE_COUNTS.reduce((sum, s) => sum + s.count, 0)
 
-// 그루 수 제일 많은 시도 하나
 export function getTopSido(): SidoItem {
   return [...SIDO_TREE_COUNTS].sort((a, b) => b.count - a.count)[0]
 }
 
-// 비율 제일 높은 수종
 export function getTopSpecies(): SpeciesItem {
   return SPECIES_DATA[0]
 }

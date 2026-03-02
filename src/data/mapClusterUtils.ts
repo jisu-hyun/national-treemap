@@ -1,5 +1,3 @@
-// 지도 색 구간 (4단계)
-
 export const NO_DATA_COLOR = "#9ca3af"
 
 export const FOUR_STEP_COLORS = [
@@ -9,7 +7,6 @@ export const FOUR_STEP_COLORS = [
   "#2e7d32",
 ]
 
-// 값들로 4구간 breaks 만들기
 export function getFourStepScale(
   values: number[]
 ): { breaks: [number, number, number, number]; colors: string[] } {
@@ -39,7 +36,6 @@ export function getStepIndex(value: number, breaks: [number, number, number, num
   return 3
 }
 
-// 범례 글자 만들 때
 export function getFourStepLabels(breaks: [number, number, number, number]): string[] {
   const [min, q1, q2, q3] = breaks
   return [

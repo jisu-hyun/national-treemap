@@ -25,4 +25,23 @@ npm run dev
    ```
 3. 저장소 **Settings → Pages → Build and deployment** 에서 Source를 **GitHub Actions** 로 선택
 4. 푸시할 때마다 자동으로 빌드·배포됨. 주소: `https://내계정.github.io/national-treemap/`
-# national-treemap
+
+## 뉴스·서울 가로수 API (Cloudflare Worker)
+
+GitHub Pages에서는 API가 없어서 뉴스와 서울 가로수 실시간 조회가 안 됩니다. Cloudflare Worker로 API를 배포하면 됩니다.
+
+1. [Cloudflare](https://dash.cloudflare.com) 로그인 후 Workers & Pages에서 새 Worker 생성
+2. 로컬에서 Worker 배포:
+   ```bash
+   npm install
+   npx wrangler login
+   npm run deploy:worker
+   ```
+3. 배포된 URL 확인 (예: `https://national-treemap-api.내계정.workers.dev`)
+4. Worker Secrets 설정 (네이버 API 키):
+   ```bash
+   npx wrangler secret put NAVER_CLIENT_ID
+   npx wrangler secret put NAVER_CLIENT_SECRET
+   ```
+5. GitHub 저장소 **Settings → Secrets and variables → Actions** 에 `CF_API_URL` 추가 (값: Worker URL, 예: `https://national-treemap-api.xxx.workers.dev`)
+6. main 브랜치 푸시 시 빌드에 반영됨

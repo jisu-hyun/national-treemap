@@ -31,7 +31,6 @@ body {
   font-family: inherit;
 }
 
-/* 지도 클릭 시 파란 테두리 안 나오게 */
 .leaflet-interactive:focus,
 .leaflet-interactive:focus-visible {
   outline: none !important;

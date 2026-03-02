@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react"
+import { getApiBase } from "../config"
 
-const NEWS_API = "/api/news"
 const NAVER_NEWS_LINK = "https://search.naver.com/search.naver?where=news&query=가로수&sort=date&nso=so%3Ad%2Cp%3Aall%2Ca%3Aall"
+
+function getNewsApiUrl() {
+  const base = getApiBase()
+  return base ? `${base}/api/news` : "/api/news"
+}
 
 interface NewsItem {
   title: string
@@ -49,9 +54,16 @@ export function NewsDashboard() {
   const [retry, setRetry] = useState(0)
 
   const fetchNews = () => {
+    const apiUrl = getNewsApiUrl()
+    if (typeof window !== "undefined" && window.location.hostname.endsWith(".github.io") && !getApiBase()) {
+      setLoading(false)
+      setError(null)
+      setItems([])
+      return
+    }
     setLoading(true)
     setError(null)
-    fetch(`${NEWS_API}?query=가로수&display=10&sort=date`)
+    fetch(`${apiUrl}?query=가로수&display=10&sort=date`)
       .then((res) => {
         if (!res.ok) throw new Error(res.status === 503 ? "API 미설정" : "로드 실패")
         return res.json()
@@ -121,15 +133,21 @@ export function NewsDashboard() {
             <p className="text-xs text-slate-500">
               {error === "API 미설정"
                 ? ".env에 네이버 API 키를 넣었다면 개발 서버(npm run dev)를 재시작한 뒤 아래 버튼을 눌러 보세요."
-                : "연결에 실패했어요. 아래에서 다시 시도해 보세요."}
+                : error === "로드 실패" &&
+                  window.location.hostname.endsWith(".github.io") &&
+                  !getApiBase()
+                  ? "Cloudflare Worker 배포 후 VITE_CF_API_URL을 설정하고 다시 빌드하세요. 아래 버튼에서 네이버 뉴스로 이동할 수 있어요."
+                  : "연결에 실패했어요. 아래에서 다시 시도해 보세요."}
             </p>
-            <button
-              type="button"
-              onClick={() => setRetry((r) => r + 1)}
-              className="text-xs text-emerald-600 hover:underline font-medium"
-            >
-              다시 시도
-            </button>
+            {(!window.location.hostname.endsWith(".github.io") || getApiBase()) && (
+              <button
+                type="button"
+                onClick={() => setRetry((r) => r + 1)}
+                className="text-xs text-emerald-600 hover:underline font-medium"
+              >
+                다시 시도
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -1,13 +1,9 @@
-// 가로수 CSV 파싱해서 지도/통계에 씀
-
 import type { SidoItem, SpeciesItem } from "./mock"
 import { SIDO_TREE_COUNTS } from "./mock"
 
-// 컬럼 인덱스
 const COL_SIGUNGU = 0
 const COL_SPECIES = 4
 
-// 긴 이름부터 매칭하려고 정렬
 const SIDO_NAMES = [...SIDO_TREE_COUNTS]
   .map((s) => s.name)
   .sort((a, b) => b.length - a.length)
@@ -33,7 +29,6 @@ function parseCsvLine(line: string): string[] {
   return out
 }
 
-// 시군구 문자열에서 시도만 뽑기
 function sigunguToSido(sigungu: string): string | null {
   const t = sigungu.trim().replace(/^\uFEFF/, "")
   for (const name of SIDO_NAMES) {

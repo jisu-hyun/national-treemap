@@ -5,8 +5,12 @@ REPO="https://github.com/jisu-hyun/national-treemap.git"
 echo "GitHub Personal Access Token을 입력하세요 (비밀번호처럼 입력되고 화면에 안 보입니다):"
 read -rs TOKEN
 echo ""
-# 붙여넣기 시 줄바꿈/공백 제거
+# 붙여넣기 시 줄바꿈/공백 제거, 실수로 두 번 붙여넣은 경우 첫 토큰만 사용
 TOKEN=$(echo -n "$TOKEN" | tr -d '\n\r\t ')
+# ghp_ 토큰이 두 번 반복되면 앞쪽만 사용 (40자)
+if [[ "$TOKEN" == ghp_*ghp_* ]]; then
+  TOKEN="${TOKEN:0:40}"
+fi
 if [ -z "$TOKEN" ]; then
   echo "토큰이 비어 있어요. 다시 실행해 주세요."
   exit 1

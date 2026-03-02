@@ -17,7 +17,6 @@ const SEOUL_BOUNDS = L.latLngBounds([37.42, 126.76], [37.70, 127.18])
 const GYEONGGI_BOUNDS = L.latLngBounds([36.95, 126.55], [37.95, 127.85])
 const SEOUL_TREEMAP_URL = "https://map.seoul.go.kr/smgis2/extMap/sttree"
 
-// GADM 영문 -> 한글 시도명
 const NAME_1_TO_KOR: Record<string, string> = {
   Seoul: "서울특별시",
   "Busan": "부산광역시",

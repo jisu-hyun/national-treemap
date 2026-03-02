@@ -2,7 +2,6 @@ import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// dev 서버에서 /api 루트로 뉴스·서울 나무수 프록시
 function newsApiPlugin() {
   return {
     name: 'news-api',
@@ -87,7 +86,6 @@ function newsApiPlugin() {
   }
 }
 
-// https://vite.dev/config/
 const isGhPages =
   process.env.GITHUB_ACTIONS === 'true' && process.env.GITHUB_REPOSITORY
 const base = isGhPages ? `/${process.env.GITHUB_REPOSITORY!.split('/')[1]}/` : '/'
@@ -98,7 +96,6 @@ export default defineConfig({
   server: {
     port: 8000,
     proxy: {
-      // 별도 서버(npm run server) 사용 시에만 프록시. 없으면 위 미들웨어가 처리
       '/api': {
         target: 'http://localhost:3001',
         changeOrigin: true,
