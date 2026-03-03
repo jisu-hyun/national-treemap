@@ -82,7 +82,9 @@ if (!csvPath || !fs.existsSync(csvPath)) {
 
 console.log("Reading CSV:", csvPath)
 const csvBuffer = fs.readFileSync(csvPath)
-const csvText = iconv.decode(csvBuffer, "euc-kr")
+const utf8Text = csvBuffer.toString("utf-8")
+const eucKrText = iconv.decode(csvBuffer, "euc-kr")
+const csvText = utf8Text.includes("시군구명") ? utf8Text : eucKrText
 const lines = csvText.trim().split(/\r?\n/).filter(Boolean)
 const header = lines[0]
 

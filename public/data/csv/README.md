@@ -1,31 +1,28 @@
 # 가로수 CSV 데이터
 
-## 시도별 분할 (Git 커밋 권장)
+## 배포 흐름 (자동 반영)
 
-원본 CSV(100MB+)는 GitHub 제한으로 올릴 수 없습니다. **시도별로 분할**하면 각 파일이 작아져 커밋 가능합니다.
+1. **원본 CSV**를 `public/data/csv/`에 둠 (파일명에 `도시숲가로수관리` 포함)
+2. **시도별 분할**: `npm run split:sido -- "public/data/csv/도시숲가로수관리 가로수 현황20241014.csv"`
+3. **`sido/*.csv`를 Git에 커밋**
+4. **배포** 시 `npm run build`가 자동으로 `aggregate` → `city-tree-summary.json` 생성 → 앱에 반영
 
-### 1단계: 시도별 분할
+원본 CSV는 `.gitignore`로 커밋되지 않으며, `sido/*.csv`만 저장소에 올라가고 배포됩니다.
+
+---
+
+## 시도별 분할 (새 데이터 업데이트 시)
 
 ```bash
-node scripts/split-by-sido.mjs "public/data/csv/<원본CSV파일>"
-# 또는: npm run split:sido -- "경로/원본파일.csv"
+npm run split:sido -- "public/data/csv/<원본CSV파일>"
 ```
 
-- 입력: 산림청 도시숲 가로수 현황 원본 CSV (EUC-KR, 파일명 예: 도시숲가로수관리 가로수 현황YYYYMMDD.csv)
-- 출력: `sido/서울특별시.csv`, `sido/경기도.csv` 등 17개 파일
+- 입력: 산림청 도시숲 가로수 현황 원본 CSV (UTF-8 또는 EUC-KR)
+- 출력: `sido/서울특별시.csv`, `sido/경기도.csv` 등 (각 시도별 파일)
 - 각 파일: 수 MB 이하 (GitHub 100MB 제한 이내)
-
-### 2단계: 집계 JSON 생성
-
-```bash
-node scripts/aggregate-city-tree.mjs
-```
-
-- 입력: `sido/*.csv` (또는 원본 단일 CSV)
-- 출력: `public/data/city-tree-summary.json`
-- 앱은 이 JSON만 fetch해서 사용
+- `sido/*.csv` 커밋 후 push하면 배포 시 자동 반영
 
 ### 참고
 
 - `도시숲가로수관리*.csv`(원본)는 `.gitignore`에 있음
-- `sido/*.csv`는 커밋 가능 (각각 작은 용량)
+- `sido/*.csv`는 커밋 가능

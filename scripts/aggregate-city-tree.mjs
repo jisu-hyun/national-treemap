@@ -111,7 +111,7 @@ function gatherCsvLines() {
         const fileLines = text.trim().split(/\r?\n/).filter(Boolean)
         if (fileLines.length < 2) continue
         if (!header) header = fileLines[0]
-        allLines.push(...fileLines.slice(1))
+        for (let i = 1; i < fileLines.length; i++) allLines.push(fileLines[i])
       }
       return header ? [header, ...allLines] : []
     }
@@ -123,7 +123,10 @@ function gatherCsvLines() {
     const csvPath = path.join(csvDir, legacyFiles[0])
     console.log("Reading legacy CSV:", csvPath)
     const csvBuffer = fs.readFileSync(csvPath)
-    return iconv.decode(csvBuffer, "euc-kr").trim().split(/\r?\n/).filter(Boolean)
+    const utf8Text = csvBuffer.toString("utf-8")
+    const eucKrText = iconv.decode(csvBuffer, "euc-kr")
+    const text = utf8Text.includes("시군구명") ? utf8Text : eucKrText
+    return text.trim().split(/\r?\n/).filter(Boolean)
   }
   throw new Error("CSV 없음. 시도별 분할: node scripts/split-by-sido.mjs <원본CSV>")
 }
