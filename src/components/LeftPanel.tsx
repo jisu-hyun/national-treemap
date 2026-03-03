@@ -7,7 +7,6 @@ import {
   getTopSpecies,
 } from "../data/mock"
 import {
-  getTopSidoFromData,
   getTopSpeciesFromData,
   type CityTreeData,
 } from "../data/cityTreeData"
@@ -27,9 +26,16 @@ interface LeftPanelProps {
 }
 
 export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, mobileOpen = false, onMobileClose }: LeftPanelProps) {
-  const sidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
+  const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
+  /** 서울시트리맵 데이터로 서울 건수 치환 (전국 합계·통계 반영) */
+  const sidoCounts = baseSidoCounts.map((s) =>
+    s.id === "11" ? { ...s, count: seoulTreeCount } : s
+  )
   const species = treeData?.species ?? SPECIES_DATA
-  const totalTrees = treeData?.total ?? TOTAL_TREES
+  const baseTotal = treeData?.total ?? TOTAL_TREES
+  const seoulFromCsv = baseSidoCounts.find((s) => s.id === "11")?.count ?? 0
+  /** 전국 총합: 산림청 합계에서 서울 CSV 제거 후 서울시트리맵 값 합산 */
+  const totalTrees = baseTotal - seoulFromCsv + seoulTreeCount
   const SIDO_OPTIONS = getSidoOptions(sidoCounts)
 
   const displayTotal =
@@ -52,9 +58,9 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
   const topSpeciesNational = treeData
     ? getTopSpeciesFromData(treeData)
     : getTopSpecies()
-  const topSido = treeData
-    ? getTopSidoFromData(treeData)
-    : getTopSido()
+  /** 서울시트리맵 반영한 sidoCounts 기준 상위 시도 */
+  const topSido =
+    sidoCounts.length > 0 ? [...sidoCounts].sort((a, b) => b.count - a.count)[0] : getTopSido()
   const topSidoRatio =
     topSido && totalTrees > 0 ? (topSido.count / totalTrees * 100).toFixed(1) : "0"
 
