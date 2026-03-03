@@ -1,7 +1,7 @@
 /**
  * 큰 CSV를 시도별로 분할
  * 실행: node scripts/split-by-sido.mjs <입력CSV경로>
- * 출력: public/data/csv/sido/<시도명>.csv (각 파일이 Git 제한 아래로 작게)
+ * 출력: data/csv/sido/<시도명>.csv (빌드용, public 밖 → 배포 제외, 25MB 제한 회피)
  */
 
 import fs from "fs"
@@ -12,7 +12,7 @@ import iconv from "iconv-lite"
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, "..")
 const csvPath = process.argv[2]
-const outDir = path.join(root, "public/data/csv/sido")
+const outDir = path.join(root, "data/csv/sido")
 
 const SIDO_TREE_COUNTS = [
   { id: "11", name: "서울특별시" },

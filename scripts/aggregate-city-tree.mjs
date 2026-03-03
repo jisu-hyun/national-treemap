@@ -3,7 +3,7 @@
  * 실행: node scripts/aggregate-city-tree.mjs
  *
  * 입력 (우선순위):
- *   1) public/data/csv/sido/*.csv (시도별 분할, Git 커밋 가능)
+ *   1) data/csv/sido/*.csv (시도별 분할, 빌드용, 배포 제외)
  *   2) public/data/csv/ 도시숲 가로수 현황 원본 CSV (100MB+, .gitignore)
  * 출력: public/data/city-tree-summary.json
  */
@@ -15,7 +15,7 @@ import iconv from "iconv-lite"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, "..")
-const sidoDir = path.join(root, "public/data/csv/sido")
+const sidoDir = path.join(root, "data/csv/sido")
 const csvDir = path.join(root, "public/data/csv")
 const outPath = path.join(root, "public/data/city-tree-summary.json")
 
