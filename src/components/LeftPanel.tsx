@@ -11,10 +11,10 @@ import {
   getTopSpeciesFromData,
   type CityTreeData,
 } from "../data/cityTreeData"
-const SIDO_OPTIONS: { value: string; label: string }[] = [
-  { value: "00", label: "전국" },
-  ...SIDO_TREE_COUNTS.map((s) => ({ value: s.id, label: s.name })),
-]
+
+function getSidoOptions(sidoCounts: { id: string; name: string }[]) {
+  return [{ value: "00", label: "전국" }, ...sidoCounts.map((s) => ({ value: s.id, label: s.name }))]
+}
 
 interface LeftPanelProps {
   region: string
@@ -30,6 +30,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
   const sidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const species = treeData?.species ?? SPECIES_DATA
   const totalTrees = treeData?.total ?? TOTAL_TREES
+  const SIDO_OPTIONS = getSidoOptions(sidoCounts)
 
   const displayTotal =
     region === "00"

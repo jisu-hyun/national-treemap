@@ -11,8 +11,10 @@ export interface SpeciesItem {
   color: string
 }
 
+/** city-tree-summary.json 로드 실패 시 서울 API 대체값 */
 export const SEOUL_TREE_COUNT_FROM_SITE = 288_878
 
+/** city-tree-summary.json 로드 실패 시 fallback (지도·패널) */
 export const SIDO_TREE_COUNTS: SidoItem[] = [
   { id: "11", name: "서울특별시", count: 294668 },
   { id: "26", name: "부산광역시", count: 142300 },

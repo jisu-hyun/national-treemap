@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { SIDO_TREE_COUNTS } from "../data/mock"
 import { SIDO_CONTACTS } from "../data/sidoContacts"
 import streetTreeImg from "../data/가로수 사진.jpg"
 
@@ -81,7 +80,8 @@ const ROLES = [
   },
 ] as const
 
-const SIDO_OPTIONS = SIDO_TREE_COUNTS.map((s) => ({ value: s.id, label: s.name }))
+/** 시도 목록: SIDO_CONTACTS 기준 (연락처 있는 지역) */
+const SIDO_OPTIONS = Object.entries(SIDO_CONTACTS).map(([value, { name }]) => ({ value, label: name }))
 
 const CITIZEN_ACTIONS = [
   {
@@ -162,8 +162,8 @@ const FAQ_ITEMS = [
   },
   {
     q: "가로수 뉴스는 어떤 기준으로 제공되나요?",
-    a: "가로수, 도시숲, 녹지 관리와 관련된 공개 기사 정보를 기반으로 정리됩니다. 특정 기관의 정책 입장을 대변하지 않으며, 정보 제공 목적입니다.",
-    key: "관련 공개 기사 정보를 기반으로 제공합니다.",
+    a: "네이버 뉴스에 게재된 가로수 관련 기사를 검색·정리하여 제공합니다. 특정 기관의 입장을 대변하지 않으며, 정보 제공 목적입니다.",
+    key: "가로수 관련 네이버 뉴스 기사를 기반으로 제공합니다.",
   },
 ] as const
 

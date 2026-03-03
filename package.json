@@ -11,6 +11,8 @@
     "deploy:worker": "wrangler deploy",
     "lint": "eslint .",
     "preview": "vite preview",
+    "verify:csv": "node scripts/verify-csv.mjs",
+    "convert:csv": "node scripts/convert-csv-to-utf8.mjs",
     "split:sido": "node scripts/split-by-sido.mjs",
     "aggregate:city-tree": "node scripts/aggregate-city-tree.mjs"
   },

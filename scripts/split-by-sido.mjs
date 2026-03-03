@@ -94,13 +94,24 @@ for (const s of SIDO_TREE_COUNTS) {
 }
 
 let skipped = 0
+const skippedSamples = []
+let lastSigungu = ""
+const inputDataRows = lines.length - 1
+
 for (let i = 1; i < lines.length; i++) {
   const row = parseCsvLine(lines[i])
-  if (row.length < 1) continue
-  const sigungu = (row[0] || "").trim()
-  const sido = sigunguToSido(sigungu)
+  if (row.length < 1) {
+    skipped++
+    skippedSamples.push(`행${i + 1}: 빈행`)
+    continue
+  }
+  let sigungu = (row[0] || "").trim().replace(/^\uFEFF/, "")
+  if (sigungu) lastSigungu = sigungu
+  else sigungu = lastSigungu
+  const sido = sigungu ? sigunguToSido(sigungu) : null
   if (!sido) {
     skipped++
+    if (skippedSamples.length < 5) skippedSamples.push(`행${i + 1}: "${sigungu}"`)
     continue
   }
   sidoLines[sido].push(lines[i])
@@ -122,4 +133,13 @@ for (const [sido, rows] of Object.entries(sidoLines)) {
 
 console.log("\nWrote", outDir)
 console.log("Total rows:", totalRows.toLocaleString(), "| Skipped:", skipped)
+if (skipped > 0) {
+  console.log("⚠️  Skipped samples:", skippedSamples.join(", "))
+  process.exit(1)
+}
+if (totalRows !== inputDataRows) {
+  console.error(`❌ 검증 실패: 입력 ${inputDataRows}행 ≠ 출력 ${totalRows}행 (누락/중복 발생)`)
+  process.exit(1)
+}
+console.log("✓ 검증: 모든 데이터 분류 완료 (누락·중복 없음)")
 console.log("\n다음 단계: node scripts/aggregate-city-tree.mjs")

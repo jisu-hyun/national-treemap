@@ -136,12 +136,15 @@ const sidoSum = {}
 const speciesSum = {}
 let total = 0
 
+let lastSigungu = ""
 for (let i = 1; i < lines.length; i++) {
   const row = parseCsvLine(lines[i])
   if (row.length <= Math.max(COL_SIGUNGU, COL_SPECIES)) continue
-  const sigungu = (row[COL_SIGUNGU] || "").trim()
+  let sigungu = (row[COL_SIGUNGU] || "").trim().replace(/^\uFEFF/, "")
+  if (sigungu) lastSigungu = sigungu
+  else sigungu = lastSigungu
   const speciesName = (row[COL_SPECIES] || "").trim().replace(/^"|"$/g, "") || "기타"
-  const sido = sigunguToSido(sigungu)
+  const sido = sigungu ? sigunguToSido(sigungu) : null
   if (!sido) continue
   sidoSum[sido] = (sidoSum[sido] || 0) + 1
   speciesSum[speciesName] = (speciesSum[speciesName] || 0) + 1
