@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 8000",
+    "dev:fresh": "sh scripts/dev-fresh.sh",
     "server": "node server/index.mjs",
     "build": "tsc -b && vite build",
     "deploy:worker": "wrangler deploy",

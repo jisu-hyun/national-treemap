@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react"
+import { TopHeader, type ViewMode } from "./components/TopHeader"
+import { GoogleTranslateLoader } from "./components/GoogleTranslateLoader"
 import { LeftPanel } from "./components/LeftPanel"
 import { MapPanel } from "./components/MapPanel"
 import { RightPanel } from "./components/RightPanel"
+import { LearnPage } from "./components/LearnPage"
 import { loadCityTreeData, type CityTreeData } from "./data/cityTreeData"
 import { SEOUL_TREE_COUNT_FROM_SITE } from "./data/mock"
 import { getApiBase } from "./config"
@@ -18,6 +21,7 @@ function App() {
   const [seoulTreeCount, setSeoulTreeCount] = useState<number | null>(null)
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
+  const [view, setView] = useState<ViewMode>("map")
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
@@ -42,26 +46,38 @@ function App() {
 
   return (
     <div className="flex flex-col h-full w-full overflow-hidden">
-      <div className="flex flex-1 min-h-0 relative">
-        <LeftPanel
-          region={region}
-          onRegionChange={handleRegionChange}
-          treeData={treeData}
-          treeDataError={treeDataError}
-          seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
-          mobileOpen={leftOpen}
-          onMobileClose={() => setLeftOpen(false)}
+      <GoogleTranslateLoader />
+      <TopHeader activeView={view} onViewChange={setView} />
+      {view === "learn" ? (
+        <LearnPage
+          onGoToMap={() => setView("map")}
+          onGoToMapWithRegion={(region) => {
+            setRegion(region)
+            setView("map")
+          }}
         />
-        <MapPanel
-          region={region}
-          onRegionChange={handleRegionChange}
-          treeData={treeData}
-          seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
-          onOpenLeft={() => setLeftOpen(true)}
-          onOpenRight={() => setRightOpen(true)}
-        />
-        <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />
-      </div>
+      ) : (
+        <div className="flex flex-1 min-h-0 relative">
+          <LeftPanel
+            region={region}
+            onRegionChange={handleRegionChange}
+            treeData={treeData}
+            treeDataError={treeDataError}
+            seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+            mobileOpen={leftOpen}
+            onMobileClose={() => setLeftOpen(false)}
+          />
+          <MapPanel
+            region={region}
+            onRegionChange={handleRegionChange}
+            treeData={treeData}
+            seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+            onOpenLeft={() => setLeftOpen(true)}
+            onOpenRight={() => setRightOpen(true)}
+          />
+          <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />
+        </div>
+      )}
     </div>
   )
 }

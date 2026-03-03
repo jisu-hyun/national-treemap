@@ -68,54 +68,42 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
 
   return (
     <>
-      {/* 백드롭: 모바일에서 패널 열렸을 때 */}
+      {/* 백드롭: 모바일에서 패널 열렸을 때 (지도 오버레이 z-[1000]보다 위에) */}
       {(mobileOpen) && (
         <button
           type="button"
           aria-label="패널 닫기"
-          className="lg:hidden fixed inset-0 bg-black/40 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 z-[1100] backdrop-blur-[1px]"
           onClick={onMobileClose}
         />
       )}
       <aside
         className={`
-          flex flex-col bg-[#f0f5ee] border-r border-gray-200 overflow-hidden
-          w-[min(320px,85vw)] lg:w-[360px] shrink-0
-          fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+          flex flex-col overflow-hidden shrink-0
+          fixed lg:relative inset-y-0 left-0
+          w-[min(340px,92vw)] lg:w-[360px]
+          z-[1150] lg:z-auto
           transform transition-transform duration-300 ease-out
+          bg-white lg:bg-[#f0f5ee] shadow-2xl lg:shadow-none border-r border-gray-200
           ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-      <div className="relative flex items-center justify-center min-h-10 p-4 bg-[#f0f5ee] border-b border-green-600/30">
-        <button
-          type="button"
-          onClick={() => window.location.reload()}
-          className="flex items-center justify-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          <img
-            src={`${import.meta.env.BASE_URL}data/logo.png`}
-            alt=""
-            className="h-6 sm:h-7 w-auto object-contain block shrink-0"
-          />
-          <span className="text-sm sm:text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
-            전국 가로수 현황 지도
-          </span>
-        </button>
-        {onMobileClose && (
+      {onMobileClose && (
+        <div className="lg:hidden flex items-center justify-end px-4 py-2 bg-white border-b border-slate-200">
           <button
             type="button"
             aria-label="패널 닫기"
-            className="lg:hidden absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg hover:bg-black/5"
+            className="p-1.5 rounded-lg hover:bg-black/5 text-gray-600"
             onClick={onMobileClose}
           >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
-      <div className="p-4 bg-[#f0f5ee] border-b border-green-600/20">
+      <div className="p-4 bg-white lg:bg-[#f0f5ee] border-b border-slate-200 lg:border-green-600/20">
         <div
           className="group rounded-xl sm:rounded-2xl border border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-4 py-4 sm:px-5 sm:py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] text-center cursor-default
             transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
@@ -140,9 +128,9 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
             </svg>
           </span>
           <select
-            value={region}
+            value={region || "00"}
             onChange={(e) => onRegionChange(e.target.value)}
-            className="w-full pl-10 pr-10 py-3.5 bg-white border border-gray-200 rounded-xl text-base font-medium text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none cursor-pointer shadow-sm"
+            className="notranslate w-full pl-10 pr-10 py-3.5 bg-white border border-gray-200 rounded-xl text-base font-medium text-gray-800 focus:ring-2 focus:ring-green-500 focus:border-green-500 appearance-none cursor-pointer shadow-sm"
             style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', backgroundSize: '1.25rem' }}
           >
             {SIDO_OPTIONS.map((opt) => (
@@ -155,7 +143,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto p-4">
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent">
         {treeData === null && !treeDataError && (
           <div className="py-3 text-base text-gray-600">
             데이터 불러오는 중…

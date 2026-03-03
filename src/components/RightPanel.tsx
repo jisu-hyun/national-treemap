@@ -14,21 +14,23 @@ export function RightPanel({ mobileOpen = false, onMobileClose }: RightPanelProp
         <button
           type="button"
           aria-label="패널 닫기"
-          className="lg:hidden fixed inset-0 bg-black/40 z-40"
+          className="lg:hidden fixed inset-0 bg-black/50 z-[1100] backdrop-blur-[1px]"
           onClick={onMobileClose}
         />
       )}
       <aside
         className={`
-          flex flex-col bg-[#f0f5ee] border-l border-gray-200 overflow-hidden
-          w-[min(320px,85vw)] lg:w-[360px] shrink-0
-          fixed lg:relative inset-y-0 right-0 z-50 lg:z-auto
+          flex flex-col overflow-hidden shrink-0
+          fixed lg:relative inset-y-0 right-0
+          w-[min(340px,92vw)] lg:w-[360px]
+          z-[1150] lg:z-auto
           transform transition-transform duration-300 ease-out
+          bg-white lg:bg-[#f0f5ee] shadow-2xl lg:shadow-none border-l border-gray-200
           ${mobileOpen ? "translate-x-0" : "translate-x-full lg:translate-x-0"}
         `}
       >
         <div
-          className="group/header relative flex items-center min-h-10 shrink-0 border-b border-gray-200/80 bg-[#f0f5ee] p-4 cursor-default
+          className="group/header relative flex items-center min-h-10 shrink-0 border-b border-gray-200/80 bg-white lg:bg-[#f0f5ee] p-4 cursor-default
             transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
             hover:shadow-[0_4px_20px_rgba(5,46,22,0.08)] hover:-translate-y-px"
         >
@@ -61,7 +63,7 @@ export function RightPanel({ mobileOpen = false, onMobileClose }: RightPanelProp
             )}
           </div>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto p-4">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent">
           <NewsDashboard refreshKey={refreshKey} />
         </div>
       </aside>

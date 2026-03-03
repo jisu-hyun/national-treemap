@@ -39,6 +39,11 @@ const SIDO_TREE_COUNTS = [
   { id: "50", name: "제주특별자치도" },
 ]
 
+/** CSV 시군구 접두사 → 앱 시도명 (강원도·전북 등 구명 매칭) */
+const SIGUNGU_TO_SIDO = {
+  강원도: "강원특별자치도",
+  전라북도: "전북특별자치도",
+}
 const SIDO_NAMES = [...SIDO_TREE_COUNTS.map((s) => s.name)].sort((a, b) => b.length - a.length)
 const COL_SIGUNGU = 0
 const COL_SPECIES = 4
@@ -84,6 +89,9 @@ function parseCsvLine(line) {
 
 function sigunguToSido(sigungu) {
   const t = sigungu.trim().replace(/^\uFEFF/, "")
+  for (const [alias, canonical] of Object.entries(SIGUNGU_TO_SIDO)) {
+    if (t.startsWith(alias)) return canonical
+  }
   for (const name of SIDO_NAMES) {
     if (t.startsWith(name)) return name
   }

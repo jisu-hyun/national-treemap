@@ -100,6 +100,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), newsApiPlugin()],
   server: {
     port: 8000,
+    strictPort: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
