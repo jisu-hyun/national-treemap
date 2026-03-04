@@ -186,7 +186,7 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/30 blur-3xl" />
           <div className="absolute bottom-10 right-20 w-48 h-48 rounded-full bg-emerald-300/20 blur-3xl" />
         </div>
-        <div className="relative max-w-5xl mx-auto">
+        <div className="relative max-w-4xl mx-auto">
           <div className="flex items-start gap-6 sm:gap-10">
             <div className="flex-shrink-0 w-80 sm:w-[26rem] aspect-[4/3] rounded-2xl overflow-hidden ring-2 ring-white/30 shadow-lg">
               <img src={streetTreeImg} alt="가로수" className="w-full h-full object-cover" />
@@ -219,11 +219,11 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
               </h2>
               <div className="w-full h-0.5 bg-emerald-500/80 rounded-full mb-8" />
             </div>
-            <div className="max-w-2xl space-y-2">
-              <p className="text-slate-500 text-[15px] leading-[1.7]">
+            <div className="max-w-4xl space-y-2">
+              <p className="text-slate-500 text-base leading-[1.7]">
                 가로수는 단순한 조경 요소가 아니라, 도시 환경을 구성하는 중요한 녹지 인프라입니다.
               </p>
-              <p className="text-slate-500 text-[15px] leading-[1.7]">
+              <p className="text-slate-500 text-base leading-[1.7]">
                 도시 온도 조절, 대기 질 개선, 생태 연결 등 환경적 기능을 수행하며, 지방자치단체의 계획과 기준에 따라 관리됩니다.
               </p>
             </div>
@@ -328,7 +328,10 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
             <h2 className="text-2xl sm:text-3xl font-semibold text-slate-800 tracking-tight mb-3">시민이 할 수 있는 일</h2>
             <div className="w-full h-0.5 bg-emerald-500/80 rounded-full" />
           </div>
-          <p className="text-slate-600 mb-8 text-sm leading-relaxed">가로수는 각 지방자치단체에서 관리하는 공공 자산입니다. 시민의 관심과 협조는 안전하고 건강한 도시 환경을 유지하는 데 도움이 됩니다.</p>
+          <div className="space-y-2 mb-8">
+              <p className="text-slate-500 text-base leading-[1.7]">가로수는 각 지방자치단체에서 관리하는 공공 자산입니다.</p>
+              <p className="text-slate-500 text-base leading-[1.7]">시민의 관심과 협조는 안전하고 건강한 도시 환경을 유지하는 데 도움이 됩니다.</p>
+            </div>
           <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
             {/* 이상 발견 시 신고 - 정적 카드 */}
             <div className="group w-full p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-amber-300/70 hover:shadow-lg hover:shadow-amber-500/5 transition-all duration-400 ease-out flex items-center">
@@ -478,18 +481,13 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
 
         {/* Section: FAQ */}
         <section className="mb-24">
-          <div className="mb-12">
+          <div className="mb-6">
             <div className="inline-block">
               <h2 className="text-2xl sm:text-3xl font-semibold text-slate-800 tracking-tight mb-3">자주 묻는 질문</h2>
-              <div className="w-full h-0.5 bg-emerald-500/80 rounded-full mb-8" />
-            </div>
-            <div className="max-w-2xl">
-              <p className="text-slate-500 text-base leading-[1.7]">
-                가로수 트리맵 서비스 이용에 관한 자주 묻는 질문을 정리했습니다.
-              </p>
+              <div className="w-full h-0.5 bg-emerald-500/80 rounded-full mb-6" />
             </div>
           </div>
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4">
             {FAQ_ITEMS.map((faq) => (
               <details
                 key={faq.q}
@@ -512,7 +510,7 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
                 </summary>
                 <div className="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
                   <div className="pl-14 sm:pl-16">
-                    <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                    <p className="text-sm sm:text-base text-slate-500 leading-relaxed">
                       {faq.highlight && faq.a.includes(faq.highlight) ? (
                         <>
                           {faq.a.split(faq.highlight)[0]}
