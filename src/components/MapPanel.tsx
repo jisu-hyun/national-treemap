@@ -124,6 +124,22 @@ function getFeatureBounds(f: GeoJSON.Feature, appId: string | null): L.LatLngBou
   }
 }
 
+/** 라벨 위치: 필터 대상(경북·인천)은 bounds 중심 사용, 그 외는 centroid (확대 시 화면 안에 보이도록) */
+function getFeatureLabelPoint(f: GeoJSON.Feature, appId: string | null): [number, number] | null {
+  const b = getFeatureBounds(f, appId)
+  if (b?.isValid?.()) {
+    const c = b.getCenter()
+    return [c.lat, c.lng]
+  }
+  try {
+    const pt = centroid(f as GeoJSON.Feature)
+    const [lng, lat] = pt.geometry.coordinates
+    return [lat, lng]
+  } catch {
+    return null
+  }
+}
+
 function getColorNational(count: number, scale: { breaks: [number, number, number, number]; colors: string[] }): string {
   if (count === 0) return NO_DATA_COLOR
   const idx = getStepIndex(count, scale.breaks)
@@ -179,7 +195,7 @@ function MapRefSetter({
 
 const FLY_DURATION = 0.6
 
-const PROGRAMMATIC_ZOOM_COOLDOWN_MS = 1200
+const PROGRAMMATIC_ZOOM_COOLDOWN_MS = 2500
 
 function RegionZoomController({ region, boundsReady }: { region: string; boundsReady: boolean }) {
   const map = useMap()
@@ -234,7 +250,7 @@ function MapContent({
     zoomend: () => {
       if (Date.now() < programmaticZoomUntilRef.current) return
       const z = map.getZoom()
-      if (region !== "00" && z <= 8) {
+      if (region !== "00" && z < 8) {
         skipFlyToNationalRef.current = true
         onRegionSelect("00")
       }
@@ -285,9 +301,10 @@ function FixedRegionLabelsOverlay({
       if (region !== "00" && id !== region) continue
       const name = getFeatureName(f.properties as Record<string, unknown>)
       const count = sidoCountsMap[name] ?? 0
+      const pt = getFeatureLabelPoint(f as GeoJSON.Feature, id)
+      if (!pt) continue
       try {
-        const pt = centroid(f as GeoJSON.Feature)
-        const [lng, lat] = pt.geometry.coordinates
+        const [lat, lng] = pt
         const point = map.latLngToContainerPoint([lat, lng])
         positions.push({
           key: id,
@@ -446,13 +463,10 @@ function KoreaGeoJSONLayer({
         const setTooltipLatLng = () => {
           const tooltip = (layer as L.GeoJSON).getTooltip()
           if (tooltip?.setLatLng) {
-            try {
-              const pt = centroid(feature as GeoJSON.Feature)
-              const [lng, lat] = pt.geometry.coordinates
+            const pt = getFeatureLabelPoint(feature as GeoJSON.Feature, id)
+            if (pt) {
+              const [lat, lng] = pt
               tooltip.setLatLng([lat, lng])
-            } catch {
-              const b = (layer as L.GeoJSON).getBounds()
-              if (b?.isValid?.()) tooltip.setLatLng(b.getCenter())
             }
           }
         }
