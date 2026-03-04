@@ -10,6 +10,7 @@ import {
   getTopSpeciesFromData,
   type CityTreeData,
 } from "../data/cityTreeData"
+import type { BusanSegment } from "../data/busanSegment"
 
 function getSidoOptions(sidoCounts: { id: string; name: string }[]) {
   return [{ value: "00", label: "전국" }, ...sidoCounts.map((s) => ({ value: s.id, label: s.name }))]
@@ -21,21 +22,27 @@ interface LeftPanelProps {
   treeData: CityTreeData | null
   treeDataError: string | null
   seoulTreeCount: number
+  busanTreeCount?: number | null
   mobileOpen?: boolean
   onMobileClose?: () => void
+  selectedBusanSegment?: BusanSegment | null
+  onClearBusanSegment?: () => void
 }
 
-export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, mobileOpen = false, onMobileClose }: LeftPanelProps) {
+export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, busanTreeCount = null, mobileOpen = false, onMobileClose, selectedBusanSegment = null, onClearBusanSegment }: LeftPanelProps) {
   const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
-  /** 서울시트리맵 데이터로 서울 건수 치환 (전국 합계·통계 반영) */
-  const sidoCounts = baseSidoCounts.map((s) =>
-    s.id === "11" ? { ...s, count: seoulTreeCount } : s
-  )
+  const seoulFromCsv = baseSidoCounts.find((s) => s.id === "11")?.count ?? 0
+  const busanFromCsv = baseSidoCounts.find((s) => s.id === "26")?.count ?? 0
+  /** 서울·부산 각각 시트리맵/가로수 구축 데이터로 치환 (전국 합계·통계 반영) */
+  const sidoCounts = baseSidoCounts.map((s) => {
+    if (s.id === "11") return { ...s, count: seoulTreeCount }
+    if (s.id === "26" && busanTreeCount != null) return { ...s, count: busanTreeCount }
+    return s
+  })
   const species = treeData?.species ?? SPECIES_DATA
   const baseTotal = treeData?.total ?? TOTAL_TREES
-  const seoulFromCsv = baseSidoCounts.find((s) => s.id === "11")?.count ?? 0
-  /** 전국 총합: 산림청 합계에서 서울 CSV 제거 후 서울시트리맵 값 합산 */
-  const totalTrees = baseTotal - seoulFromCsv + seoulTreeCount
+  /** 전국 총합: 서울·부산은 구축 데이터 합산값으로 반영 */
+  const totalTrees = baseTotal - seoulFromCsv + seoulTreeCount - busanFromCsv + (busanTreeCount ?? busanFromCsv)
   const SIDO_OPTIONS = getSidoOptions(sidoCounts)
 
   const displayTotal =
@@ -149,6 +156,63 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         </div>
         <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
       </div>
+
+      {selectedBusanSegment && (
+        <div className="mx-4 mt-2 mb-0 p-4 bg-white rounded-xl border border-emerald-200/80 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-slate-800">가로수 정보</h3>
+            {onClearBusanSegment && (
+              <button
+                type="button"
+                onClick={onClearBusanSegment}
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500"
+                aria-label="닫기"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
+          </div>
+          <dl className="space-y-2 text-sm">
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-500 shrink-0">도로명</dt>
+              <dd className="font-medium text-slate-800 text-right">{selectedBusanSegment.name}</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-500 shrink-0">가로수</dt>
+              <dd className="text-slate-800">{selectedBusanSegment.trees.toLocaleString()}그루</dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-500 shrink-0">식재거리</dt>
+              <dd className="text-slate-800">
+                {selectedBusanSegment.length > 0
+                  ? `${selectedBusanSegment.length.toLocaleString()}m`
+                  : "—"}
+              </dd>
+            </div>
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-500 shrink-0">구</dt>
+              <dd className="text-slate-800">{selectedBusanSegment.gu}</dd>
+            </div>
+          </dl>
+          <div className="pt-3 mt-3 border-t border-slate-200">
+            <p className="text-slate-500 text-xs font-medium mb-2">수종별</p>
+            {selectedBusanSegment.species && selectedBusanSegment.species.length > 0 ? (
+              <ul className="space-y-1.5 text-sm">
+                {selectedBusanSegment.species.map((s) => (
+                  <li key={s.name} className="flex justify-between gap-2">
+                    <span className="text-slate-700">{s.name}</span>
+                    <span className="text-slate-800 tabular-nums">{s.count.toLocaleString()}그루</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-slate-400 text-sm">수종 정보 없음</p>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent">
         {treeData === null && !treeDataError && (

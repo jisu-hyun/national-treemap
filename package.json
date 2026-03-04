@@ -14,6 +14,12 @@
     "verify:csv": "node scripts/verify-csv.mjs",
     "convert:csv": "node scripts/convert-csv-to-utf8.mjs",
     "split:sido": "node scripts/split-by-sido.mjs",
+    "parse:busan-jingu": "node scripts/parse-busan-jingu.mjs",
+    "parse:busan-saha": "node scripts/parse-busan-saha.mjs",
+    "parse:busan-junggu": "node scripts/parse-busan-junggu.mjs",
+    "parse:busan-dongnae": "node scripts/parse-busan-dongnae.mjs",
+    "parse:busan-yeongdo": "node scripts/parse-busan-yeongdo.mjs",
+    "parse:busan-ugis": "node scripts/parse-busan-ugis.mjs",
     "aggregate:city-tree": "node scripts/aggregate-city-tree.mjs"
   },
   "dependencies": {

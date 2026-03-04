@@ -6,6 +6,7 @@ import { MapPanel } from "./components/MapPanel"
 import { RightPanel } from "./components/RightPanel"
 import { LearnPage } from "./components/LearnPage"
 import { loadCityTreeData, type CityTreeData } from "./data/cityTreeData"
+import type { BusanSegment } from "./data/busanSegment"
 import { SEOUL_TREE_COUNT_FROM_SITE } from "./data/mock"
 import { getApiBase } from "./config"
 
@@ -19,12 +20,15 @@ function App() {
   const [treeData, setTreeData] = useState<CityTreeData | null>(null)
   const [treeDataError, setTreeDataError] = useState<string | null>(null)
   const [seoulTreeCount, setSeoulTreeCount] = useState<number | null>(null)
+  const [busanTreeCount, setBusanTreeCount] = useState<number | null>(null)
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
   const [view, setView] = useState<ViewMode>("map")
+  const [selectedBusanSegment, setSelectedBusanSegment] = useState<BusanSegment | null>(null)
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
+    if (value !== "26") setSelectedBusanSegment(null)
   }
 
   useEffect(() => {
@@ -64,16 +68,22 @@ function App() {
             treeData={treeData}
             treeDataError={treeDataError}
             seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+            busanTreeCount={busanTreeCount}
             mobileOpen={leftOpen}
             onMobileClose={() => setLeftOpen(false)}
+            selectedBusanSegment={selectedBusanSegment}
+            onClearBusanSegment={() => setSelectedBusanSegment(null)}
           />
           <MapPanel
             region={region}
             onRegionChange={handleRegionChange}
             treeData={treeData}
             seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
+            onBusanTreeCountLoad={setBusanTreeCount}
             onOpenLeft={() => setLeftOpen(true)}
             onOpenRight={() => setRightOpen(true)}
+            selectedBusanSegment={selectedBusanSegment}
+            onBusanSegmentSelect={(s) => setSelectedBusanSegment(s)}
           />
           <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />
         </div>

@@ -498,7 +498,7 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
                     <span className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-slate-100/80 group-hover:bg-emerald-100/80 group-open:bg-emerald-100/80 flex items-center justify-center text-slate-600 group-hover:text-emerald-600 group-open:text-emerald-600 transition-colors duration-400">
                       <span className="text-sm sm:text-base font-bold">Q</span>
                     </span>
-                    <span className="font-semibold text-slate-800 text-xl sm:text-[1.25rem] tracking-tight group-hover:text-slate-900 transition-colors duration-400">
+                    <span className="font-semibold text-slate-800 text-base sm:text-lg tracking-tight group-hover:text-slate-900 transition-colors duration-400">
                       {faq.q}
                     </span>
                   </span>

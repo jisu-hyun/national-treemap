@@ -54,9 +54,17 @@ Worker URL은 `npm run deploy:worker` 후 wrangler가 알려주는 주소를 넣
 
 ### 3. 배포
 
-- **Save** 후 자동 빌드 시작
-- 이후 `main` 브랜치에 push할 때마다 자동 배포
+**방법 A – Git push (권장)**  
+- **Save** 후 자동 빌드 시작  
+- 이후 `main` 브랜치에 push할 때마다 자동 배포  
 - 배포된 URL: `https://national-treemap.내계정.pages.dev`
+
+**방법 B – 로컬에서 빌드물만 올리기**  
+```bash
+npm run build
+npx wrangler login   # 브라우저에서 Cloudflare 로그인
+npx wrangler pages deploy dist --project-name=national-treemap
+```
 
 ### 4. GitHub Actions 비활성화 (선택)
 
