@@ -5,6 +5,7 @@ import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { SIDO_TREE_COUNTS } from "../data/mock"
 import type { SidoItem } from "../data/mock"
+import { SIDO_ID_SEOUL, SIDO_ID_BUSAN, SIDO_ID_JEONBUK } from "../data/sidoOverrides"
 import type { CityTreeData } from "../data/cityTreeData"
 import type { BusanSegment } from "../data/busanSegment"
 import { buildGrayMaskGeoJSON } from "../data/grayMaskUtils"
@@ -32,7 +33,29 @@ const BUSAN_YEONGDO_TREES_URL = `${import.meta.env.BASE_URL}data/busan-yeongdo-t
 /** 도시공간정보시스템 기반 구별 JSON (구 전용 CSV 없는 11개 구), 파일 분리로 배포 용량 분산 */
 const BUSAN_UGIS_IDS = ["gangseo", "gijang", "haeundae", "buk", "geumjeong", "sasang", "nam", "yeonje", "suyeong", "dong", "seo"]
 const BUSAN_UGIS_BASE = `${import.meta.env.BASE_URL}data/busan-ugis/`
-const KOREA_MAX_BOUNDS = L.latLngBounds([32.9, 124.6], [38.9, 132.2])
+/** 전북 전주시 가로수 (parse-jeonju.mjs로 생성) */
+const JEONJU_TREES_URL = `${import.meta.env.BASE_URL}data/jeonju-trees.json?v=1`
+/** 전북 정읍시 가로수 (parse-jeongeup.mjs로 생성) */
+const JEONGEUP_TREES_URL = `${import.meta.env.BASE_URL}data/jeongeup-trees.json?v=1`
+/** 전북 완주군 가로수 (parse-wanju.mjs로 생성) */
+const WANJU_TREES_URL = `${import.meta.env.BASE_URL}data/wanju-trees.json?v=1`
+/** 전국 뷰에서 잡아둔 범위 — 확대했을 때도 이 범위 밖으로 패닝 불가 */
+const nationalViewBoundsRef: { current: L.LatLngBounds | null } = { current: null }
+
+/** 전국 뷰: 줌아웃 기본, panBy로 한반도 위치 조정 (px, 음수 x = 내용 오른쪽으로) */
+const NATIONAL_VIEW_PAN_X_PX = -60
+/** 전국 뷰 잠금만 적용 (패닝·줌아웃 방지). panBy는 하지 않음 — 줌아웃으로 돌아온 경우 현재 뷰 고정용 */
+function lockNationalView(map: L.Map) {
+  map.setMinZoom(Math.ceil(map.getZoom()))
+  const b = map.getBounds()
+  map.setMaxBounds(b)
+  nationalViewBoundsRef.current = b
+}
+
+function applyNationalViewPosition(map: L.Map) {
+  map.panBy([NATIONAL_VIEW_PAN_X_PX, 0])
+  lockNationalView(map)
+}
 
 const regionBoundsRef: { current: Record<string, L.LatLngBounds> } = { current: {} }
 
@@ -41,6 +64,9 @@ const programmaticZoomUntilRef: { current: number } = { current: 0 }
 
 /** 줌아웃으로 자동 전국 전환 시 flyToBounds 건너뛰기 (사용자 줌 위치 유지) */
 const skipFlyToNationalRef: { current: boolean } = { current: false }
+
+/** GeoJSON 로드 시 이미 전국 뷰(fitBounds+pan) 적용했으면 RegionZoomController에서 flyToBounds 생략 → 새로고침 시 초점 한 번만 이동 */
+const nationalViewSetByGeoJSONRef: { current: boolean } = { current: false }
 
 /** StrictMode 이중 실행·연속 트리거로 zoom 두 번 되는 것 방지 */
 const lastZoomedRef: { current: { region: string; at: number } | null } = { current: null }
@@ -162,25 +188,18 @@ function getColorNational(count: number, scale: { breaks: [number, number, numbe
 
 const koreaBoundsRef: { current: L.LatLngBounds | null } = { current: null }
 
-/** 부산 확대 시 줌 임계값: 이 이상이면 그레이 마스크·배경 숨김 (마커 가독성) */
-const BUSAN_MARKER_ZOOM = 11
+/** 부산·전주 등 구간 원형 마커 표시 줌 (이 이상이면 그레이 마스크·배경 숨김). 10 = 덜 확대 */
+const DETAIL_MARKER_ZOOM = 10
+const BUSAN_MARKER_ZOOM = DETAIL_MARKER_ZOOM
 
-/** 원 클러스터가 보일 때: 공원 등 녹지 표시 타일. Voyager는 녹지 표시만 하고 산봉우리(삼각형) 없음 */
-const TILE_CARTO_LIGHT = "https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"
+/** 기본·확대 공통: CARTO Voyager(따뜻한 톤, 자연스러운 지형). Light 대비 시인성·디자인 개선 */
 const TILE_CARTO_VOYAGER = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png"
 
-function TileLayerByView({ region }: { region: string }) {
-  const map = useMap()
-  const [zoom, setZoom] = useState(() => map.getZoom())
-  useMapEvents({
-    zoom: () => setZoom(map.getZoom()),
-    zoomend: () => setZoom(map.getZoom()),
-  })
-  const showGreenSpaces = region === "26" && zoom >= BUSAN_MARKER_ZOOM
+function TileLayerByView() {
   return (
     <TileLayer
       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-      url={showGreenSpaces ? TILE_CARTO_VOYAGER : TILE_CARTO_LIGHT}
+      url={TILE_CARTO_VOYAGER}
       crossOrigin="anonymous"
     />
   )
@@ -214,7 +233,7 @@ function MapLegendOverlay({
     zoom: () => setZoom(map.getZoom()),
     zoomend: () => setZoom(map.getZoom()),
   })
-  const showBusanCircleLegend = region === "26" && zoom >= BUSAN_MARKER_ZOOM
+  const showCircleLegend = (region === "26" || region === "45") && zoom >= DETAIL_MARKER_ZOOM
   const { low, high } = BUSAN_LEGEND_BREAKS
   const r = BUSAN_CIRCLE_RADIUS
   const legendCircleStyle = (radius: number) => ({
@@ -228,16 +247,16 @@ function MapLegendOverlay({
 
   return (
     <div
-      className="absolute left-2 sm:left-4 bottom-14 sm:bottom-16 lg:bottom-16 z-[999] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 p-2 sm:p-3 text-xs max-w-[calc(100vw-6rem)]"
+      className="absolute left-3 sm:left-4 bottom-2 sm:bottom-3 z-[999] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs max-w-[calc(100vw-6rem)]"
       style={{ pointerEvents: "none" }}
       aria-hidden
     >
-      {showBusanCircleLegend ? (
+      {showCircleLegend ? (
         <>
-          <div className="font-semibold text-slate-800 mb-2 text-[11px] tracking-wide">
+          <div className="font-semibold text-slate-800 mb-1.5 text-[11px] tracking-wide">
             원 크기 설명 (단위: 그루)
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.small)} />
               <span className="text-[10px] text-slate-600 leading-tight">0 ~ {low.toLocaleString()} 그루</span>
@@ -257,24 +276,24 @@ function MapLegendOverlay({
         </>
       ) : (
         <>
-          <div className="font-semibold text-slate-800 mb-2 text-[11px] tracking-wide">
+          <div className="font-semibold text-slate-800 mb-1.5 text-[11px] tracking-wide">
             색깔 설명 (단위: 그루)
           </div>
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: NO_DATA_COLOR }} />
               <span className="text-[10px] text-slate-600 leading-tight">0 (데이터 없음)</span>
             </div>
             {getFourStepLabels(nationalFourStep.breaks).map((label, i) => (
-              <div key={i} className="flex items-center gap-1">
+              <div key={i} className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: nationalFourStep.colors[i] }} />
                 <span className="text-[10px] text-slate-600 leading-tight">{label}</span>
               </div>
             ))}
-            <p className="text-[10px] text-amber-700 mt-0.5 bg-amber-50 rounded px-1 py-0.5 leading-tight">
-              색이 <strong className="font-semibold">진할수록</strong> 나무가 더 많아요.
-            </p>
           </div>
+          <p className="text-[10px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1 py-0.5 leading-tight">
+            색이 <strong className="font-semibold">진할수록</strong> 나무가 더 많아요.
+          </p>
         </>
       )}
     </div>
@@ -295,7 +314,7 @@ function GrayMaskLayer({ region, zoom }: { region: string; zoom: number }) {
   }, [])
 
   if (!maskGeoJson) return null
-  if (region === "26" && zoom >= BUSAN_MARKER_ZOOM) return null
+  if ((region === "26" || region === "45") && zoom >= DETAIL_MARKER_ZOOM) return null
 
   return (
     <GeoJSON
@@ -331,11 +350,38 @@ const FLY_DURATION = 0.6
 
 const PROGRAMMATIC_ZOOM_COOLDOWN_MS = 2500
 
-function RegionZoomController({ region, boundsReady }: { region: string; boundsReady: boolean }) {
+/** 반응형: 지도 컨테이너 리사이즈 시 Leaflet 크기 갱신 (페이지/창 커지면 지도도 같이 커지도록) */
+function MapResizeSync() {
+  const map = useMap()
+  useEffect(() => {
+    const container = map.getContainer()
+    if (!container) return
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize()
+    })
+    ro.observe(container)
+    return () => ro.disconnect()
+  }, [map])
+  return null
+}
+
+function RegionZoomController({
+  region,
+  boundsReady,
+  onNationalMinZoomApplied,
+}: {
+  region: string
+  boundsReady: boolean
+  onNationalMinZoomApplied?: (zoom: number) => void
+}) {
   const map = useMap()
 
   useLayoutEffect(() => {
-    if (region !== "00" && !boundsReady) return
+    if (region !== "00") {
+      const bounds = nationalViewBoundsRef.current ?? koreaBoundsRef.current
+      if (bounds?.isValid?.()) map.setMaxBounds(bounds)
+      if (!boundsReady) return
+    } else if (!boundsReady) return
     const now = Date.now()
     if (lastZoomedRef.current?.region === region && now - lastZoomedRef.current.at < ZOOM_DEDUPE_MS) return
     lastZoomedRef.current = { region, at: now }
@@ -344,21 +390,38 @@ function RegionZoomController({ region, boundsReady }: { region: string; boundsR
     if (region === "00") {
       if (skipFlyToNationalRef.current) {
         skipFlyToNationalRef.current = false
+        lockNationalView(map)
+        return
+      }
+      if (nationalViewSetByGeoJSONRef.current) {
+        nationalViewSetByGeoJSONRef.current = false
+        lockNationalView(map)
         return
       }
       if (koreaBoundsRef.current?.isValid?.()) {
-        map.flyToBounds(koreaBoundsRef.current, { padding: [20, 20], ...opts })
+        map.flyToBounds(koreaBoundsRef.current, { padding: [20, 20], maxZoom: 7, ...opts })
+        map.once("moveend", () => {
+          applyNationalViewPosition(map)
+          onNationalMinZoomApplied?.(Math.ceil(map.getZoom()))
+        })
       }
     } else {
       const bounds = regionBoundsRef.current[region]
       if (bounds?.isValid?.()) {
         const center = bounds.getCenter()
+        /** 지역 확대 시 최소 줌. 전북(45)·부산(26)은 원클러스터가 보이도록 11 이상 */
+        const REGION_MIN_ZOOM = 10
+        const minZoomForDetail = region === "26" || region === "45" ? DETAIL_MARKER_ZOOM : REGION_MIN_ZOOM
         if (region === "42") {
-          map.flyTo(center, 9, opts)
+          map.flyTo(center, Math.max(9, REGION_MIN_ZOOM), opts)
         } else if (region === "46") {
-          map.flyTo(center, 9, opts)
+          map.flyTo(center, Math.max(9, REGION_MIN_ZOOM), opts)
         } else {
           map.flyToBounds(bounds, { padding: [8, 8], maxZoom: 14, ...opts })
+          map.once("moveend", () => {
+            const z = map.getZoom()
+            if (z < minZoomForDetail) map.setZoom(minZoomForDetail)
+          })
         }
       }
     }
@@ -424,24 +487,98 @@ function BusanJinguMarkers({
   )
 }
 
+/** 전주시·정읍시 가로수 구간 마커 (BusanSegment 동일 구조) */
+function Region45Markers({
+  region,
+  zoom,
+  markers,
+  selectedSegment,
+  onSegmentSelect,
+  onOpenLeft,
+  paneName,
+}: {
+  region: string
+  zoom: number
+  markers: BusanSegment[]
+  selectedSegment: BusanSegment | null
+  onSegmentSelect: (s: BusanSegment) => void
+  onOpenLeft?: () => void
+  paneName: string
+}) {
+  if (region !== "45" || markers.length === 0) return null
+  if (zoom < DETAIL_MARKER_ZOOM) return null
+
+  return (
+    <Pane name={paneName} style={{ zIndex: 600 }}>
+      {markers.map((m, i) => {
+        const radius = getBusanRadius(m.trees)
+        const selected = isSameSegment(selectedSegment, m)
+        return (
+          <CircleMarker
+            key={`${m.lat}-${m.lng}-${m.name}-${i}`}
+            center={[m.lat, m.lng]}
+            radius={radius}
+            pathOptions={{
+              fillColor: selected ? "#047857" : BUSAN_CIRCLE_STYLE.fill,
+              color: selected ? "#065f46" : BUSAN_CIRCLE_STYLE.stroke,
+              weight: selected ? 2.5 : BUSAN_CIRCLE_STYLE.strokeWidth,
+              fillOpacity: BUSAN_CIRCLE_STYLE.fillOpacity,
+            }}
+            eventHandlers={{
+              click: () => {
+                onSegmentSelect(m)
+                onOpenLeft?.()
+              },
+            }}
+          />
+        )
+      })}
+    </Pane>
+  )
+}
+
 function MapContent({
   region,
   mapRef,
   sidoCounts,
   busanMarkers,
+  jeonjuMarkers,
+  jeongeupMarkers,
+  wanjuMarkers,
   onRegionSelect,
   selectedBusanSegment,
+  selectedJeonjuSegment,
+  selectedJeongeupSegment,
+  selectedWanjuSegment,
   onBusanSegmentSelect,
+  onJeonjuSegmentSelect,
+  onJeongeupSegmentSelect,
+  onWanjuSegmentSelect,
   onOpenLeft,
+  onNationalMinZoomApplied,
+  effectiveMinZoom,
+  onInitialNationalViewReady,
 }: {
   region: string
   mapRef: React.MutableRefObject<L.Map | null>
   sidoCounts: SidoItem[]
   busanMarkers: BusanSegment[]
+  jeonjuMarkers: BusanSegment[]
+  jeongeupMarkers: BusanSegment[]
+  wanjuMarkers: BusanSegment[]
   onRegionSelect: (value: string) => void
   selectedBusanSegment: BusanSegment | null
+  selectedJeonjuSegment: BusanSegment | null
+  selectedJeongeupSegment: BusanSegment | null
+  selectedWanjuSegment: BusanSegment | null
   onBusanSegmentSelect: (s: BusanSegment) => void
+  onJeonjuSegmentSelect: (s: BusanSegment) => void
+  onJeongeupSegmentSelect: (s: BusanSegment) => void
+  onWanjuSegmentSelect: (s: BusanSegment) => void
   onOpenLeft?: () => void
+  onNationalMinZoomApplied?: (zoom: number) => void
+  effectiveMinZoom: number
+  onInitialNationalViewReady?: () => void
 }) {
   const map = useMap()
   const [boundsReady, setBoundsReady] = useState(false)
@@ -459,14 +596,21 @@ function MapContent({
     },
   })
 
+  useEffect(() => {
+    map.setMinZoom(effectiveMinZoom)
+  }, [map, effectiveMinZoom])
+
   return (
     <>
+      <MapResizeSync />
       <GrayMaskLayer region={region} zoom={zoom} />
       <KoreaGeoJSONLayer
         region={region}
         sidoCounts={sidoCounts}
         onRegionSelect={onRegionSelect}
         onBoundsReady={setBoundsReady}
+        onNationalMinZoomApplied={onNationalMinZoomApplied}
+        onInitialNationalViewReady={onInitialNationalViewReady}
       />
       <BusanJinguMarkers
         region={region}
@@ -476,7 +620,38 @@ function MapContent({
         onSegmentSelect={onBusanSegmentSelect}
         onOpenLeft={onOpenLeft}
       />
-      <RegionZoomController region={region} boundsReady={boundsReady} />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={jeonjuMarkers}
+        selectedSegment={selectedJeonjuSegment}
+        onSegmentSelect={onJeonjuSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="jeonju-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={jeongeupMarkers}
+        selectedSegment={selectedJeongeupSegment}
+        onSegmentSelect={onJeongeupSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="jeongeup-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={wanjuMarkers}
+        selectedSegment={selectedWanjuSegment}
+        onSegmentSelect={onWanjuSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="wanju-markers"
+      />
+      <RegionZoomController
+        region={region}
+        boundsReady={boundsReady}
+        onNationalMinZoomApplied={onNationalMinZoomApplied}
+      />
       <MapRefSetter mapRef={mapRef} />
     </>
   )
@@ -591,11 +766,15 @@ function KoreaGeoJSONLayer({
   sidoCounts,
   onRegionSelect,
   onBoundsReady,
+  onNationalMinZoomApplied,
+  onInitialNationalViewReady,
 }: {
   region: string
   sidoCounts: SidoItem[]
   onRegionSelect: (value: string) => void
   onBoundsReady?: (ready: boolean) => void
+  onNationalMinZoomApplied?: (zoom: number) => void
+  onInitialNationalViewReady?: () => void
 }) {
   const regionRef = useRef(region)
   regionRef.current = region
@@ -603,7 +782,7 @@ function KoreaGeoJSONLayer({
   const map = useMap()
   const [zoomLevel, setZoomLevel] = useState(() => map.getZoom())
   useMapEvents({ zoom: () => setZoomLevel(map.getZoom()), zoomend: () => setZoomLevel(map.getZoom()) })
-  const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && !(region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM)
+  const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && !(region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM) && !(region === "45" && zoomLevel >= DETAIL_MARKER_ZOOM)
   const sidoCountsMap = Object.fromEntries(sidoCounts.map((s) => [s.name, s.count]))
   const nationalScale = getFourStepScale(sidoCounts.map((s) => s.count))
 
@@ -615,15 +794,19 @@ function KoreaGeoJSONLayer({
         const layer = L.geoJSON(data)
         const bounds = layer.getBounds()
         koreaBoundsRef.current = bounds
-        map.setMinZoom(8)
-        map.setMaxBounds(KOREA_MAX_BOUNDS)
         if (regionRef.current === "00") {
           programmaticZoomUntilRef.current = Date.now() + PROGRAMMATIC_ZOOM_COOLDOWN_MS
-          map.fitBounds(bounds, { padding: [20, 20] })
-          map.zoomIn()
+          map.fitBounds(bounds, { padding: [20, 20], maxZoom: 7 })
+          applyNationalViewPosition(map)
+          onNationalMinZoomApplied?.(Math.ceil(map.getZoom()))
+          nationalViewSetByGeoJSONRef.current = true
+          onInitialNationalViewReady?.()
         }
       })
-      .catch(() => setGeojson(null))
+      .catch(() => {
+        setGeojson(null)
+        onInitialNationalViewReady?.()
+      })
   }, [map])
 
   useEffect(() => {
@@ -652,18 +835,18 @@ function KoreaGeoJSONLayer({
         />
       )}
       <GeoJSON
-        key={`sido-layer-${showLabels ? "labels" : "tooltips"}-${region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM ? "busan-hide-tt" : "default"}`}
+        key={`sido-layer-${showLabels ? "labels" : "tooltips"}-${(region === "26" || region === "45") && zoomLevel >= DETAIL_MARKER_ZOOM ? "detail-hide-tt" : "default"}`}
         data={geojson}
       style={(feature) => {
-        const hideFill = region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM
+        const hideFill = (region === "26" || region === "45") && zoomLevel >= DETAIL_MARKER_ZOOM
         const name = getFeatureName(feature?.properties as Record<string, unknown>)
         const count = sidoCountsMap[name] ?? 0
         return {
           fillColor: getColorNational(count, nationalScale),
-          weight: 2,
-          opacity: 1,
-          color: hideFill ? "#475569" : "#fff",
-          fillOpacity: hideFill ? 0 : 0.85,
+          weight: 1.2,
+          opacity: 0.95,
+          color: hideFill ? "#64748b" : "#f1f5f9",
+          fillOpacity: hideFill ? 0 : 0.88,
         }
       }}
       onEachFeature={(feature, layer) => {
@@ -682,8 +865,9 @@ function KoreaGeoJSONLayer({
           }
         }
 
-        const hideBusanTooltip = id === "26" && region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM
-        if (!showLabels && !hideBusanTooltip) {
+        const hideDetailTooltip = (id === "26" && region === "26") || (id === "45" && region === "45")
+        const hideTooltip = hideDetailTooltip && zoomLevel >= DETAIL_MARKER_ZOOM
+        if (!showLabels && !hideTooltip) {
           const isGyeonggi = id === "41"
           layer.bindTooltip(
             `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong></div>`,
@@ -698,7 +882,7 @@ function KoreaGeoJSONLayer({
         }
 
         // 부산 확대·가로수 마커 표시 시: 부산 폴리곤은 클릭 비활성화 → 원형 마커 클릭이 왼쪽 팝업으로 전달되도록
-        if (hideBusanTooltip) {
+        if (hideTooltip) {
           (layer as L.Path).setStyle({ interactive: false })
         } else {
           layer.on("click", () => {
@@ -764,16 +948,37 @@ interface MapPanelProps {
   treeData: CityTreeData | null
   seoulTreeCount: number
   onBusanTreeCountLoad?: (count: number) => void
+  /** 전북(전주·정읍·완주) 구축 데이터 합계 — MapPanel에서 합산 후 1회 전달 */
+  onJeonbukTreeCountLoad?: (count: number) => void
   onOpenLeft?: () => void
   onOpenRight?: () => void
   selectedBusanSegment?: BusanSegment | null
   onBusanSegmentSelect?: (s: BusanSegment) => void
+  selectedJeonjuSegment?: BusanSegment | null
+  onJeonjuSegmentSelect?: (s: BusanSegment) => void
+  selectedJeongeupSegment?: BusanSegment | null
+  onJeongeupSegmentSelect?: (s: BusanSegment) => void
+  selectedWanjuSegment?: BusanSegment | null
+  onWanjuSegmentSelect?: (s: BusanSegment) => void
 }
 
-export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onOpenLeft, onOpenRight, selectedBusanSegment = null, onBusanSegmentSelect }: MapPanelProps) {
-  const dataAttribution = "데이터 출처: 공공데이터포털 · 산림청 도시숲 가로수관리 가로수 현황"
+export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onJeonbukTreeCountLoad, onOpenLeft, onOpenRight, selectedBusanSegment = null, onBusanSegmentSelect, selectedJeonjuSegment = null, onJeonjuSegmentSelect, selectedJeongeupSegment = null, onJeongeupSegmentSelect, selectedWanjuSegment = null, onWanjuSegmentSelect }: MapPanelProps) {
+  const dataAttribution = "데이터 출처: 공공데이터포털"
   const mapRef = useRef<L.Map | null>(null)
   const [busanMarkers, setBusanMarkers] = useState<BusanSegment[]>([])
+  const [jeonjuMarkers, setJeonjuMarkers] = useState<BusanSegment[]>([])
+  const [jeongeupMarkers, setJeongeupMarkers] = useState<BusanSegment[]>([])
+  const [wanjuMarkers, setWanjuMarkers] = useState<BusanSegment[]>([])
+  /** 전국 뷰 적용 시 최소줌(리셋 후 축소 방지). region "00"일 때만 Map에 반영 */
+  const [nationalMinZoom, setNationalMinZoom] = useState<number | null>(null)
+  const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? 7) : 3
+  /** 전국 초기 로드: GeoJSON 적용 전까지 지도 숨김 → 새로고침 시 초점 점프 방지 */
+  const [initialNationalViewReady, setInitialNationalViewReady] = useState(false)
+  useEffect(() => {
+    if (region !== "00") return
+    const t = setTimeout(() => setInitialNationalViewReady(true), 5000)
+    return () => clearTimeout(t)
+  }, [region])
   /** 부산 가로수 데이터: 지역 선택 시 표시용 + 총그루수 산출용으로 앱 로드 시 1회 fetch */
   useEffect(() => {
     let cancelled = false
@@ -806,6 +1011,48 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
       cancelled = true
     }
   }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(JEONJU_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setJeonjuMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setJeonjuMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(JEONGEUP_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setJeongeupMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setJeongeupMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(WANJU_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setWanjuMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setWanjuMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
   const busanTreeCount = useMemo(
     () => busanMarkers.reduce((sum, m) => sum + m.trees, 0),
     [busanMarkers]
@@ -813,20 +1060,50 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
   useEffect(() => {
     if (busanMarkers.length > 0) onBusanTreeCountLoad?.(busanTreeCount)
   }, [busanTreeCount, busanMarkers.length, onBusanTreeCountLoad])
+  const jeonjuTreeCount = useMemo(
+    () => jeonjuMarkers.reduce((sum, m) => sum + m.trees, 0),
+    [jeonjuMarkers]
+  )
+  const jeongeupTreeCount = useMemo(
+    () => jeongeupMarkers.reduce((sum, m) => sum + m.trees, 0),
+    [jeongeupMarkers]
+  )
+  const wanjuTreeCount = useMemo(
+    () => wanjuMarkers.reduce((sum, m) => sum + m.trees, 0),
+    [wanjuMarkers]
+  )
+  /** 전북(전주시·정읍시·완주군) 구축 데이터 합계 — 전국 총합·전북 표시용 */
+  const jeonbukTreeCount = useMemo(
+    () => jeonjuTreeCount + jeongeupTreeCount + wanjuTreeCount,
+    [jeonjuTreeCount, jeongeupTreeCount, wanjuTreeCount]
+  )
+  const hasJeonbukData = jeonjuMarkers.length > 0 || jeongeupMarkers.length > 0 || wanjuMarkers.length > 0
+  useEffect(() => {
+    if (hasJeonbukData) onJeonbukTreeCountLoad?.(jeonbukTreeCount)
+  }, [jeonbukTreeCount, hasJeonbukData, onJeonbukTreeCountLoad])
+
   const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const sidoCounts = useMemo(
     () =>
       baseSidoCounts.map((s) => {
-        if (s.id === "11") return { ...s, count: seoulTreeCount }
-        if (s.id === "26" && busanMarkers.length > 0) return { ...s, count: busanTreeCount }
+        if (s.id === SIDO_ID_SEOUL) return { ...s, count: seoulTreeCount }
+        if (s.id === SIDO_ID_BUSAN && busanMarkers.length > 0) return { ...s, count: busanTreeCount }
+        if (s.id === SIDO_ID_JEONBUK && hasJeonbukData) return { ...s, count: jeonbukTreeCount }
         return s
       }),
-    [baseSidoCounts, seoulTreeCount, busanMarkers.length, busanTreeCount]
+    [
+      baseSidoCounts,
+      seoulTreeCount,
+      busanMarkers.length,
+      busanTreeCount,
+      hasJeonbukData,
+      jeonbukTreeCount,
+    ]
   )
   const nationalFourStep = getFourStepScale(sidoCounts.map((s) => s.count))
 
   return (
-    <main className="flex-1 flex flex-col min-w-0 bg-slate-100 relative min-w-0">
+    <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 relative">
       {/* 모바일: 좌/우 패널 열기 버튼 */}
       <div className="lg:hidden absolute top-3 left-3 right-3 z-[1000] flex justify-between items-start pointer-events-none">
         <div className="pointer-events-auto flex gap-2">
@@ -859,16 +1136,18 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 relative">
+      <div
+        className="flex-1 min-h-0 relative transition-opacity duration-200"
+        style={{ opacity: region !== "00" || initialNationalViewReady ? 1 : 0 }}
+      >
         <MapContainer
           center={[36.35, 127.9]}
-          zoom={7}
-          minZoom={6}
+          zoom={6}
+          minZoom={effectiveMinZoom}
           maxZoom={13}
+          maxBoundsViscosity={1}
           className="w-full h-full"
           zoomControl={false}
-          maxBounds={KOREA_MAX_BOUNDS}
-          maxBoundsViscosity={1}
           touchZoom={true}
           scrollWheelZoom={true}
           doubleClickZoom={true}
@@ -876,24 +1155,36 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
           keyboard={false}
         >
           <ZoomControl position="bottomright" />
-          <TileLayerByView region={region} />
+          <TileLayerByView />
           <MapContent
             region={region}
             mapRef={mapRef}
             sidoCounts={sidoCounts}
             busanMarkers={busanMarkers}
+            jeonjuMarkers={jeonjuMarkers}
+            jeongeupMarkers={jeongeupMarkers}
+            wanjuMarkers={wanjuMarkers}
             onRegionSelect={onRegionChange}
             selectedBusanSegment={selectedBusanSegment ?? null}
+            selectedJeonjuSegment={selectedJeonjuSegment ?? null}
+            selectedJeongeupSegment={selectedJeongeupSegment ?? null}
+            selectedWanjuSegment={selectedWanjuSegment ?? null}
             onBusanSegmentSelect={onBusanSegmentSelect ?? (() => {})}
+            onJeonjuSegmentSelect={onJeonjuSegmentSelect ?? (() => {})}
+            onJeongeupSegmentSelect={onJeongeupSegmentSelect ?? (() => {})}
+            onWanjuSegmentSelect={onWanjuSegmentSelect ?? (() => {})}
             onOpenLeft={onOpenLeft}
+            onNationalMinZoomApplied={setNationalMinZoom}
+            effectiveMinZoom={effectiveMinZoom}
+            onInitialNationalViewReady={() => setInitialNationalViewReady(true)}
           />
           <MapLegendOverlay region={region} nationalFourStep={nationalFourStep} />
           <SeoulTreemapButton region={region} />
         </MapContainer>
       </div>
 
-      <div className="h-8 sm:h-9 shrink-0 flex items-center justify-center gap-2 bg-white/80 border-t border-slate-200/80 text-[10px] sm:text-[11px] text-slate-500 tracking-wide px-2">
-        <svg className="w-3.5 h-3.5 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+      <div className="h-6 sm:h-7 shrink-0 flex items-center justify-center gap-1.5 py-0.5 bg-white/80 border-t border-slate-200/80 text-[10px] sm:text-[11px] text-slate-500 tracking-wide px-2">
+        <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
         </svg>
         {dataAttribution}

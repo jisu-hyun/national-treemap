@@ -20,6 +20,12 @@
     "parse:busan-dongnae": "node scripts/parse-busan-dongnae.mjs",
     "parse:busan-yeongdo": "node scripts/parse-busan-yeongdo.mjs",
     "parse:busan-ugis": "node scripts/parse-busan-ugis.mjs",
+    "parse:jeonju": "node scripts/parse-jeonju.mjs",
+    "parse:jeonju:no-geocode": "node scripts/parse-jeonju.mjs --no-geocode",
+    "parse:jeongeup": "node scripts/parse-jeongeup.mjs",
+    "parse:jeongeup:no-geocode": "node scripts/parse-jeongeup.mjs --no-geocode",
+    "parse:wanju": "node scripts/parse-wanju.mjs",
+    "csv:utf8": "node scripts/csv-to-utf8.mjs",
     "aggregate:city-tree": "node scripts/aggregate-city-tree.mjs"
   },
   "dependencies": {

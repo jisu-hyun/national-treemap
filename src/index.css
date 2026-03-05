@@ -44,6 +44,7 @@ body {
 
 .leaflet-container {
   font-family: inherit;
+  min-height: 0;
 }
 
 .leaflet-interactive:focus,

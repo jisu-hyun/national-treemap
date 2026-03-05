@@ -3,9 +3,10 @@ import { LanguageTranslate } from "./LanguageTranslate"
 const NAV_ITEMS = [
   { id: "map", label: "지도" },
   { id: "learn", label: "가로수 알아보기" },
+  { id: "dataset", label: "활용 데이터" },
 ] as const
 
-export type ViewMode = "map" | "learn"
+export type ViewMode = "map" | "learn" | "dataset"
 
 interface TopHeaderProps {
   activeView?: ViewMode
@@ -15,11 +16,12 @@ interface TopHeaderProps {
 export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) {
   return (
     <header className="flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 h-14 sm:h-16 bg-white border-b border-slate-200/80 shadow-sm shrink-0">
-      <div className="flex items-center gap-2 sm:gap-6 min-w-0 flex-1 min-w-0">
+      <div className="flex items-center gap-2 sm:gap-6 min-w-0 flex-1">
+        {/* 로고·타이틀: 중앙 정렬(원래대로), 왼쪽 여백으로 오른쪽으로 배치 */}
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="flex items-center gap-1.5 sm:gap-2 shrink-0 hover:opacity-80 transition-opacity text-left min-h-[44px] min-w-[44px]"
+          className="flex items-center justify-center gap-1.5 sm:gap-2 shrink-0 hover:opacity-80 transition-opacity text-left min-h-[44px] min-w-[44px] ml-6 sm:ml-8"
           aria-label="새로고침"
         >
           <img
@@ -31,7 +33,8 @@ export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) 
             전국 가로수 현황지도
           </h1>
         </button>
-        <nav className="flex items-center gap-0 ml-2 sm:ml-10 shrink-0">
+        {/* 지도·가로수 알아보기·활용 데이터: 타이틀 오른쪽에 배치 */}
+        <nav className="flex items-center gap-0 ml-8 sm:ml-12 shrink-0">
           {NAV_ITEMS.map((item, i) => (
             <span key={item.id} className="flex items-center">
               {i > 0 && <span className="w-px h-4 bg-slate-200 mx-2" aria-hidden />}
