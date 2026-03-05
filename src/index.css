@@ -103,3 +103,45 @@ body {
 .citizen-card-reveal.is-visible:hover {
   transform: translateY(-2px);
 }
+
+/* 활용 데이터: 지도 구축 요약 카드 - 스크롤 인뷰 시 힘차게 스태거 등장 */
+.dataset-summary-card {
+  opacity: 0;
+  transform: translateY(140px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+}
+.dataset-summary-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.dataset-summary-card:nth-child(1) { transition-delay: 0ms; }
+.dataset-summary-card:nth-child(2) { transition-delay: 90ms; }
+.dataset-summary-card:nth-child(3) { transition-delay: 180ms; }
+.dataset-summary-card:nth-child(4) { transition-delay: 270ms; }
+.dataset-summary-card:nth-child(5) { transition-delay: 360ms; }
+.dataset-summary-card.is-visible:nth-child(1) { transition-delay: 0ms; }
+.dataset-summary-card.is-visible:nth-child(2) { transition-delay: 90ms; }
+.dataset-summary-card.is-visible:nth-child(3) { transition-delay: 180ms; }
+.dataset-summary-card.is-visible:nth-child(4) { transition-delay: 270ms; }
+.dataset-summary-card.is-visible:nth-child(5) { transition-delay: 360ms; }
+
+/* 위로/아래로 가기 FAB — 글래스 + 호버 리프트 */
+.scroll-fab {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.scroll-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 12px 28px -8px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(16, 185, 129, 0.1);
+}
+.scroll-fab:active {
+  transform: scale(0.96);
+}
+.scroll-fab svg {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.scroll-fab:hover svg.scroll-fab-up {
+  transform: translateY(-2px);
+}
+.scroll-fab:hover svg.scroll-fab-down {
+  transform: translateY(2px);
+}

@@ -108,6 +108,7 @@ function App() {
             setRegion(region)
             setView("map")
           }}
+          onGoToMap={() => setView("map")}
         />
       ) : view === "dataset" ? (
         <DatasetPage onGoToMap={() => setView("map")} />

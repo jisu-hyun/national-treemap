@@ -167,16 +167,41 @@ const FAQ_ITEMS = [
 ] as const
 
 
+const CREATOR_NAME = "현지구"
+
 interface LearnPageProps {
   onGoToMapWithRegion?: (region: string) => void
+  onGoToMap?: () => void
 }
 
-export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
+export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
   const [selectedRole, setSelectedRole] = useState<(typeof ROLES)[number] | null>(null)
   const [selectedCitizen, setSelectedCitizen] = useState<(typeof CITIZEN_ACTIONS)[number] | null>(null)
   const [citizenRegion, setCitizenRegion] = useState("11")
   const citizenCardsRef = useRef<HTMLDivElement>(null)
   const [citizenCardsVisible, setCitizenCardsVisible] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+  const [scrollAtTop, setScrollAtTop] = useState(true)
+  const [scrollAtBottom, setScrollAtBottom] = useState(false)
+
+  useEffect(() => {
+    const el = mainRef.current
+    if (!el) return
+    const check = () => {
+      const { scrollTop, scrollHeight, clientHeight } = el
+      const threshold = 8
+      setScrollAtTop(scrollTop <= threshold)
+      setScrollAtBottom(scrollTop + clientHeight >= scrollHeight - threshold)
+    }
+    check()
+    el.addEventListener("scroll", check, { passive: true })
+    const ro = new ResizeObserver(check)
+    ro.observe(el)
+    return () => {
+      el.removeEventListener("scroll", check)
+      ro.disconnect()
+    }
+  }, [])
 
   useEffect(() => {
     const el = citizenCardsRef.current
@@ -190,7 +215,7 @@ export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
   }, [])
 
   return (
-    <main className="flex-1 min-h-0 overflow-y-auto bg-white">
+    <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto bg-white relative">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 px-4 sm:px-6 lg:px-8 pt-28 sm:pt-40 pb-14 sm:pb-20">
         <div className="absolute inset-0 opacity-10">
@@ -374,7 +399,7 @@ export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
             <button
               type="button"
               onClick={() => setSelectedCitizen(CITIZEN_ACTIONS.find((c) => c.hasContactUI)!)}
-              className={`citizen-card-reveal w-full flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-white border border-slate-200/80 border-emerald-500/30 hover:border-emerald-500/50 hover:bg-emerald-50/30 text-left transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:ring-offset-2 ${citizenCardsVisible ? "is-visible" : ""}`}
+              className={`citizen-card-reveal w-full flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-white border border-slate-200/80 border-emerald-500/30 hover:border-emerald-500/50 hover:bg-emerald-50/30 text-left transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30 focus-visible:ring-offset-2 ${citizenCardsVisible ? "is-visible" : ""}`}
             >
               <div className="shrink-0 w-10 h-10 rounded-xl bg-emerald-100/90 flex items-center justify-center">
                 <IconPhone className="w-5 h-5 text-emerald-700/90" />
@@ -430,7 +455,7 @@ export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
                       <select
                         value={citizenRegion}
                         onChange={(e) => setCitizenRegion(e.target.value)}
-                        className="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 appearance-none cursor-pointer"
+                        className="w-full pl-4 pr-10 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:border-emerald-500 appearance-none cursor-pointer"
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
                           backgroundRepeat: "no-repeat",
@@ -574,7 +599,87 @@ export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
             ))}
           </div>
         </section>
+
+        <footer className="mt-32 pt-12 pb-8 border-t border-slate-200/80">
+          {/* 구글 광고 영역 — 회색 선과 본문 사이 */}
+          <div
+            id="footer-ad-slot"
+            className="min-h-[90px] w-full mb-6 flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200/80"
+            aria-label="광고"
+          >
+            {/* 구글 애드센스 등 스크립트 삽입 시 이 영역에 배치 */}
+          </div>
+          <div className="space-y-8">
+            <div>
+              <p className="text-sm font-medium text-slate-700">
+                전국 가로수 현황 지도
+              </p>
+              <p className="text-xs text-slate-500 mt-1 whitespace-nowrap">
+                공공데이터를 활용한 참고용 서비스입니다. 지도와 수치는 공개 자료 기준이며, 정확한 내용은 각 제공 기관을 확인해 주세요.
+              </p>
+            </div>
+            <div>
+              <p className="text-xs font-medium text-slate-600 mb-2">바로가기</p>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
+                {onGoToMap && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={onGoToMap}
+                      className="hover:text-emerald-600 transition-colors underline underline-offset-2"
+                    >
+                      지도로 이동
+                    </button>
+                    <span className="text-slate-300 select-none" aria-hidden>·</span>
+                  </>
+                )}
+                <a
+                  href="https://www.data.go.kr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-600 transition-colors underline underline-offset-2"
+                >
+                  공공데이터포털
+                </a>
+                <span className="text-slate-300 select-none" aria-hidden>·</span>
+                <a
+                  href="https://map.seoul.go.kr/smgis2/extMap/sttree"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-600 transition-colors underline underline-offset-2"
+                >
+                  서울시 가로수 트리맵
+                </a>
+              </div>
+            </div>
+            <p className="text-[11px] text-slate-400">
+              본 서비스는 참고용이며, 공식 통계·행정 자료와 다를 수 있습니다. 데이터 이용 시 공공데이터포털 및 각 제공 기관 안내를 확인해 주세요.
+            </p>
+            <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-xs text-slate-500 pt-2">
+              <span className="shrink-0">
+                제작 <span className="text-slate-300 select-none" aria-hidden>|</span> {CREATOR_NAME}
+              </span>
+            </div>
+          </div>
+        </footer>
       </div>
+      {/* 위로 가기 / 아래로 가기 — 각각 고정 위치, 맨 위/맨 아래일 때만 숨김 */}
+      <button
+        type="button"
+        onClick={() => mainRef.current?.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="맨 위로"
+        className={`scroll-fab fixed right-6 z-40 w-11 h-11 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/70 shadow-lg shadow-slate-200/50 text-slate-600 hover:bg-emerald-50 hover:border-emerald-300/60 hover:text-emerald-700 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:ring-offset-2 transition-opacity duration-200 ${scrollAtTop ? "pointer-events-none opacity-0" : "bottom-[4.75rem]"}`}
+      >
+        <svg className="w-5 h-5 scroll-fab-up" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" /></svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => mainRef.current?.scrollTo({ top: (mainRef.current?.scrollHeight ?? 0) - (mainRef.current?.clientHeight ?? 0), behavior: "smooth" })}
+        aria-label="맨 아래로"
+        className={`scroll-fab fixed bottom-6 right-6 z-40 w-11 h-11 rounded-2xl bg-white/90 backdrop-blur-md border border-slate-200/70 shadow-lg shadow-slate-200/50 text-slate-600 hover:bg-emerald-50 hover:border-emerald-300/60 hover:text-emerald-700 flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400/50 focus-visible:ring-offset-2 transition-opacity duration-200 ${scrollAtBottom ? "pointer-events-none opacity-0" : ""}`}
+      >
+        <svg className="w-5 h-5 scroll-fab-down" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+      </button>
     </main>
   )
 }
