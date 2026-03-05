@@ -20,13 +20,20 @@ if (!fs.existsSync(csvPath)) {
   process.exit(1)
 }
 
-/** 한글 CSV 헤더인지 확인 (전주: 연번·노선명 / 정읍: 노선·본수 / 완주: 시도·시군구·행정동) */
+/** 한글 CSV 헤더인지 확인 (전주: 연번·노선명 / 정읍: 노선·본수 / 완주: 시도·시군구·행정동 / 광명 등: 관리번호·행정동·가로수) */
 function isKoreanCsvHeader(line) {
   if (!line || line.length < 4) return false
   const has전주 = line.includes("연번") && line.includes("노선명")
   const has정읍 = line.includes("노선") && (line.includes("본수") || line.includes("시점"))
   const has완주 = line.includes("시도") && line.includes("시군구") && line.includes("행정동")
-  return has전주 || has정읍 || has완주
+  const has광명등 = (line.includes("관리번호") || line.includes("행정동")) && (line.includes("가로수") || line.includes("위도") || line.includes("경도"))
+  const has용인등 = (line.includes("시도명") || line.includes("시군구명")) && (line.includes("도로구분") || line.includes("은행나무"))
+  const has양평등 = (line.includes("지역") || line.includes("노선")) && (line.includes("은행") || line.includes("벚나무") || line.includes("가로수"))
+  const has의정부등 = line.includes("가로수정보") || (line.includes("관리번호") && line.includes("위도") && line.includes("경도"))
+  const has고양등 = (line.includes("구분") && (line.includes("느티나무") || line.includes("은행나무") || line.includes("왕벚나무")))
+  const has안산등 = (line.includes("시군명") || line.includes("노선명")) && (line.includes("행정동") || line.includes("가로수본수") || line.includes("수종"))
+  const has의왕등 = (line.includes("공간지리식별번호") || line.includes("관리번호")) && (line.includes("위도") && line.includes("경도") && line.includes("수종코드"))
+  return has전주 || has정읍 || has완주 || has광명등 || has용인등 || has양평등 || has의정부등 || has고양등 || has안산등 || has의왕등
 }
 
 const buf = fs.readFileSync(csvPath)

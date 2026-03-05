@@ -26,6 +26,10 @@ interface LeftPanelProps {
   busanTreeCount?: number | null
   /** 전북(전주·정읍·완주) 구축 데이터 합계 — MapPanel에서 합산 후 전달 */
   jeonbukTreeCount?: number | null
+  /** 경기 세부(광주·용인·광명·안양·양평·의정부·고양·안산) 관할별 총 그루수 */
+  gyeonggiDetailCounts?: { gwangju: number; yongin: number; gwangmyeong: number; anyang: number; yangpyeong: number; uijeongbu: number; goyang: number; ansan: number; uiwang: number; gwacheon: number } | null
+  /** 전북 세부(전주·정읍·완주) 관할별 총 그루수 */
+  jeonbukDetailCounts?: { jeonju: number; jeongeup: number; wanju: number } | null
   mobileOpen?: boolean
   onMobileClose?: () => void
   selectedBusanSegment?: BusanSegment | null
@@ -38,9 +42,27 @@ interface LeftPanelProps {
   onClearWanjuSegment?: () => void
   selectedGwangjuSegment?: BusanSegment | null
   onClearGwangjuSegment?: () => void
+  selectedYonginSegment?: BusanSegment | null
+  onClearYonginSegment?: () => void
+  selectedGwangmyeongSegment?: BusanSegment | null
+  onClearGwangmyeongSegment?: () => void
+  selectedAnyangSegment?: BusanSegment | null
+  onClearAnyangSegment?: () => void
+  selectedYangpyeongSegment?: BusanSegment | null
+  onClearYangpyeongSegment?: () => void
+  selectedUijeongbuSegment?: BusanSegment | null
+  onClearUijeongbuSegment?: () => void
+  selectedGoyangSegment?: BusanSegment | null
+  onClearGoyangSegment?: () => void
+  selectedAnsanSegment?: BusanSegment | null
+  onClearAnsanSegment?: () => void
+  selectedUiwangSegment?: BusanSegment | null
+  onClearUiwangSegment?: () => void
+  selectedGwacheonSegment?: BusanSegment | null
+  onClearGwacheonSegment?: () => void
 }
 
-export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, busanTreeCount = null, jeonbukTreeCount = null, mobileOpen = false, onMobileClose, selectedBusanSegment = null, onClearBusanSegment, selectedJeonjuSegment = null, onClearJeonjuSegment, selectedJeongeupSegment = null, onClearJeongeupSegment, selectedWanjuSegment = null, onClearWanjuSegment, selectedGwangjuSegment = null, onClearGwangjuSegment }: LeftPanelProps) {
+export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, busanTreeCount = null, jeonbukTreeCount = null, gyeonggiDetailCounts = null, jeonbukDetailCounts = null, mobileOpen = false, onMobileClose, selectedBusanSegment = null, onClearBusanSegment, selectedJeonjuSegment = null, onClearJeonjuSegment, selectedJeongeupSegment = null, onClearJeongeupSegment, selectedWanjuSegment = null, onClearWanjuSegment, selectedGwangjuSegment = null, onClearGwangjuSegment, selectedYonginSegment = null, onClearYonginSegment, selectedGwangmyeongSegment = null, onClearGwangmyeongSegment, selectedAnyangSegment = null, onClearAnyangSegment, selectedYangpyeongSegment = null, onClearYangpyeongSegment, selectedUijeongbuSegment = null, onClearUijeongbuSegment, selectedGoyangSegment = null, onClearGoyangSegment, selectedAnsanSegment = null, onClearAnsanSegment, selectedUiwangSegment = null, onClearUiwangSegment, selectedGwacheonSegment = null, onClearGwacheonSegment }: LeftPanelProps) {
   const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const baseTotal = treeData?.total ?? TOTAL_TREES
 
@@ -76,6 +98,47 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
   const regionLabel = SIDO_OPTIONS.find((o) => o.value === region)?.label ?? "전국"
   const totalLabel = region === "00" ? "전국에는" : `${regionLabel}에는`
   const totalCountFormatted = displayTotal.toLocaleString()
+
+  /** 마커 클릭 시 상단 요약: 해당 관할 라벨 + 관할 총 그루수 */
+  const hasSegmentSelected =
+    !!selectedBusanSegment || !!selectedJeonjuSegment || !!selectedJeongeupSegment ||
+    !!selectedWanjuSegment || !!selectedGwangjuSegment || !!selectedYonginSegment ||
+    !!selectedGwangmyeongSegment || !!selectedAnyangSegment || !!selectedYangpyeongSegment || !!selectedUijeongbuSegment || !!selectedGoyangSegment || !!selectedAnsanSegment || !!selectedUiwangSegment || !!selectedGwacheonSegment
+  const summaryLabel =
+    selectedBusanSegment ? "부산광역시에는" :
+    selectedJeonjuSegment ? "전북특별자치도 전주시에는" :
+    selectedJeongeupSegment ? "전북특별자치도 정읍시에는" :
+    selectedWanjuSegment ? "전북특별자치도 완주군에는" :
+    selectedGwangjuSegment ? "경기도 광주시에는" :
+    selectedYonginSegment ? "경기도 용인시에는" :
+    selectedGwangmyeongSegment ? "경기도 광명시에는" :
+    selectedAnyangSegment ? "경기도 안양시에는" :
+    selectedYangpyeongSegment ? "경기도 양평군에는" :
+    selectedUijeongbuSegment ? "경기도 의정부시에는" :
+    selectedGoyangSegment ? "경기도 고양시에는" :
+    selectedAnsanSegment ? "경기도 안산시에는" :
+    selectedUiwangSegment ? "경기도 의왕시에는" :
+    selectedGwacheonSegment ? "경기도 과천시에는" :
+    totalLabel
+  const summaryCount =
+    selectedBusanSegment && busanTreeCount != null ? busanTreeCount :
+    selectedJeonjuSegment ? (jeonbukDetailCounts?.jeonju ?? 0) :
+    selectedJeongeupSegment ? (jeonbukDetailCounts?.jeongeup ?? 0) :
+    selectedWanjuSegment ? (jeonbukDetailCounts?.wanju ?? 0) :
+    selectedGwangjuSegment ? (gyeonggiDetailCounts?.gwangju ?? 0) :
+    selectedYonginSegment ? (gyeonggiDetailCounts?.yongin ?? 0) :
+    selectedGwangmyeongSegment ? (gyeonggiDetailCounts?.gwangmyeong ?? 0) :
+    selectedAnyangSegment ? (gyeonggiDetailCounts?.anyang ?? 0) :
+    selectedYangpyeongSegment ? (gyeonggiDetailCounts?.yangpyeong ?? 0) :
+    selectedUijeongbuSegment ? (gyeonggiDetailCounts?.uijeongbu ?? 0) :
+    selectedGoyangSegment ? (gyeonggiDetailCounts?.goyang ?? 0) :
+    selectedAnsanSegment ? (gyeonggiDetailCounts?.ansan ?? 0) :
+    selectedUiwangSegment ? (gyeonggiDetailCounts?.uiwang ?? 0) :
+    selectedGwacheonSegment ? (gyeonggiDetailCounts?.gwacheon ?? 0) :
+    displayTotal
+  const summaryCountFormatted = hasSegmentSelected
+    ? (typeof summaryCount === "number" ? summaryCount : displayTotal).toLocaleString()
+    : totalCountFormatted
   const sortedSpecies = [...displaySpecies].sort((a, b) => b.count - a.count)
   const top5Species = sortedSpecies.slice(0, 5).map((s) => ({
     name: s.name,
@@ -145,14 +208,16 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
             hover:scale-[1.02] hover:shadow-[0_12px_40px_rgba(5,46,22,0.35)] hover:-translate-y-0.5 hover:border-white/30"
         >
           <p className="text-xs sm:text-sm font-bold text-white tracking-wide transition-transform duration-300 group-hover:translate-x-0.5">
-            {totalLabel} 가로수가
+            {summaryLabel} 가로수가
           </p>
           <p className="mt-1.5 sm:mt-2 flex items-baseline justify-center gap-1 sm:gap-1.5 flex-wrap">
             <span className="text-2xl sm:text-3xl font-bold text-white transition-all duration-300 group-hover:tracking-wide">총 </span>
             <span className="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight text-white transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">
-              {totalCountFormatted}
+              {summaryCountFormatted}
             </span>
-            <span className="text-xs sm:text-sm font-medium text-white transition-opacity duration-300 group-hover:opacity-90">그루 식재되어 있습니다.</span>
+          </p>
+          <p className="mt-0.5 text-xs sm:text-sm font-medium text-white transition-opacity duration-300 group-hover:opacity-90">
+            그루 식재되어 있습니다.
           </p>
         </div>
         <div className="relative mt-3">
@@ -178,9 +243,25 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
       </div>
 
-      {(selectedBusanSegment || selectedJeonjuSegment || selectedJeongeupSegment || selectedWanjuSegment || selectedGwangjuSegment) && (() => {
-        const seg = selectedBusanSegment ?? selectedJeonjuSegment ?? selectedJeongeupSegment ?? selectedWanjuSegment ?? selectedGwangjuSegment!
-        const onClear = selectedBusanSegment ? onClearBusanSegment : selectedJeonjuSegment ? onClearJeonjuSegment : selectedJeongeupSegment ? onClearJeongeupSegment : selectedWanjuSegment ? onClearWanjuSegment : onClearGwangjuSegment
+      {(selectedBusanSegment || selectedJeonjuSegment || selectedJeongeupSegment || selectedWanjuSegment || selectedGwangjuSegment || selectedYonginSegment || selectedGwangmyeongSegment || selectedAnyangSegment || selectedYangpyeongSegment || selectedUijeongbuSegment || selectedGoyangSegment || selectedAnsanSegment || selectedUiwangSegment || selectedGwacheonSegment) && (() => {
+        const seg = selectedBusanSegment ?? selectedJeonjuSegment ?? selectedJeongeupSegment ?? selectedWanjuSegment ?? selectedGwangjuSegment ?? selectedYonginSegment ?? selectedGwangmyeongSegment ?? selectedAnyangSegment ?? selectedYangpyeongSegment ?? selectedUijeongbuSegment ?? selectedGoyangSegment ?? selectedAnsanSegment ?? selectedUiwangSegment ?? selectedGwacheonSegment!
+        const onClear = selectedBusanSegment ? onClearBusanSegment : selectedJeonjuSegment ? onClearJeonjuSegment : selectedJeongeupSegment ? onClearJeongeupSegment : selectedWanjuSegment ? onClearWanjuSegment : selectedGwangjuSegment ? onClearGwangjuSegment : selectedYonginSegment ? onClearYonginSegment : selectedGwangmyeongSegment ? onClearGwangmyeongSegment : selectedAnyangSegment ? onClearAnyangSegment : selectedYangpyeongSegment ? onClearYangpyeongSegment : selectedUijeongbuSegment ? onClearUijeongbuSegment : selectedGoyangSegment ? onClearGoyangSegment : selectedAnsanSegment ? onClearAnsanSegment : selectedUiwangSegment ? onClearUiwangSegment : selectedGwacheonSegment ? onClearGwacheonSegment : onClearYangpyeongSegment
+        const regionLabel =
+          selectedBusanSegment ? `부산광역시 ${seg.gu}` :
+          selectedGwangjuSegment ? `경기도 ${seg.gu}` :
+          selectedYonginSegment ? `경기도 용인시 ${seg.gu}` :
+          selectedGwangmyeongSegment ? `경기도 ${seg.gu}` :
+          selectedAnyangSegment ? `경기도 ${seg.gu}` :
+          selectedYangpyeongSegment ? `경기도 ${seg.gu}` :
+          selectedUijeongbuSegment ? `경기도 ${seg.gu}` :
+          selectedGoyangSegment ? `경기도 ${seg.gu}` :
+          selectedAnsanSegment ? `경기도 ${seg.gu}` :
+          selectedUiwangSegment ? `경기도 ${seg.gu}` :
+          selectedGwacheonSegment ? `경기도 ${seg.gu}` :
+          selectedJeonjuSegment ? `전북특별자치도 전주시 ${seg.gu}` :
+          selectedJeongeupSegment ? `전북특별자치도 정읍시${seg.gu ? ` ${seg.gu}` : ""}` :
+          selectedWanjuSegment ? `전북특별자치도 완주군${seg.gu ? ` ${seg.gu}` : ""}` :
+          seg.gu
         const hasLength = seg.length > 0
         const hasSpecies = seg.species && seg.species.length > 0
         return (
@@ -202,8 +283,8 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
             </div>
             <dl className="space-y-2.5 text-sm">
               <div className="flex justify-between gap-3 items-baseline">
-                <dt className="text-slate-500 shrink-0 w-20">자치구</dt>
-                <dd className="font-medium text-slate-800 text-right truncate">{seg.gu}</dd>
+                <dt className="text-slate-500 shrink-0 w-20">지역</dt>
+                <dd className="font-medium text-slate-800 text-right truncate">{regionLabel}</dd>
               </div>
               <div className="flex justify-between gap-3 items-baseline">
                 <dt className="text-slate-500 shrink-0 w-20">도로명</dt>

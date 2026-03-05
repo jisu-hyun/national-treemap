@@ -24,6 +24,23 @@ function App() {
   const [busanTreeCount, setBusanTreeCount] = useState<number | null>(null)
   /** 전북(전주·정읍·완주) 구축 데이터 합계 — MapPanel에서 합산 후 전달 */
   const [jeonbukTreeCount, setJeonbukTreeCount] = useState<number | null>(null)
+  const [gyeonggiDetailCounts, setGyeonggiDetailCounts] = useState<{
+    gwangju: number
+    yongin: number
+    gwangmyeong: number
+    anyang: number
+    yangpyeong: number
+    uijeongbu: number
+    goyang: number
+    ansan: number
+    uiwang: number
+    gwacheon: number
+  } | null>(null)
+  const [jeonbukDetailCounts, setJeonbukDetailCounts] = useState<{
+    jeonju: number
+    jeongeup: number
+    wanju: number
+  } | null>(null)
   const [leftOpen, setLeftOpen] = useState(false)
   const [rightOpen, setRightOpen] = useState(false)
   const [view, setView] = useState<ViewMode>("map")
@@ -32,6 +49,15 @@ function App() {
   const [selectedJeongeupSegment, setSelectedJeongeupSegment] = useState<BusanSegment | null>(null)
   const [selectedWanjuSegment, setSelectedWanjuSegment] = useState<BusanSegment | null>(null)
   const [selectedGwangjuSegment, setSelectedGwangjuSegment] = useState<BusanSegment | null>(null)
+  const [selectedYonginSegment, setSelectedYonginSegment] = useState<BusanSegment | null>(null)
+  const [selectedGwangmyeongSegment, setSelectedGwangmyeongSegment] = useState<BusanSegment | null>(null)
+  const [selectedAnyangSegment, setSelectedAnyangSegment] = useState<BusanSegment | null>(null)
+  const [selectedYangpyeongSegment, setSelectedYangpyeongSegment] = useState<BusanSegment | null>(null)
+  const [selectedUijeongbuSegment, setSelectedUijeongbuSegment] = useState<BusanSegment | null>(null)
+  const [selectedGoyangSegment, setSelectedGoyangSegment] = useState<BusanSegment | null>(null)
+  const [selectedAnsanSegment, setSelectedAnsanSegment] = useState<BusanSegment | null>(null)
+  const [selectedUiwangSegment, setSelectedUiwangSegment] = useState<BusanSegment | null>(null)
+  const [selectedGwacheonSegment, setSelectedGwacheonSegment] = useState<BusanSegment | null>(null)
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
@@ -41,7 +67,18 @@ function App() {
       setSelectedJeongeupSegment(null)
       setSelectedWanjuSegment(null)
     }
-    if (value !== "41") setSelectedGwangjuSegment(null)
+    if (value !== "41") {
+      setSelectedGwangjuSegment(null)
+      setSelectedYonginSegment(null)
+      setSelectedGwangmyeongSegment(null)
+      setSelectedAnyangSegment(null)
+      setSelectedYangpyeongSegment(null)
+      setSelectedUijeongbuSegment(null)
+      setSelectedGoyangSegment(null)
+      setSelectedAnsanSegment(null)
+      setSelectedUiwangSegment(null)
+      setSelectedGwacheonSegment(null)
+    }
   }
 
   useEffect(() => {
@@ -67,7 +104,6 @@ function App() {
       <TopHeader activeView={view} onViewChange={setView} />
       {view === "learn" ? (
         <LearnPage
-          onGoToMap={() => setView("map")}
           onGoToMapWithRegion={(region) => {
             setRegion(region)
             setView("map")
@@ -85,6 +121,8 @@ function App() {
             seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
             busanTreeCount={busanTreeCount}
             jeonbukTreeCount={jeonbukTreeCount}
+            gyeonggiDetailCounts={gyeonggiDetailCounts}
+            jeonbukDetailCounts={jeonbukDetailCounts}
             mobileOpen={leftOpen}
             onMobileClose={() => setLeftOpen(false)}
             selectedBusanSegment={selectedBusanSegment}
@@ -97,6 +135,24 @@ function App() {
             onClearWanjuSegment={() => setSelectedWanjuSegment(null)}
             selectedGwangjuSegment={selectedGwangjuSegment}
             onClearGwangjuSegment={() => setSelectedGwangjuSegment(null)}
+            selectedYonginSegment={selectedYonginSegment}
+            onClearYonginSegment={() => setSelectedYonginSegment(null)}
+            selectedGwangmyeongSegment={selectedGwangmyeongSegment}
+            onClearGwangmyeongSegment={() => setSelectedGwangmyeongSegment(null)}
+            selectedAnyangSegment={selectedAnyangSegment}
+            onClearAnyangSegment={() => setSelectedAnyangSegment(null)}
+            selectedYangpyeongSegment={selectedYangpyeongSegment}
+            onClearYangpyeongSegment={() => setSelectedYangpyeongSegment(null)}
+            selectedUijeongbuSegment={selectedUijeongbuSegment}
+            onClearUijeongbuSegment={() => setSelectedUijeongbuSegment(null)}
+            selectedGoyangSegment={selectedGoyangSegment}
+            onClearGoyangSegment={() => setSelectedGoyangSegment(null)}
+            selectedAnsanSegment={selectedAnsanSegment}
+            onClearAnsanSegment={() => setSelectedAnsanSegment(null)}
+            selectedUiwangSegment={selectedUiwangSegment}
+            onClearUiwangSegment={() => setSelectedUiwangSegment(null)}
+            selectedGwacheonSegment={selectedGwacheonSegment}
+            onClearGwacheonSegment={() => setSelectedGwacheonSegment(null)}
           />
           <MapPanel
             region={region}
@@ -105,12 +161,23 @@ function App() {
             seoulTreeCount={seoulTreeCount ?? SEOUL_TREE_COUNT_FROM_SITE}
             onBusanTreeCountLoad={setBusanTreeCount}
             onJeonbukTreeCountLoad={setJeonbukTreeCount}
+            onGyeonggiDetailCountsLoad={setGyeonggiDetailCounts}
+            onJeonbukDetailCountsLoad={setJeonbukDetailCounts}
             onOpenLeft={() => setLeftOpen(true)}
             onOpenRight={() => setRightOpen(true)}
             selectedBusanSegment={selectedBusanSegment}
             onBusanSegmentSelect={(s) => {
               setSelectedBusanSegment(s)
               setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
             }}
             selectedJeonjuSegment={selectedJeonjuSegment}
             onJeonjuSegmentSelect={(s) => {
@@ -118,6 +185,15 @@ function App() {
               setSelectedJeongeupSegment(null)
               setSelectedWanjuSegment(null)
               setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
             }}
             selectedJeongeupSegment={selectedJeongeupSegment}
             onJeongeupSegmentSelect={(s) => {
@@ -125,6 +201,15 @@ function App() {
               setSelectedJeonjuSegment(null)
               setSelectedWanjuSegment(null)
               setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
             }}
             selectedWanjuSegment={selectedWanjuSegment}
             onWanjuSegmentSelect={(s) => {
@@ -132,6 +217,15 @@ function App() {
               setSelectedJeonjuSegment(null)
               setSelectedJeongeupSegment(null)
               setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
             }}
             selectedGwangjuSegment={selectedGwangjuSegment}
             onGwangjuSegmentSelect={(s) => {
@@ -139,6 +233,166 @@ function App() {
               setSelectedJeonjuSegment(null)
               setSelectedJeongeupSegment(null)
               setSelectedWanjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedYonginSegment={selectedYonginSegment}
+            onYonginSegmentSelect={(s) => {
+              setSelectedYonginSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedGwangmyeongSegment={selectedGwangmyeongSegment}
+            onGwangmyeongSegmentSelect={(s) => {
+              setSelectedGwangmyeongSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedAnyangSegment={selectedAnyangSegment}
+            onAnyangSegmentSelect={(s) => {
+              setSelectedAnyangSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedYangpyeongSegment={selectedYangpyeongSegment}
+            onYangpyeongSegmentSelect={(s) => {
+              setSelectedYangpyeongSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedUijeongbuSegment={selectedUijeongbuSegment}
+            onUijeongbuSegmentSelect={(s) => {
+              setSelectedUijeongbuSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedGoyangSegment={selectedGoyangSegment}
+            onGoyangSegmentSelect={(s) => {
+              setSelectedGoyangSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedAnsanSegment(null)
+            }}
+            selectedAnsanSegment={selectedAnsanSegment}
+            onAnsanSegmentSelect={(s) => {
+              setSelectedAnsanSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedUiwangSegment(null)
+            }}
+            selectedUiwangSegment={selectedUiwangSegment}
+            onUiwangSegmentSelect={(s) => {
+              setSelectedUiwangSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
+            selectedGwacheonSegment={selectedGwacheonSegment}
+            onGwacheonSegmentSelect={(s) => {
+              setSelectedGwacheonSegment(s)
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
             }}
           />
           <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />

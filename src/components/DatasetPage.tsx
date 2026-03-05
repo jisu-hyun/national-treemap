@@ -3,20 +3,27 @@
  * 모든 데이터는 공공데이터포털(data.go.kr)에서 제공하는 자료를 활용했습니다.
  */
 
-const DATA_GO_KR = "https://www.data.go.kr"
-
-/** 공공데이터포털 활용 데이터 목록 (제공받은 링크 기준) */
+/** 공공데이터포털 활용 데이터 목록 (제공 링크 기준) */
 const DATA_SOURCES = [
-  { name: "산림청_도시숲가로수관리 가로수 현황", url: `${DATA_GO_KR}/data/15120900/fileData.do` },
-  { name: "부산광역시_부산진구_가로수현황", url: `${DATA_GO_KR}/data/15037889/fileData.do` },
-  { name: "부산광역시_사하구_가로수현황", url: `${DATA_GO_KR}/data/3079307/fileData.do` },
-  { name: "부산광역시_중구_가로수 현황", url: `${DATA_GO_KR}/data/15026347/fileData.do` },
-  { name: "부산광역시_동래구_가로수현황", url: `${DATA_GO_KR}/data/3079676/fileData.do` },
-  { name: "부산광역시 영도구_가로수", url: `${DATA_GO_KR}/data/15064294/fileData.do` },
-  { name: "전북특별자치도 전주시_가로수", url: `${DATA_GO_KR}/data/15080618/fileData.do` },
-  { name: "전북특별자치도 정읍시_가로수 노선별 현황", url: `${DATA_GO_KR}/data/15055342/fileData.do` },
-  { name: "전북특별자치도 완주군_가로수현황", url: `${DATA_GO_KR}/data/15065129/fileData.do` },
-  { name: "경기도 광주시_가로수(공간정보)", url: `${DATA_GO_KR}/data/15120830/fileData.do` },
+  { name: "산림청_도시숲가로수관리 가로수 현황", url: "https://www.data.go.kr/data/15120900/fileData.do?recommendDataYn=Y" },
+  { name: "부산광역시_부산진구_가로수현황", url: "https://www.data.go.kr/data/15037889/fileData.do" },
+  { name: "부산광역시_사하구_가로수현황", url: "https://www.data.go.kr/data/3079307/fileData.do" },
+  { name: "부산광역시_중구_가로수 현황", url: "https://www.data.go.kr/data/15026347/fileData.do" },
+  { name: "부산광역시_동래구_가로수현황", url: "https://www.data.go.kr/data/3079676/fileData.do" },
+  { name: "부산광역시 영도구_가로수", url: "https://www.data.go.kr/data/15064294/fileData.do" },
+  { name: "전북특별자치도 전주시_가로수", url: "https://www.data.go.kr/data/15080618/fileData.do" },
+  { name: "전북특별자치도 정읍시_가로수 노선별 현황", url: "https://www.data.go.kr/data/15055342/fileData.do" },
+  { name: "전북특별자치도 완주군_가로수현황", url: "https://www.data.go.kr/data/15065129/fileData.do" },
+  { name: "경기도 광주시_가로수(공간정보)", url: "https://www.data.go.kr/data/15120830/fileData.do" },
+  { name: "경기도 용인시_가로수", url: "https://www.data.go.kr/data/15014206/fileData.do" },
+  { name: "경기도 광명시 가로수 현황", url: "https://www.data.go.kr/data/15025510/fileData.do" },
+  { name: "경기도 안양시_공간정보시스템_가로수 현황", url: "https://www.data.go.kr/data/15042420/fileData.do" },
+  { name: "경기도 양평군_관내 가로수 데이터", url: "https://www.data.go.kr/data/15097915/fileData.do" },
+  { name: "경기도 의정부시_가로수정보", url: "https://www.data.go.kr/data/15095497/fileData.do" },
+  { name: "경기도 고양시_가로수 현황", url: "https://www.data.go.kr/data/15109151/fileData.do" },
+  { name: "경기도 안산시_노선별 가로수 현황", url: "https://www.data.go.kr/data/15124349/fileData.do" },
+  { name: "경기도 의왕시_가로수 현황(보행안전지수)", url: "https://www.data.go.kr/data/15108918/fileData.do" },
+  { name: "경기도 과천시_공간정보(도로부속물)", url: "https://www.data.go.kr/data/15129912/fileData.do" },
 ] as const
 
 const IconExternal = () => (
@@ -25,19 +32,24 @@ const IconExternal = () => (
   </svg>
 )
 
+/** 맨 아래 제작자 표시 */
+const CREATOR_NAME = "현지구"
+
 interface DatasetPageProps {
   onGoToMap?: () => void
+  creatorName?: string
 }
 
+/** 구축 요약: 지도에서 어떻게 쓰이는지 구역별 설명 */
 const SECTIONS = [
-  { id: "base", title: "전국 기준", summary: "산림청 도시숲 가로수 현황, 시도별 집계해 지도 색상·통계에 반영" },
+  { id: "base", title: "전국 기준", summary: "산림청 도시숲 가로수 현황으로 시도별 집계, 지도 색상·전국 통계에 반영" },
   { id: "seoul", title: "서울", summary: "서울시 트리맵 데이터로 전국 집계의 서울 값을 대체" },
-  { id: "busan", title: "부산", summary: "진구·사하·중구·동래·영도 구별 데이터 파싱 후 지도 마커 표시, 전국 합계에 반영" },
-  { id: "jeonbuk", title: "전북 (전주·정읍·완주)", summary: "3개 시군 CSV 파싱 후 마커 표시, 전국 합계에 반영" },
-  { id: "gyeonggi", title: "경기 광주시", summary: "Shapefile 공간정보 확보, 지도 반영은 추후 예정" },
+  { id: "busan", title: "부산 (진구·사하·중구·동래·영도)", summary: "구별 CSV/지오코딩으로 마커 표시, 전국 합계에 반영" },
+  { id: "jeonbuk", title: "전북 (전주·정읍·완주)", summary: "시군별 CSV 파싱 후 마커 표시, 전국 합계에 반영" },
+  { id: "gyeonggi", title: "경기 (광주·용인·광명·안양·양평·의정부·고양·안산·의왕·과천)", summary: "CSV·Shapefile 파싱 및 좌표 변환 후 마커 표시, 경기 합계에 반영" },
 ] as const
 
-export function DatasetPage({ onGoToMap }: DatasetPageProps) {
+export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
   return (
     <main className="flex-1 min-h-0 overflow-y-auto bg-gradient-to-b from-slate-50/80 to-slate-100/50">
       {/* Hero */}
@@ -52,7 +64,7 @@ export function DatasetPage({ onGoToMap }: DatasetPageProps) {
             활용 데이터
           </h1>
           <p className="text-slate-400 text-sm sm:text-base max-w-xl leading-relaxed">
-            모든 데이터는 <strong className="text-slate-200 font-medium">공공데이터포털(data.go.kr)</strong>에서 가져왔습니다.
+            모든 데이터는 <strong className="text-slate-200 font-medium">공공데이터포털(data.go.kr)</strong>에서 제공하는 자료를 활용했습니다.
           </p>
         </div>
       </section>
@@ -65,10 +77,10 @@ export function DatasetPage({ onGoToMap }: DatasetPageProps) {
               활용 데이터 목록
             </h2>
             <p className="text-slate-500 text-xs mt-1">
-              공공데이터포털 제공 자료
+              공공데이터포털 제공 자료 · 클릭 시 원본 페이지로 이동
             </p>
           </div>
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
             {DATA_SOURCES.map((item) => (
               <li key={item.url}>
                 <a
@@ -88,23 +100,28 @@ export function DatasetPage({ onGoToMap }: DatasetPageProps) {
         </section>
 
         {/* 구축 요약 카드 그리드 */}
-        <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-10">
-          {SECTIONS.map((section) => (
-            <section
-              key={section.id}
-              className="rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden hover:border-slate-300/60 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200"
-            >
-              <div className="px-4 sm:px-5 py-4">
-                <h3 className="text-sm font-semibold text-slate-800 tracking-tight">
-                  {section.title}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                  {section.summary}
-                </p>
-              </div>
-            </section>
-          ))}
-        </div>
+        <section className="mb-10">
+          <h2 className="text-sm font-semibold text-slate-700 tracking-tight mb-3">
+            지도 구축 요약
+          </h2>
+          <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+            {SECTIONS.map((section) => (
+              <article
+                key={section.id}
+                className="rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200/60 shadow-[0_1px_3px_rgba(0,0,0,0.04)] overflow-hidden hover:border-slate-300/60 hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200"
+              >
+                <div className="px-4 sm:px-5 py-4">
+                  <h3 className="text-sm font-semibold text-slate-800 tracking-tight">
+                    {section.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    {section.summary}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <p className="text-slate-400 text-xs">
@@ -120,6 +137,14 @@ export function DatasetPage({ onGoToMap }: DatasetPageProps) {
             </button>
           )}
         </div>
+
+        <footer className="mt-20 pt-8 border-t border-slate-200/80">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-slate-500">
+            <span>제작</span>
+            <span className="text-slate-300 select-none" aria-hidden>|</span>
+            <span>{creatorName ?? CREATOR_NAME}</span>
+          </div>
+        </footer>
       </div>
     </main>
   )

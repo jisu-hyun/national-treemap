@@ -52,7 +52,6 @@ const ROLES = [
     desc: "가로수는 도시를 시원하게 식혀줘요.",
     detail: "여름에 아스팔트 도로가 뜨거워지는 이유는 햇빛을 그대로 흡수하기 때문입니다.\n\n가로수는 잎과 가지로 햇빛을 가려 그늘을 만들고, 나무가 수분을 내보내는 과정에서 주변 공기를 조금 식혀 줍니다.\n\n그래서 나무가 많은 길은 그렇지 않은 곳보다 덜 뜨겁게 느껴질 수 있습니다.",
     summary: "가로수는 도시를 시원하게 식혀줘요.",
-    mapLink: "가로수 분포 보기",
   },
   {
     Icon: IconLeaf,
@@ -60,7 +59,6 @@ const ROLES = [
     desc: "가로수는 공기를 정화시켜줘요.",
     detail: "나무는 광합성을 통해 이산화탄소를 흡수하고 산소를 만들어 냅니다.\n\n또한 잎 표면에 일부 먼지와 오염 물질이 붙으면서 공기 질 개선에 도움을 줄 수 있습니다.\n\n물론 가로수만으로 모든 오염을 해결할 수는 없지만, 도시 환경을 더 건강하게 만드는 요소 중 하나입니다.",
     summary: "가로수는 공기를 정화시켜줘요.",
-    mapLink: "수종 정보 보기",
   },
   {
     Icon: IconBird,
@@ -68,7 +66,6 @@ const ROLES = [
     desc: "가로수는 도시 속 녹색 길을 이어줘요.",
     detail: "도시에는 건물과 도로가 많아 생물들이 이동하기 쉽지 않습니다.\n\n가로수는 공원이나 하천 주변 녹지를 이어 주는 역할을 할 수 있습니다.\n\n이 덕분에 새나 곤충 같은 생물들이 이동하거나 머물 공간이 생깁니다.",
     summary: "가로수는 도시 속 녹색 길을 이어줘요.",
-    mapLink: "지역별 가로수 보기",
   },
   {
     Icon: IconFlower,
@@ -76,7 +73,6 @@ const ROLES = [
     desc: "가로수는 도시를 사계절 풍경으로 꾸며줘요.",
     detail: "봄에는 꽃이 피고, 여름에는 짙은 그늘을 만들고, 가을에는 단풍이 들고, 겨울에는 가지 모양이 드러납니다.\n\n이처럼 가로수는 계절에 따라 다른 풍경을 보여 주며, 거리의 분위기와 도시 이미지를 만드는 데 중요한 역할을 합니다.",
     summary: "가로수는 도시를 사계절 풍경으로 꾸며줘요.",
-    mapLink: "전국 가로수 지도 보기",
   },
 ] as const
 
@@ -169,11 +165,10 @@ const FAQ_ITEMS = [
 
 
 interface LearnPageProps {
-  onGoToMap?: () => void
   onGoToMapWithRegion?: (region: string) => void
 }
 
-export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
+export function LearnPage({ onGoToMapWithRegion }: LearnPageProps) {
   const [selectedRole, setSelectedRole] = useState<(typeof ROLES)[number] | null>(null)
   const [selectedCitizen, setSelectedCitizen] = useState<(typeof CITIZEN_ACTIONS)[number] | null>(null)
   const [citizenRegion, setCitizenRegion] = useState("11")
@@ -268,7 +263,7 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
                   className="fixed inset-0 bg-black/40 z-50 backdrop-blur-[2px]"
                   onClick={() => setSelectedRole(null)}
                 />
-                <div className="fixed left-4 right-4 top-1/2 -translate-y-1/2 sm:left-1/2 sm:right-auto sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[min(600px,94vw)] z-[60] max-h-[90vh] overflow-hidden flex flex-col bg-white rounded-2xl shadow-2xl ring-1 ring-black/10 border border-slate-200/80">
+                <div className="fixed left-4 right-4 top-1/2 -translate-y-1/2 sm:left-1/2 sm:right-auto sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[min(800px,96vw)] z-[60] max-h-[90vh] overflow-hidden flex flex-col bg-white rounded-2xl shadow-2xl ring-1 ring-black/10 border border-slate-200/80">
                   <div className="rounded-t-2xl border-b border-white/20 bg-gradient-to-br from-emerald-600 via-emerald-600 to-green-800 px-4 py-4 sm:px-5 sm:py-5 text-white shadow-[0_4px_20px_rgba(5,46,22,0.25)] shrink-0">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
@@ -299,21 +294,6 @@ export function LearnPage({ onGoToMap, onGoToMapWithRegion }: LearnPageProps) {
                           <p key={i}>{para}</p>
                         ))}
                       </div>
-                      {onGoToMap && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedRole(null)
-                            onGoToMap()
-                          }}
-                          className="mt-6 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 text-emerald-700 font-medium hover:from-emerald-500/25 hover:to-teal-500/20 border border-emerald-200/80 transition-colors"
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                          </svg>
-                          {selectedRole.mapLink}
-                        </button>
-                      )}
                     </div>
                   </div>
                 </div>

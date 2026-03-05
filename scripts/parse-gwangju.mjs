@@ -58,6 +58,7 @@ function findShpDir(cliPath) {
   return null
 }
 
+/** Shapefile 좌표 → WGS84. 이 데이터는 (easting, northing) 순으로 저장되어 [x, y] 그대로 proj4에 전달 */
 function toWgs84(x, y) {
   const [lng, lat] = proj4("EPSG:5186", "WGS84", [x, y])
   return { lat, lng }

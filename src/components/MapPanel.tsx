@@ -41,6 +41,24 @@ const JEONGEUP_TREES_URL = `${import.meta.env.BASE_URL}data/jeongeup-trees.json?
 const WANJU_TREES_URL = `${import.meta.env.BASE_URL}data/wanju-trees.json?v=1`
 /** 경기도 광주시 가로수 (parse-gwangju.mjs로 생성, Shapefile 기반) */
 const GWANGJU_TREES_URL = `${import.meta.env.BASE_URL}data/gwangju-trees.json?v=1`
+/** 경기도 용인시 가로수 (parse-yongin.mjs로 생성) */
+const YONGIN_TREES_URL = `${import.meta.env.BASE_URL}data/yongin-trees.json?v=1`
+/** 경기도 광명시 가로수 (parse-gwangmyeong.mjs로 생성) */
+const GWANGMYEONG_TREES_URL = `${import.meta.env.BASE_URL}data/gwangmyeong-trees.json?v=1`
+/** 경기도 안양시 가로수 (parse-anyang.mjs로 생성) */
+const ANYANG_TREES_URL = `${import.meta.env.BASE_URL}data/anyang-trees.json?v=1`
+/** 경기도 양평군 가로수 (parse-yangpyeong.mjs로 생성) */
+const YANGPYEONG_TREES_URL = `${import.meta.env.BASE_URL}data/yangpyeong-trees.json?v=1`
+/** 경기도 의정부시 가로수 (parse-uijeongbu.mjs로 생성) */
+const UIJEONGBU_TREES_URL = `${import.meta.env.BASE_URL}data/uijeongbu-trees.json?v=1`
+/** 경기도 고양시 가로수 (parse-goyang.mjs로 생성) */
+const GOYANG_TREES_URL = `${import.meta.env.BASE_URL}data/goyang-trees.json?v=1`
+/** 경기도 안산시 가로수 (parse-ansan.mjs로 생성) */
+const ANSAN_TREES_URL = `${import.meta.env.BASE_URL}data/ansan-trees.json?v=1`
+/** 경기도 의왕시 가로수 (parse-uiwang.mjs로 생성) */
+const UIWANG_TREES_URL = `${import.meta.env.BASE_URL}data/uiwang-trees.json?v=1`
+/** 경기도 과천시 가로수 (parse-gwacheon.mjs로 생성) */
+const GWACHEON_TREES_URL = `${import.meta.env.BASE_URL}data/gwacheon-trees.json?v=1`
 /** 전국 뷰에서 잡아둔 범위 — 확대했을 때도 이 범위 밖으로 패닝 불가 */
 const nationalViewBoundsRef: { current: L.LatLngBounds | null } = { current: null }
 
@@ -207,11 +225,11 @@ function TileLayerByView() {
   )
 }
 
-/** 부산 원 크기 범례 구간: 00 단위로 고정 (100, 500 그루) */
-const BUSAN_LEGEND_BREAKS = { low: 100, high: 500 }
+/** 원 크기 범례 구간 (전체 구간 마커 공통): 100, 500, 5000 그루 */
+const BUSAN_LEGEND_BREAKS = { low: 100, high: 500, xlarge: 5000 }
 
-/** 부산 원 반지름(px) · 범례와 지도에서 동일 사용 */
-const BUSAN_CIRCLE_RADIUS = { small: 8, medium: 14, large: 22 } as const
+/** 원 반지름(px) · 범례와 지도에서 동일 사용 (부산·전북·경기 등 전체 적용) */
+const BUSAN_CIRCLE_RADIUS = { small: 8, medium: 14, large: 22, xlarge: 32 } as const
 
 /** 부산 원 색상 · 범례와 지도에서 동일 사용 */
 const BUSAN_CIRCLE_STYLE = {
@@ -223,7 +241,7 @@ const BUSAN_CIRCLE_STYLE = {
 
 /** 전국: 색깔 구간 범례. 부산 확대(원형 마커): 원 크기 = 그루 수 구간(100·500 그루 기준) */
 function MapLegendOverlay({
-  region,
+  region: _region,
   nationalFourStep,
 }: {
   region: string
@@ -235,8 +253,8 @@ function MapLegendOverlay({
     zoom: () => setZoom(map.getZoom()),
     zoomend: () => setZoom(map.getZoom()),
   })
-  const showCircleLegend = (region === "26" || region === "45" || region === "41") && zoom >= DETAIL_MARKER_ZOOM
-  const { low, high } = BUSAN_LEGEND_BREAKS
+  const showCircleLegend = zoom >= DETAIL_MARKER_ZOOM
+  const { low, high, xlarge } = BUSAN_LEGEND_BREAKS
   const r = BUSAN_CIRCLE_RADIUS
   const legendCircleStyle = (radius: number) => ({
     width: radius * 2,
@@ -269,7 +287,11 @@ function MapLegendOverlay({
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.large)} />
-              <span className="text-[10px] text-slate-600 leading-tight">{(high + 1).toLocaleString()} 그루 이상</span>
+              <span className="text-[10px] text-slate-600 leading-tight">{(high + 1).toLocaleString()} ~ {xlarge.toLocaleString()} 그루</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="inline-block shrink-0" style={legendCircleStyle(r.xlarge)} />
+              <span className="text-[10px] text-slate-600 leading-tight">{(xlarge + 1).toLocaleString()} 그루 이상</span>
             </div>
           </div>
           <p className="text-[10px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1 py-0.5 leading-tight">
@@ -302,7 +324,7 @@ function MapLegendOverlay({
   )
 }
 
-function GrayMaskLayer({ region, zoom }: { region: string; zoom: number }) {
+function GrayMaskLayer({ region: _region, zoom }: { region: string; zoom: number }) {
   const [maskGeoJson, setMaskGeoJson] = useState<GeoJSON.Polygon | null>(null)
 
   useEffect(() => {
@@ -316,7 +338,7 @@ function GrayMaskLayer({ region, zoom }: { region: string; zoom: number }) {
   }, [])
 
   if (!maskGeoJson) return null
-  if ((region === "26" || region === "45" || region === "41") && zoom >= DETAIL_MARKER_ZOOM) return null
+  if (zoom >= DETAIL_MARKER_ZOOM) return null
 
   return (
     <GeoJSON
@@ -435,15 +457,31 @@ function RegionZoomController({
 function getBusanRadius(trees: number): number {
   if (trees <= BUSAN_LEGEND_BREAKS.low) return BUSAN_CIRCLE_RADIUS.small
   if (trees <= BUSAN_LEGEND_BREAKS.high) return BUSAN_CIRCLE_RADIUS.medium
-  return BUSAN_CIRCLE_RADIUS.large
+  if (trees <= BUSAN_LEGEND_BREAKS.xlarge) return BUSAN_CIRCLE_RADIUS.large
+  return BUSAN_CIRCLE_RADIUS.xlarge
 }
 
 function isSameSegment(a: BusanSegment | null, b: BusanSegment): boolean {
   return a != null && a.lat === b.lat && a.lng === b.lng && a.name === b.name
 }
 
+/** 한국 범위: 위도 33~43, 경도 124~132. 데이터에 lat/lng가 바뀌어 있으면 보정해 [lat, lng] 반환 */
+function segmentCenter(m: BusanSegment): [number, number] {
+  const { lat, lng } = m
+  const likelySwapped = lat >= 90 || (lat > 50 && lng < 90) || (lat >= 124 && lat <= 135 && lng >= 33 && lng <= 43)
+  if (likelySwapped) return [lng, lat]
+  return [lat, lng]
+}
+
+/** 부산 행정구역 대략 범위 (지오코딩 오류로 서울 등 타 지역 좌표가 섞인 마커 제외용) */
+const BUSAN_BOUNDS = { latMin: 34.85, latMax: 35.55, lngMin: 128.7, lngMax: 129.55 }
+function isInBusanBounds(m: BusanSegment): boolean {
+  const [lat, lng] = segmentCenter(m)
+  return lat >= BUSAN_BOUNDS.latMin && lat <= BUSAN_BOUNDS.latMax && lng >= BUSAN_BOUNDS.lngMin && lng <= BUSAN_BOUNDS.lngMax
+}
+
 function BusanJinguMarkers({
-  region,
+  region: _region,
   zoom,
   markers,
   selectedSegment,
@@ -457,18 +495,19 @@ function BusanJinguMarkers({
   onSegmentSelect: (s: BusanSegment) => void
   onOpenLeft?: () => void
 }) {
-  if (region !== "26" || markers.length === 0) return null
+  if (markers.length === 0) return null
   if (zoom < BUSAN_MARKER_ZOOM) return null
 
+  const inBounds = markers.filter(isInBusanBounds)
   return (
     <Pane name="busan-markers" style={{ zIndex: 600 }}>
-      {markers.map((m, i) => {
+      {inBounds.map((m, i) => {
         const radius = getBusanRadius(m.trees)
         const selected = isSameSegment(selectedSegment, m)
         return (
           <CircleMarker
             key={`${m.lat}-${m.lng}-${i}`}
-            center={[m.lat, m.lng]}
+            center={segmentCenter(m)}
             radius={radius}
             pathOptions={{
               fillColor: selected ? "#047857" : BUSAN_CIRCLE_STYLE.fill,
@@ -489,16 +528,15 @@ function BusanJinguMarkers({
   )
 }
 
-/** 전주시·정읍시 가로수 구간 마커 (BusanSegment 동일 구조) */
+/** 전주·정읍·완주·경기 광주 구간 마커 (줌 일정 이상이면 표시) */
 function Region45Markers({
-  region,
+  region: _region,
   zoom,
   markers,
   selectedSegment,
   onSegmentSelect,
   onOpenLeft,
   paneName,
-  regionId = "45",
 }: {
   region: string
   zoom: number
@@ -507,10 +545,9 @@ function Region45Markers({
   onSegmentSelect: (s: BusanSegment) => void
   onOpenLeft?: () => void
   paneName: string
-  /** 표시할 지역 시도 id (45=전북, 41=경기 광주) */
   regionId?: string
 }) {
-  if (region !== regionId || markers.length === 0) return null
+  if (markers.length === 0) return null
   if (zoom < DETAIL_MARKER_ZOOM) return null
 
   return (
@@ -521,7 +558,7 @@ function Region45Markers({
         return (
           <CircleMarker
             key={`${m.lat}-${m.lng}-${m.name}-${i}`}
-            center={[m.lat, m.lng]}
+            center={segmentCenter(m)}
             radius={radius}
             pathOptions={{
               fillColor: selected ? "#047857" : BUSAN_CIRCLE_STYLE.fill,
@@ -551,17 +588,44 @@ function MapContent({
   jeongeupMarkers,
   wanjuMarkers,
   gwangjuMarkers,
+  yonginMarkers,
+  gwangmyeongMarkers,
+  anyangMarkers,
+  yangpyeongMarkers,
+  uijeongbuMarkers,
+  goyangMarkers,
+  ansanMarkers,
+  uiwangMarkers,
+  gwacheonMarkers,
   onRegionSelect,
   selectedBusanSegment,
   selectedJeonjuSegment,
   selectedJeongeupSegment,
   selectedWanjuSegment,
   selectedGwangjuSegment,
+  selectedYonginSegment,
+  selectedGwangmyeongSegment,
+  selectedAnyangSegment,
+  selectedYangpyeongSegment,
+  selectedUijeongbuSegment,
+  selectedGoyangSegment,
+  selectedAnsanSegment,
+  selectedUiwangSegment,
+  selectedGwacheonSegment,
   onBusanSegmentSelect,
   onJeonjuSegmentSelect,
   onJeongeupSegmentSelect,
   onWanjuSegmentSelect,
   onGwangjuSegmentSelect,
+  onYonginSegmentSelect,
+  onGwangmyeongSegmentSelect,
+  onAnyangSegmentSelect,
+  onYangpyeongSegmentSelect,
+  onUijeongbuSegmentSelect,
+  onGoyangSegmentSelect,
+  onAnsanSegmentSelect,
+  onUiwangSegmentSelect,
+  onGwacheonSegmentSelect,
   onOpenLeft,
   onNationalMinZoomApplied,
   effectiveMinZoom,
@@ -575,17 +639,44 @@ function MapContent({
   jeongeupMarkers: BusanSegment[]
   wanjuMarkers: BusanSegment[]
   gwangjuMarkers: BusanSegment[]
+  yonginMarkers: BusanSegment[]
+  gwangmyeongMarkers: BusanSegment[]
+  anyangMarkers: BusanSegment[]
+  yangpyeongMarkers: BusanSegment[]
+  uijeongbuMarkers: BusanSegment[]
+  goyangMarkers: BusanSegment[]
+  ansanMarkers: BusanSegment[]
+  uiwangMarkers: BusanSegment[]
+  gwacheonMarkers: BusanSegment[]
   onRegionSelect: (value: string) => void
   selectedBusanSegment: BusanSegment | null
   selectedJeonjuSegment: BusanSegment | null
   selectedJeongeupSegment: BusanSegment | null
   selectedWanjuSegment: BusanSegment | null
   selectedGwangjuSegment: BusanSegment | null
+  selectedYonginSegment: BusanSegment | null
+  selectedGwangmyeongSegment: BusanSegment | null
+  selectedAnyangSegment: BusanSegment | null
+  selectedYangpyeongSegment: BusanSegment | null
+  selectedUijeongbuSegment: BusanSegment | null
+  selectedGoyangSegment: BusanSegment | null
+  selectedAnsanSegment: BusanSegment | null
+  selectedUiwangSegment: BusanSegment | null
+  selectedGwacheonSegment: BusanSegment | null
   onBusanSegmentSelect: (s: BusanSegment) => void
   onJeonjuSegmentSelect: (s: BusanSegment) => void
   onJeongeupSegmentSelect: (s: BusanSegment) => void
   onWanjuSegmentSelect: (s: BusanSegment) => void
   onGwangjuSegmentSelect: (s: BusanSegment) => void
+  onYonginSegmentSelect: (s: BusanSegment) => void
+  onGwangmyeongSegmentSelect: (s: BusanSegment) => void
+  onAnyangSegmentSelect: (s: BusanSegment) => void
+  onYangpyeongSegmentSelect: (s: BusanSegment) => void
+  onUijeongbuSegmentSelect: (s: BusanSegment) => void
+  onGoyangSegmentSelect: (s: BusanSegment) => void
+  onAnsanSegmentSelect: (s: BusanSegment) => void
+  onUiwangSegmentSelect: (s: BusanSegment) => void
+  onGwacheonSegmentSelect: (s: BusanSegment) => void
   onOpenLeft?: () => void
   onNationalMinZoomApplied?: (zoom: number) => void
   effectiveMinZoom: number
@@ -666,7 +757,87 @@ function MapContent({
         onSegmentSelect={onGwangjuSegmentSelect}
         onOpenLeft={onOpenLeft}
         paneName="gwangju-markers"
-        regionId="41"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={yonginMarkers}
+        selectedSegment={selectedYonginSegment}
+        onSegmentSelect={onYonginSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="yongin-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={gwangmyeongMarkers}
+        selectedSegment={selectedGwangmyeongSegment}
+        onSegmentSelect={onGwangmyeongSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="gwangmyeong-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={anyangMarkers}
+        selectedSegment={selectedAnyangSegment}
+        onSegmentSelect={onAnyangSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="anyang-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={yangpyeongMarkers}
+        selectedSegment={selectedYangpyeongSegment}
+        onSegmentSelect={onYangpyeongSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="yangpyeong-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={uijeongbuMarkers}
+        selectedSegment={selectedUijeongbuSegment}
+        onSegmentSelect={onUijeongbuSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="uijeongbu-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={goyangMarkers}
+        selectedSegment={selectedGoyangSegment}
+        onSegmentSelect={onGoyangSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="goyang-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={ansanMarkers}
+        selectedSegment={selectedAnsanSegment}
+        onSegmentSelect={onAnsanSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="ansan-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={uiwangMarkers}
+        selectedSegment={selectedUiwangSegment}
+        onSegmentSelect={onUiwangSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="uiwang-markers"
+      />
+      <Region45Markers
+        region={region}
+        zoom={zoom}
+        markers={gwacheonMarkers}
+        selectedSegment={selectedGwacheonSegment}
+        onSegmentSelect={onGwacheonSegmentSelect}
+        onOpenLeft={onOpenLeft}
+        paneName="gwacheon-markers"
       />
       <RegionZoomController
         region={region}
@@ -803,7 +974,7 @@ function KoreaGeoJSONLayer({
   const map = useMap()
   const [zoomLevel, setZoomLevel] = useState(() => map.getZoom())
   useMapEvents({ zoom: () => setZoomLevel(map.getZoom()), zoomend: () => setZoomLevel(map.getZoom()) })
-  const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && !(region === "26" && zoomLevel >= BUSAN_MARKER_ZOOM) && !(region === "45" && zoomLevel >= DETAIL_MARKER_ZOOM) && !(region === "41" && zoomLevel >= DETAIL_MARKER_ZOOM)
+  const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && zoomLevel < DETAIL_MARKER_ZOOM
   const sidoCountsMap = Object.fromEntries(sidoCounts.map((s) => [s.name, s.count]))
   const nationalScale = getFourStepScale(sidoCounts.map((s) => s.count))
 
@@ -856,10 +1027,10 @@ function KoreaGeoJSONLayer({
         />
       )}
       <GeoJSON
-        key={`sido-layer-${showLabels ? "labels" : "tooltips"}-${(region === "26" || region === "45" || region === "41") && zoomLevel >= DETAIL_MARKER_ZOOM ? "detail-hide-tt" : "default"}`}
+        key={`sido-layer-${showLabels ? "labels" : "tooltips"}-${zoomLevel >= DETAIL_MARKER_ZOOM ? "detail-hide-tt" : "default"}`}
         data={geojson}
       style={(feature) => {
-        const hideFill = (region === "26" || region === "45" || region === "41") && zoomLevel >= DETAIL_MARKER_ZOOM
+        const hideFill = zoomLevel >= DETAIL_MARKER_ZOOM
         const name = getFeatureName(feature?.properties as Record<string, unknown>)
         const count = sidoCountsMap[name] ?? 0
         return {
@@ -886,7 +1057,7 @@ function KoreaGeoJSONLayer({
           }
         }
 
-        const hideDetailTooltip = (id === "26" && region === "26") || (id === "45" && region === "45") || (id === "41" && region === "41")
+        const hideDetailTooltip = (id === "26" || id === "45" || id === "41") && zoomLevel >= DETAIL_MARKER_ZOOM
         const hideTooltip = hideDetailTooltip && zoomLevel >= DETAIL_MARKER_ZOOM
         if (!showLabels && !hideTooltip) {
           const isGyeonggi = id === "41"
@@ -971,6 +1142,21 @@ interface MapPanelProps {
   onBusanTreeCountLoad?: (count: number) => void
   /** 전북(전주·정읍·완주) 구축 데이터 합계 — MapPanel에서 합산 후 1회 전달 */
   onJeonbukTreeCountLoad?: (count: number) => void
+  /** 경기 세부(광주·용인·광명·안양·양평·의정부·고양·안산·의왕·과천) 관할별 총 그루수 — 상단 요약 박스용 */
+  onGyeonggiDetailCountsLoad?: (counts: {
+    gwangju: number
+    yongin: number
+    gwangmyeong: number
+    anyang: number
+    yangpyeong: number
+    uijeongbu: number
+    goyang: number
+    ansan: number
+    uiwang: number
+    gwacheon: number
+  }) => void
+  /** 전북 세부(전주·정읍·완주) 관할별 총 그루수 — 상단 요약 박스용 */
+  onJeonbukDetailCountsLoad?: (counts: { jeonju: number; jeongeup: number; wanju: number }) => void
   onOpenLeft?: () => void
   onOpenRight?: () => void
   selectedBusanSegment?: BusanSegment | null
@@ -983,9 +1169,27 @@ interface MapPanelProps {
   onWanjuSegmentSelect?: (s: BusanSegment) => void
   selectedGwangjuSegment?: BusanSegment | null
   onGwangjuSegmentSelect?: (s: BusanSegment) => void
+  selectedYonginSegment?: BusanSegment | null
+  onYonginSegmentSelect?: (s: BusanSegment) => void
+  selectedGwangmyeongSegment?: BusanSegment | null
+  onGwangmyeongSegmentSelect?: (s: BusanSegment) => void
+  selectedAnyangSegment?: BusanSegment | null
+  onAnyangSegmentSelect?: (s: BusanSegment) => void
+  selectedYangpyeongSegment?: BusanSegment | null
+  onYangpyeongSegmentSelect?: (s: BusanSegment) => void
+  selectedUijeongbuSegment?: BusanSegment | null
+  onUijeongbuSegmentSelect?: (s: BusanSegment) => void
+  selectedGoyangSegment?: BusanSegment | null
+  onGoyangSegmentSelect?: (s: BusanSegment) => void
+  selectedAnsanSegment?: BusanSegment | null
+  onAnsanSegmentSelect?: (s: BusanSegment) => void
+  selectedUiwangSegment?: BusanSegment | null
+  onUiwangSegmentSelect?: (s: BusanSegment) => void
+  selectedGwacheonSegment?: BusanSegment | null
+  onGwacheonSegmentSelect?: (s: BusanSegment) => void
 }
 
-export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onJeonbukTreeCountLoad, onOpenLeft, onOpenRight, selectedBusanSegment = null, onBusanSegmentSelect, selectedJeonjuSegment = null, onJeonjuSegmentSelect, selectedJeongeupSegment = null, onJeongeupSegmentSelect, selectedWanjuSegment = null, onWanjuSegmentSelect, selectedGwangjuSegment = null, onGwangjuSegmentSelect }: MapPanelProps) {
+export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onJeonbukTreeCountLoad, onGyeonggiDetailCountsLoad, onJeonbukDetailCountsLoad, onOpenLeft, onOpenRight, selectedBusanSegment = null, onBusanSegmentSelect, selectedJeonjuSegment = null, onJeonjuSegmentSelect, selectedJeongeupSegment = null, onJeongeupSegmentSelect, selectedWanjuSegment = null, onWanjuSegmentSelect, selectedGwangjuSegment = null, onGwangjuSegmentSelect, selectedYonginSegment = null, onYonginSegmentSelect, selectedGwangmyeongSegment = null, onGwangmyeongSegmentSelect, selectedAnyangSegment = null, onAnyangSegmentSelect, selectedYangpyeongSegment = null, onYangpyeongSegmentSelect, selectedUijeongbuSegment = null, onUijeongbuSegmentSelect, selectedGoyangSegment = null, onGoyangSegmentSelect, selectedAnsanSegment = null, onAnsanSegmentSelect, selectedUiwangSegment = null, onUiwangSegmentSelect, selectedGwacheonSegment = null, onGwacheonSegmentSelect }: MapPanelProps) {
   const dataAttribution = "데이터 출처: 공공데이터포털"
   const mapRef = useRef<L.Map | null>(null)
   const [busanMarkers, setBusanMarkers] = useState<BusanSegment[]>([])
@@ -993,6 +1197,15 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
   const [jeongeupMarkers, setJeongeupMarkers] = useState<BusanSegment[]>([])
   const [wanjuMarkers, setWanjuMarkers] = useState<BusanSegment[]>([])
   const [gwangjuMarkers, setGwangjuMarkers] = useState<BusanSegment[]>([])
+  const [yonginMarkers, setYonginMarkers] = useState<BusanSegment[]>([])
+  const [gwangmyeongMarkers, setGwangmyeongMarkers] = useState<BusanSegment[]>([])
+  const [anyangMarkers, setAnyangMarkers] = useState<BusanSegment[]>([])
+  const [yangpyeongMarkers, setYangpyeongMarkers] = useState<BusanSegment[]>([])
+  const [uijeongbuMarkers, setUijeongbuMarkers] = useState<BusanSegment[]>([])
+  const [goyangMarkers, setGoyangMarkers] = useState<BusanSegment[]>([])
+  const [ansanMarkers, setAnsanMarkers] = useState<BusanSegment[]>([])
+  const [uiwangMarkers, setUiwangMarkers] = useState<BusanSegment[]>([])
+  const [gwacheonMarkers, setGwacheonMarkers] = useState<BusanSegment[]>([])
   /** 전국 뷰 적용 시 최소줌(리셋 후 축소 방지). region "00"일 때만 Map에 반영 */
   const [nationalMinZoom, setNationalMinZoom] = useState<number | null>(null)
   const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? 7) : 3
@@ -1091,8 +1304,147 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
       cancelled = true
     }
   }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(YONGIN_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setYonginMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setYonginMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(GWANGMYEONG_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setGwangmyeongMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setGwangmyeongMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(ANYANG_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setAnyangMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setAnyangMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    const base = ((import.meta.env.BASE_URL || "/") as string).replace(/\/$/, "") || ""
+    const pathPrefix = base ? `/${base.replace(/^\//, "")}/` : "/"
+    const url =
+      typeof window !== "undefined" && window.location?.origin
+        ? `${window.location.origin}${pathPrefix}data/yangpyeong-trees.json?v=1`
+        : YANGPYEONG_TREES_URL
+    const load = (u: string) =>
+      fetch(u)
+        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${r.status}`))))
+        .then((arr: unknown) => {
+          if (cancelled) return
+          const list = Array.isArray(arr) ? arr : (arr as { data?: unknown[] })?.data
+          if (Array.isArray(list) && list.length > 0) {
+            const first = list[0] as Record<string, unknown>
+            if (typeof first?.lat === "number" && typeof first?.lng === "number") setYangpyeongMarkers(list as BusanSegment[])
+          }
+        })
+    load(url).catch(() => {
+      if (!cancelled && url !== YANGPYEONG_TREES_URL) load(YANGPYEONG_TREES_URL).catch(() => setYangpyeongMarkers([]))
+      else if (!cancelled) setYangpyeongMarkers([])
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(UIJEONGBU_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setUijeongbuMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setUijeongbuMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(GOYANG_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setGoyangMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setGoyangMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(ANSAN_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setAnsanMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setAnsanMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(UIWANG_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setUiwangMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setUiwangMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+  useEffect(() => {
+    let cancelled = false
+    fetch(GWACHEON_TREES_URL)
+      .then((r) => r.json())
+      .then((arr: BusanSegment[]) => {
+        if (!cancelled && Array.isArray(arr)) setGwacheonMarkers(arr)
+      })
+      .catch(() => {
+        if (!cancelled) setGwacheonMarkers([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
   const busanTreeCount = useMemo(
-    () => busanMarkers.reduce((sum, m) => sum + m.trees, 0),
+    () => busanMarkers.filter(isInBusanBounds).reduce((sum, m) => sum + m.trees, 0),
     [busanMarkers]
   )
   useEffect(() => {
@@ -1119,6 +1471,32 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
   useEffect(() => {
     if (hasJeonbukData) onJeonbukTreeCountLoad?.(jeonbukTreeCount)
   }, [jeonbukTreeCount, hasJeonbukData, onJeonbukTreeCountLoad])
+
+  const gyeonggiDetailCounts = useMemo(
+    () => ({
+      gwangju: gwangjuMarkers.reduce((s, m) => s + m.trees, 0),
+      yongin: yonginMarkers.reduce((s, m) => s + m.trees, 0),
+      gwangmyeong: gwangmyeongMarkers.reduce((s, m) => s + m.trees, 0),
+      anyang: anyangMarkers.reduce((s, m) => s + m.trees, 0),
+      yangpyeong: yangpyeongMarkers.reduce((s, m) => s + m.trees, 0),
+      uijeongbu: uijeongbuMarkers.reduce((s, m) => s + m.trees, 0),
+      goyang: goyangMarkers.reduce((s, m) => s + m.trees, 0),
+      ansan: ansanMarkers.reduce((s, m) => s + m.trees, 0),
+      uiwang: uiwangMarkers.reduce((s, m) => s + m.trees, 0),
+      gwacheon: gwacheonMarkers.reduce((s, m) => s + m.trees, 0),
+    }),
+    [gwangjuMarkers, yonginMarkers, gwangmyeongMarkers, anyangMarkers, yangpyeongMarkers, uijeongbuMarkers, goyangMarkers, ansanMarkers, uiwangMarkers, gwacheonMarkers]
+  )
+  useEffect(() => {
+    onGyeonggiDetailCountsLoad?.(gyeonggiDetailCounts)
+  }, [gyeonggiDetailCounts, onGyeonggiDetailCountsLoad])
+  const jeonbukDetailCounts = useMemo(
+    () => ({ jeonju: jeonjuTreeCount, jeongeup: jeongeupTreeCount, wanju: wanjuTreeCount }),
+    [jeonjuTreeCount, jeongeupTreeCount, wanjuTreeCount]
+  )
+  useEffect(() => {
+    if (hasJeonbukData) onJeonbukDetailCountsLoad?.(jeonbukDetailCounts)
+  }, [jeonbukDetailCounts, hasJeonbukData, onJeonbukDetailCountsLoad])
 
   const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const sidoCounts = useMemo(
@@ -1203,17 +1581,44 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
             jeongeupMarkers={jeongeupMarkers}
             wanjuMarkers={wanjuMarkers}
             gwangjuMarkers={gwangjuMarkers}
+            yonginMarkers={yonginMarkers}
+            gwangmyeongMarkers={gwangmyeongMarkers}
+            anyangMarkers={anyangMarkers}
+            yangpyeongMarkers={yangpyeongMarkers}
+            uijeongbuMarkers={uijeongbuMarkers}
+            goyangMarkers={goyangMarkers}
+            ansanMarkers={ansanMarkers}
+            uiwangMarkers={uiwangMarkers}
+            gwacheonMarkers={gwacheonMarkers}
             onRegionSelect={onRegionChange}
             selectedBusanSegment={selectedBusanSegment ?? null}
             selectedJeonjuSegment={selectedJeonjuSegment ?? null}
             selectedJeongeupSegment={selectedJeongeupSegment ?? null}
             selectedWanjuSegment={selectedWanjuSegment ?? null}
             selectedGwangjuSegment={selectedGwangjuSegment ?? null}
+            selectedYonginSegment={selectedYonginSegment ?? null}
+            selectedGwangmyeongSegment={selectedGwangmyeongSegment ?? null}
+            selectedAnyangSegment={selectedAnyangSegment ?? null}
+            selectedYangpyeongSegment={selectedYangpyeongSegment ?? null}
+            selectedUijeongbuSegment={selectedUijeongbuSegment ?? null}
+            selectedGoyangSegment={selectedGoyangSegment ?? null}
+            selectedAnsanSegment={selectedAnsanSegment ?? null}
+            selectedUiwangSegment={selectedUiwangSegment ?? null}
+            selectedGwacheonSegment={selectedGwacheonSegment ?? null}
             onBusanSegmentSelect={onBusanSegmentSelect ?? (() => {})}
             onJeonjuSegmentSelect={onJeonjuSegmentSelect ?? (() => {})}
             onJeongeupSegmentSelect={onJeongeupSegmentSelect ?? (() => {})}
             onWanjuSegmentSelect={onWanjuSegmentSelect ?? (() => {})}
             onGwangjuSegmentSelect={onGwangjuSegmentSelect ?? (() => {})}
+            onYonginSegmentSelect={onYonginSegmentSelect ?? (() => {})}
+            onGwangmyeongSegmentSelect={onGwangmyeongSegmentSelect ?? (() => {})}
+            onAnyangSegmentSelect={onAnyangSegmentSelect ?? (() => {})}
+            onYangpyeongSegmentSelect={onYangpyeongSegmentSelect ?? (() => {})}
+            onUijeongbuSegmentSelect={onUijeongbuSegmentSelect ?? (() => {})}
+            onGoyangSegmentSelect={onGoyangSegmentSelect ?? (() => {})}
+            onAnsanSegmentSelect={onAnsanSegmentSelect ?? (() => {})}
+            onUiwangSegmentSelect={onUiwangSegmentSelect ?? (() => {})}
+            onGwacheonSegmentSelect={onGwacheonSegmentSelect ?? (() => {})}
             onOpenLeft={onOpenLeft}
             onNationalMinZoomApplied={setNationalMinZoom}
             effectiveMinZoom={effectiveMinZoom}
