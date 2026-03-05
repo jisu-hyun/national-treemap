@@ -31,6 +31,7 @@ function App() {
   const [selectedJeonjuSegment, setSelectedJeonjuSegment] = useState<BusanSegment | null>(null)
   const [selectedJeongeupSegment, setSelectedJeongeupSegment] = useState<BusanSegment | null>(null)
   const [selectedWanjuSegment, setSelectedWanjuSegment] = useState<BusanSegment | null>(null)
+  const [selectedGwangjuSegment, setSelectedGwangjuSegment] = useState<BusanSegment | null>(null)
 
   const handleRegionChange = (value: string) => {
     setRegion(value)
@@ -40,6 +41,7 @@ function App() {
       setSelectedJeongeupSegment(null)
       setSelectedWanjuSegment(null)
     }
+    if (value !== "41") setSelectedGwangjuSegment(null)
   }
 
   useEffect(() => {
@@ -93,6 +95,8 @@ function App() {
             onClearJeongeupSegment={() => setSelectedJeongeupSegment(null)}
             selectedWanjuSegment={selectedWanjuSegment}
             onClearWanjuSegment={() => setSelectedWanjuSegment(null)}
+            selectedGwangjuSegment={selectedGwangjuSegment}
+            onClearGwangjuSegment={() => setSelectedGwangjuSegment(null)}
           />
           <MapPanel
             region={region}
@@ -104,24 +108,37 @@ function App() {
             onOpenLeft={() => setLeftOpen(true)}
             onOpenRight={() => setRightOpen(true)}
             selectedBusanSegment={selectedBusanSegment}
-            onBusanSegmentSelect={(s) => setSelectedBusanSegment(s)}
+            onBusanSegmentSelect={(s) => {
+              setSelectedBusanSegment(s)
+              setSelectedGwangjuSegment(null)
+            }}
             selectedJeonjuSegment={selectedJeonjuSegment}
             onJeonjuSegmentSelect={(s) => {
               setSelectedJeonjuSegment(s)
               setSelectedJeongeupSegment(null)
               setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
             }}
             selectedJeongeupSegment={selectedJeongeupSegment}
             onJeongeupSegmentSelect={(s) => {
               setSelectedJeongeupSegment(s)
               setSelectedJeonjuSegment(null)
               setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
             }}
             selectedWanjuSegment={selectedWanjuSegment}
             onWanjuSegmentSelect={(s) => {
               setSelectedWanjuSegment(s)
               setSelectedJeonjuSegment(null)
               setSelectedJeongeupSegment(null)
+              setSelectedGwangjuSegment(null)
+            }}
+            selectedGwangjuSegment={selectedGwangjuSegment}
+            onGwangjuSegmentSelect={(s) => {
+              setSelectedGwangjuSegment(s)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
             }}
           />
           <RightPanel mobileOpen={rightOpen} onMobileClose={() => setRightOpen(false)} />

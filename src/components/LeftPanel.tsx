@@ -36,9 +36,11 @@ interface LeftPanelProps {
   onClearJeongeupSegment?: () => void
   selectedWanjuSegment?: BusanSegment | null
   onClearWanjuSegment?: () => void
+  selectedGwangjuSegment?: BusanSegment | null
+  onClearGwangjuSegment?: () => void
 }
 
-export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, busanTreeCount = null, jeonbukTreeCount = null, mobileOpen = false, onMobileClose, selectedBusanSegment = null, onClearBusanSegment, selectedJeonjuSegment = null, onClearJeonjuSegment, selectedJeongeupSegment = null, onClearJeongeupSegment, selectedWanjuSegment = null, onClearWanjuSegment }: LeftPanelProps) {
+export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seoulTreeCount, busanTreeCount = null, jeonbukTreeCount = null, mobileOpen = false, onMobileClose, selectedBusanSegment = null, onClearBusanSegment, selectedJeonjuSegment = null, onClearJeonjuSegment, selectedJeongeupSegment = null, onClearJeongeupSegment, selectedWanjuSegment = null, onClearWanjuSegment, selectedGwangjuSegment = null, onClearGwangjuSegment }: LeftPanelProps) {
   const baseSidoCounts = treeData?.sidoCounts ?? SIDO_TREE_COUNTS
   const baseTotal = treeData?.total ?? TOTAL_TREES
 
@@ -176,9 +178,9 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
       </div>
 
-      {(selectedBusanSegment || selectedJeonjuSegment || selectedJeongeupSegment || selectedWanjuSegment) && (() => {
-        const seg = selectedBusanSegment ?? selectedJeonjuSegment ?? selectedJeongeupSegment ?? selectedWanjuSegment!
-        const onClear = selectedBusanSegment ? onClearBusanSegment : selectedJeonjuSegment ? onClearJeonjuSegment : selectedJeongeupSegment ? onClearJeongeupSegment : onClearWanjuSegment
+      {(selectedBusanSegment || selectedJeonjuSegment || selectedJeongeupSegment || selectedWanjuSegment || selectedGwangjuSegment) && (() => {
+        const seg = selectedBusanSegment ?? selectedJeonjuSegment ?? selectedJeongeupSegment ?? selectedWanjuSegment ?? selectedGwangjuSegment!
+        const onClear = selectedBusanSegment ? onClearBusanSegment : selectedJeonjuSegment ? onClearJeonjuSegment : selectedJeongeupSegment ? onClearJeongeupSegment : selectedWanjuSegment ? onClearWanjuSegment : onClearGwangjuSegment
         const hasLength = seg.length > 0
         const hasSpecies = seg.species && seg.species.length > 0
         return (

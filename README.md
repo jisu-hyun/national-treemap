@@ -39,7 +39,10 @@ npm run dev
 | Production branch | `main` |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
-| Root directory | (비워두거나 `/`) |
+| **Root directory** | **반드시 비워 두기** (비어 있지 않으면 `package.json`을 찾지 못해 빌드 실패) |
+
+**`package.json`을 찾을 수 없다는 빌드 실패가 나면**  
+Cloudflare Pages → 해당 프로젝트 → **Settings** → **Builds & deployments** → **Build configuration**에서 **Root directory**를 확인하세요. 값이 있으면 지우고 비운 뒤 저장하고 다시 배포하세요.
 
 ### 2. 환경 변수 (Build time)
 
