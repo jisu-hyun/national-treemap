@@ -62,18 +62,36 @@ const GWACHEON_TREES_URL = `${import.meta.env.BASE_URL}data/gwacheon-trees.json?
 /** 전국 뷰에서 잡아둔 범위 — 확대했을 때도 이 범위 밖으로 패닝 불가 */
 const nationalViewBoundsRef: { current: L.LatLngBounds | null } = { current: null }
 
-/** 전국 뷰: 줌아웃 기본, panBy로 한반도 위치 조정 (px, 음수 x = 내용 오른쪽으로) */
-const NATIONAL_VIEW_PAN_X_PX = -60
-/** 전국 뷰 잠금만 적용 (패닝·줌아웃 방지). panBy는 하지 않음 — 줌아웃으로 돌아온 경우 현재 뷰 고정용 */
+/** 전국 뷰 초기 줌 (새로고침·전국 진입 시 고정). 이 줌 이하로 축소·상하좌우 이동 불가 */
+const NATIONAL_DEFAULT_ZOOM = 8
+/** 전국 뷰 목표 중심 오프셋 (bounds 중심 기준). lat 음수=남쪽(제주), lng 음수=서쪽(왼쪽) */
+const NATIONAL_VIEW_CENTER_OFFSET_LAT = -0.2
+const NATIONAL_VIEW_CENTER_OFFSET_LNG = 0.28
+
+/** 한반도 대략 중심 + 오프셋 (MapContainer 초기값·리렌더 시 동기화용, GeoJSON 로드 전에도 동일 위치) */
+const KOREA_APPROX_CENTER: L.LatLngTuple = [36.35, 127.9]
+const INITIAL_NATIONAL_CENTER: L.LatLngTuple = [
+  KOREA_APPROX_CENTER[0] + NATIONAL_VIEW_CENTER_OFFSET_LAT,
+  KOREA_APPROX_CENTER[1] + NATIONAL_VIEW_CENTER_OFFSET_LNG,
+]
+
+function getNationalViewCenter(bounds: L.LatLngBounds): L.LatLngTuple {
+  const c = bounds.getCenter()
+  return [c.lat + NATIONAL_VIEW_CENTER_OFFSET_LAT, c.lng + NATIONAL_VIEW_CENTER_OFFSET_LNG]
+}
+
+/** 전국 뷰: 현재 뷰 고정 — 상하좌우 패닝·이하 축소 불가 */
 function lockNationalView(map: L.Map) {
-  map.setMinZoom(Math.ceil(map.getZoom()))
+  map.setMinZoom(NATIONAL_DEFAULT_ZOOM)
   const b = map.getBounds()
   map.setMaxBounds(b)
   nationalViewBoundsRef.current = b
 }
 
-function applyNationalViewPosition(map: L.Map) {
-  map.panBy([NATIONAL_VIEW_PAN_X_PX, 0])
+/** 전국 뷰 초점 한 번만 적용 (setView 사용, panBy 제거로 누적/위로 올라가는 현상 방지) */
+function applyNationalViewPosition(map: L.Map, bounds: L.LatLngBounds) {
+  const center = getNationalViewCenter(bounds)
+  map.setView(center, NATIONAL_DEFAULT_ZOOM)
   lockNationalView(map)
 }
 
@@ -423,10 +441,12 @@ function RegionZoomController({
         return
       }
       if (koreaBoundsRef.current?.isValid?.()) {
-        map.flyToBounds(koreaBoundsRef.current, { padding: [20, 20], maxZoom: 7, ...opts })
+        const bounds = koreaBoundsRef.current
+        const center = getNationalViewCenter(bounds)
+        map.flyTo(center, NATIONAL_DEFAULT_ZOOM, opts)
         map.once("moveend", () => {
-          applyNationalViewPosition(map)
-          onNationalMinZoomApplied?.(Math.ceil(map.getZoom()))
+          lockNationalView(map)
+          onNationalMinZoomApplied?.(NATIONAL_DEFAULT_ZOOM)
         })
       }
     } else {
@@ -988,9 +1008,8 @@ function KoreaGeoJSONLayer({
         koreaBoundsRef.current = bounds
         if (regionRef.current === "00") {
           programmaticZoomUntilRef.current = Date.now() + PROGRAMMATIC_ZOOM_COOLDOWN_MS
-          map.fitBounds(bounds, { padding: [20, 20], maxZoom: 7 })
-          applyNationalViewPosition(map)
-          onNationalMinZoomApplied?.(Math.ceil(map.getZoom()))
+          applyNationalViewPosition(map, bounds)
+          onNationalMinZoomApplied?.(NATIONAL_DEFAULT_ZOOM)
           nationalViewSetByGeoJSONRef.current = true
           onInitialNationalViewReady?.()
         }
@@ -1208,7 +1227,7 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
   const [gwacheonMarkers, setGwacheonMarkers] = useState<BusanSegment[]>([])
   /** 전국 뷰 적용 시 최소줌(리셋 후 축소 방지). region "00"일 때만 Map에 반영 */
   const [nationalMinZoom, setNationalMinZoom] = useState<number | null>(null)
-  const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? 7) : 3
+  const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? NATIONAL_DEFAULT_ZOOM) : 3
   /** 전국 초기 로드: GeoJSON 적용 전까지 지도 숨김 → 새로고침 시 초점 점프 방지 */
   const [initialNationalViewReady, setInitialNationalViewReady] = useState(false)
   useEffect(() => {
@@ -1557,8 +1576,8 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
         style={{ opacity: region !== "00" || initialNationalViewReady ? 1 : 0 }}
       >
         <MapContainer
-          center={[36.35, 127.9]}
-          zoom={6}
+          center={INITIAL_NATIONAL_CENTER}
+          zoom={NATIONAL_DEFAULT_ZOOM}
           minZoom={effectiveMinZoom}
           maxZoom={13}
           maxBoundsViscosity={1}

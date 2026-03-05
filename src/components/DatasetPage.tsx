@@ -212,8 +212,10 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
               <p className="text-sm font-medium text-slate-700">
                 전국 가로수 현황 지도
               </p>
-              <p className="text-xs text-slate-500 mt-1 whitespace-nowrap">
-                공공데이터를 활용한 참고용 서비스입니다. 지도와 수치는 공개 자료 기준이며, 정확한 내용은 각 제공 기관을 확인해 주세요.
+              <p className="text-xs text-slate-500 mt-1">
+                공공데이터를 활용한 참고용 서비스입니다.
+                <br />
+                지도와 수치는 공개 자료 기준이며, 공식 통계·행정 자료와 다를 수 있습니다. 정확한 내용 및 데이터 이용 시 공공데이터포털과 각 제공 기관 안내를 확인해 주세요.
               </p>
             </div>
             {/* 관련 링크 */}
@@ -251,10 +253,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
                 </a>
               </div>
             </div>
-            {/* 안내 문구 */}
-            <p className="text-[11px] text-slate-400">
-              본 서비스는 참고용이며, 공식 통계·행정 자료와 다를 수 있습니다. 데이터 이용 시 공공데이터포털 및 각 제공 기관 안내를 확인해 주세요.
-            </p>
             {/* 제작 크레딧 (오른쪽 끝) */}
             <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-xs text-slate-500 pt-2">
               <span className="shrink-0">
