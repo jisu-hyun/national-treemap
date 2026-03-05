@@ -1,0 +1,784 @@
+[
+  {
+    "name": "보수로, 구청로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 391,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 196
+      },
+      {
+        "name": "미분류",
+        "count": 194
+      },
+      {
+        "name": "후박나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "백양로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 953,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "버즘나무",
+        "count": 406
+      },
+      {
+        "name": "은행나무",
+        "count": 376
+      },
+      {
+        "name": "미분류",
+        "count": 146
+      },
+      {
+        "name": "기타낙엽",
+        "count": 17
+      },
+      {
+        "name": "결식지",
+        "count": 8
+      }
+    ]
+  },
+  {
+    "name": "(미상)",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1306,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 530
+      },
+      {
+        "name": "은행나무",
+        "count": 287
+      },
+      {
+        "name": "벚나무",
+        "count": 197
+      },
+      {
+        "name": "기타상록",
+        "count": 160
+      },
+      {
+        "name": "기타낙엽",
+        "count": 92
+      },
+      {
+        "name": "버즘나무",
+        "count": 15
+      },
+      {
+        "name": "후박나무",
+        "count": 12
+      },
+      {
+        "name": "이팝나무",
+        "count": 8
+      },
+      {
+        "name": "기타",
+        "count": 4
+      },
+      {
+        "name": "결식지",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "엄궁산복도로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 187,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 154
+      },
+      {
+        "name": "벚나무",
+        "count": 30
+      },
+      {
+        "name": "은행나무",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "대영로, 낙동로,금곡로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1018,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 618
+      },
+      {
+        "name": "은행나무",
+        "count": 222
+      },
+      {
+        "name": "기타낙엽",
+        "count": 176
+      },
+      {
+        "name": "결식지",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "name": "참샘1길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 23,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "후박나무",
+        "count": 23
+      }
+    ]
+  },
+  {
+    "name": "청기동길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 118,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 67
+      },
+      {
+        "name": "벚나무",
+        "count": 26
+      },
+      {
+        "name": "미분류",
+        "count": 25
+      }
+    ]
+  },
+  {
+    "name": "신주례1길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 50,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 49
+      },
+      {
+        "name": "버즘나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "장인로,새벽로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 183,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "버즘나무",
+        "count": 183
+      }
+    ]
+  },
+  {
+    "name": "왕굴다리길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 24,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 17
+      },
+      {
+        "name": "버즘나무",
+        "count": 7
+      }
+    ]
+  },
+  {
+    "name": "사상로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 728,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 728
+      }
+    ]
+  },
+  {
+    "name": "삼덕로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 50,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 50
+      }
+    ]
+  },
+  {
+    "name": "내부순환도로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 527,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 457
+      },
+      {
+        "name": "벚나무",
+        "count": 70
+      }
+    ]
+  },
+  {
+    "name": "청과길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 44,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 44
+      }
+    ]
+  },
+  {
+    "name": "새알섬길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 65,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 65
+      }
+    ]
+  },
+  {
+    "name": "화훼길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 16,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 16
+      }
+    ]
+  },
+  {
+    "name": "평화길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 95,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 95
+      }
+    ]
+  },
+  {
+    "name": "즐거운길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 267,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 260
+      },
+      {
+        "name": "은행나무",
+        "count": 7
+      }
+    ]
+  },
+  {
+    "name": "학장로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 466,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 438
+      },
+      {
+        "name": "벚나무",
+        "count": 28
+      }
+    ]
+  },
+  {
+    "name": "냉정중앙길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 65,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 60
+      },
+      {
+        "name": "미분류",
+        "count": 5
+      }
+    ]
+  },
+  {
+    "name": "덕상초등길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 18,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 18
+      }
+    ]
+  },
+  {
+    "name": "백양로안길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 2,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "name": "공고가는길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "제3도시고속도로(관문대로)",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 140,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 136
+      },
+      {
+        "name": "은행나무",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "승학길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 121,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 121
+      }
+    ]
+  },
+  {
+    "name": "구학길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 20,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 20
+      }
+    ]
+  },
+  {
+    "name": "하나로길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 41,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 41
+      }
+    ]
+  },
+  {
+    "name": "가야로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 303,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 302
+      },
+      {
+        "name": "은행나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "새모라길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 18,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 16
+      },
+      {
+        "name": "은행나무",
+        "count": 1
+      },
+      {
+        "name": "결식지",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "엄궁중앙길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 64,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 64
+      }
+    ]
+  },
+  {
+    "name": "온누리2길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 6,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "모덕새싹길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "터널오름길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 240,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 240
+      }
+    ]
+  },
+  {
+    "name": "서당골길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 37,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 37
+      }
+    ]
+  },
+  {
+    "name": "대동로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 60,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 29
+      },
+      {
+        "name": "은행나무",
+        "count": 17
+      },
+      {
+        "name": "기타낙엽",
+        "count": 7
+      },
+      {
+        "name": "미분류",
+        "count": 6
+      },
+      {
+        "name": "해송",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "광장로",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 154,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 154
+      }
+    ]
+  },
+  {
+    "name": "모들9길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 3,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "신주례2길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 26,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 26
+      }
+    ]
+  },
+  {
+    "name": "동주길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 28,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 24
+      },
+      {
+        "name": "미분류",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "창진길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 28,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 28
+      }
+    ]
+  },
+  {
+    "name": "양지2길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "버즘나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "홍깨가운데길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 7,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 7
+      }
+    ]
+  },
+  {
+    "name": "새마음길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 1,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "구덕고개",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 8,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 8
+      }
+    ]
+  },
+  {
+    "name": "굴다리길",
+    "lat": 35.16,
+    "lng": 129.07,
+    "trees": 6,
+    "length": 0,
+    "gu": "사상구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 3
+      },
+      {
+        "name": "은행나무",
+        "count": 3
+      }
+    ]
+  }
+]

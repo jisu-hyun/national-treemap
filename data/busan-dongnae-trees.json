@@ -1,0 +1,1162 @@
+[
+  {
+    "name": "중앙대로",
+    "lat": 35.2152973,
+    "lng": 129.0811762,
+    "trees": 466,
+    "length": 5500,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 293
+      },
+      {
+        "name": "왕벚나무",
+        "count": 145
+      },
+      {
+        "name": "향나무",
+        "count": 10
+      },
+      {
+        "name": "가중나무",
+        "count": 7
+      },
+      {
+        "name": "먼나무",
+        "count": 6
+      },
+      {
+        "name": "느티나무",
+        "count": 5
+      }
+    ],
+    "meta": {
+      "lengthKm": 5.5
+    },
+    "geocodeQuery": "부산광역시 동래구 중앙대로"
+  },
+  {
+    "name": "충렬대로",
+    "lat": 35.2019046,
+    "lng": 129.0834284,
+    "trees": 532,
+    "length": 4800,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 432
+      },
+      {
+        "name": "이팝나무",
+        "count": 58
+      },
+      {
+        "name": "가시나무",
+        "count": 22
+      },
+      {
+        "name": "단풍나무",
+        "count": 17
+      },
+      {
+        "name": "느티나무",
+        "count": 3
+      }
+    ],
+    "meta": {
+      "lengthKm": 4.8
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로"
+  },
+  {
+    "name": "충렬대로107번길",
+    "lat": 35.2097749,
+    "lng": 129.0731164,
+    "trees": 76,
+    "length": 300,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 70
+      },
+      {
+        "name": "느티나무",
+        "count": 6
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.3
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로107번길"
+  },
+  {
+    "name": "충렬대로238번길",
+    "lat": 35.2004517,
+    "lng": 129.0850604,
+    "trees": 12,
+    "length": 200,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 12
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.2
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로238번길"
+  },
+  {
+    "name": "충렬대로350번길",
+    "lat": 35.1967298,
+    "lng": 129.0972781,
+    "trees": 17,
+    "length": 150,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "가시나무",
+        "count": 17
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.15
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로350번길"
+  },
+  {
+    "name": "충렬대로410번길",
+    "lat": 35.1947077,
+    "lng": 129.1022763,
+    "trees": 8,
+    "length": 100,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "먼나무",
+        "count": 8
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.1
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로410번길"
+  },
+  {
+    "name": "아시아드대로",
+    "lat": 35.2016434,
+    "lng": 129.0653961,
+    "trees": 302,
+    "length": 1800,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "후박나무",
+        "count": 222
+      },
+      {
+        "name": "느티나무",
+        "count": 58
+      },
+      {
+        "name": "가시나무",
+        "count": 10
+      },
+      {
+        "name": "먼나무",
+        "count": 9
+      },
+      {
+        "name": "메타세콰이어",
+        "count": 2
+      },
+      {
+        "name": "히말라야시다",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.8
+    },
+    "geocodeQuery": "부산광역시 동래구 아시아드대로"
+  },
+  {
+    "name": "아시아드대로228번길",
+    "lat": 35.2036863,
+    "lng": 129.0683052,
+    "trees": 20,
+    "length": 200,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 20
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.2
+    },
+    "geocodeQuery": "부산광역시 동래구 아시아드대로228번길"
+  },
+  {
+    "name": "아시아드대로208번길",
+    "lat": 35.2020053,
+    "lng": 129.0677333,
+    "trees": 6,
+    "length": 50,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "가시나무",
+        "count": 6
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.05
+    },
+    "geocodeQuery": "부산광역시 동래구 아시아드대로208번길"
+  },
+  {
+    "name": "반송로",
+    "lat": 35.2084122,
+    "lng": 129.1030132,
+    "trees": 365,
+    "length": 2400,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 311
+      },
+      {
+        "name": "메타세콰이어",
+        "count": 54
+      }
+    ],
+    "meta": {
+      "lengthKm": 2.4
+    },
+    "geocodeQuery": "부산광역시 동래구 반송로"
+  },
+  {
+    "name": "우장춘로",
+    "lat": 35.2203538,
+    "lng": 129.0765424,
+    "trees": 303,
+    "length": 2000,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 210
+      },
+      {
+        "name": "먼나무",
+        "count": 93
+      }
+    ],
+    "meta": {
+      "lengthKm": 2
+    },
+    "geocodeQuery": "부산광역시 동래구 우장춘로"
+  },
+  {
+    "name": "쇠미로",
+    "lat": 35.202232,
+    "lng": 129.0599511,
+    "trees": 338,
+    "length": 2950,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 174
+      },
+      {
+        "name": "가시나무",
+        "count": 109
+      },
+      {
+        "name": "은행나무",
+        "count": 40
+      },
+      {
+        "name": "느티나무",
+        "count": 15
+      }
+    ],
+    "meta": {
+      "lengthKm": 2.95
+    },
+    "geocodeQuery": "부산광역시 동래구 쇠미로"
+  },
+  {
+    "name": "쇠미로40번길",
+    "lat": 35.1982257,
+    "lng": 129.0552498,
+    "trees": 54,
+    "length": 350,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 54
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.35
+    },
+    "geocodeQuery": "부산광역시 동래구 쇠미로40번길"
+  },
+  {
+    "name": "석사로",
+    "lat": 35.199138,
+    "lng": 129.0625296,
+    "trees": 89,
+    "length": 450,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 89
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.45
+    },
+    "geocodeQuery": "부산광역시 동래구 석사로"
+  },
+  {
+    "name": "사직북로",
+    "lat": 35.2000379,
+    "lng": 129.057926,
+    "trees": 48,
+    "length": 800,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 48
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.8
+    },
+    "geocodeQuery": "부산광역시 동래구 사직북로"
+  },
+  {
+    "name": "사직북로19번길",
+    "lat": 35.1974447,
+    "lng": 129.0597251,
+    "trees": 45,
+    "length": 250,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 45
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.25
+    },
+    "geocodeQuery": "부산광역시 동래구 사직북로19번길"
+  },
+  {
+    "name": "사직북로33번길",
+    "lat": 35.1986536,
+    "lng": 129.0579033,
+    "trees": 8,
+    "length": 70,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 8
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.07
+    },
+    "geocodeQuery": "부산광역시 동래구 사직북로33번길"
+  },
+  {
+    "name": "사직북로50번길",
+    "lat": 35.2009171,
+    "lng": 129.0588716,
+    "trees": 13,
+    "length": 150,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 13
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.15
+    },
+    "geocodeQuery": "부산광역시 동래구 사직북로50번길"
+  },
+  {
+    "name": "사직북로63번길",
+    "lat": 35.1989653,
+    "lng": 129.0577782,
+    "trees": 15,
+    "length": 200,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 15
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.2
+    },
+    "geocodeQuery": "부산광역시 동래구 사직북로63번길"
+  },
+  {
+    "name": "사직로",
+    "lat": 35.1958986,
+    "lng": 129.0622839,
+    "trees": 179,
+    "length": 1000,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 179
+      }
+    ],
+    "meta": {
+      "lengthKm": 1
+    },
+    "geocodeQuery": "부산광역시 동래구 사직로"
+  },
+  {
+    "name": "종합운동장로",
+    "lat": 35.1926524,
+    "lng": 129.0645821,
+    "trees": 67,
+    "length": 350,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 67
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.35
+    },
+    "geocodeQuery": "부산광역시 동래구 종합운동장로"
+  },
+  {
+    "name": "여고로",
+    "lat": 35.1959598,
+    "lng": 129.0695754,
+    "trees": 215,
+    "length": 1400,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 136
+      },
+      {
+        "name": "느티나무",
+        "count": 79
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.4
+    },
+    "geocodeQuery": "부산광역시 동래구 여고로"
+  },
+  {
+    "name": "여고북로",
+    "lat": 35.201347,
+    "lng": 129.0663186,
+    "trees": 10,
+    "length": 100,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "가시나무",
+        "count": 10
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.1
+    },
+    "geocodeQuery": "부산광역시 동래구 여고북로"
+  },
+  {
+    "name": "미남로",
+    "lat": 35.199121,
+    "lng": 129.070472,
+    "trees": 226,
+    "length": 1500,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 225
+      },
+      {
+        "name": "후박나무",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.5
+    },
+    "geocodeQuery": "부산광역시 동래구 미남로"
+  },
+  {
+    "name": "온천장로",
+    "lat": 35.2141057,
+    "lng": 129.0791988,
+    "trees": 82,
+    "length": 1500,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "먼나무",
+        "count": 41
+      },
+      {
+        "name": "은행나무",
+        "count": 40
+      },
+      {
+        "name": "느티나무",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.5
+    },
+    "geocodeQuery": "부산광역시 동래구 온천장로"
+  },
+  {
+    "name": "온천장로107번길",
+    "lat": 35.2203869,
+    "lng": 129.083278,
+    "trees": 13,
+    "length": 250,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "먼나무",
+        "count": 13
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.25
+    },
+    "geocodeQuery": "부산광역시 동래구 온천장로107번길"
+  },
+  {
+    "name": "금강로59번길",
+    "lat": 35.2154829,
+    "lng": 129.0744618,
+    "trees": 59,
+    "length": 500,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "단풍나무",
+        "count": 48
+      },
+      {
+        "name": "메타세콰이어",
+        "count": 7
+      },
+      {
+        "name": "왕벚나무",
+        "count": 2
+      },
+      {
+        "name": "히말라야시다",
+        "count": 1
+      },
+      {
+        "name": "느티나무",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.5
+    },
+    "geocodeQuery": "부산광역시 동래구 금강로59번길"
+  },
+  {
+    "name": "온천천로",
+    "lat": 35.1985663,
+    "lng": 129.0816975,
+    "trees": 417,
+    "length": 5000,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 300
+      },
+      {
+        "name": "곰솔",
+        "count": 67
+      },
+      {
+        "name": "가시나무",
+        "count": 12
+      },
+      {
+        "name": "은행나무",
+        "count": 10
+      },
+      {
+        "name": "이팝나무",
+        "count": 8
+      },
+      {
+        "name": "향나무",
+        "count": 6
+      },
+      {
+        "name": "후박나무",
+        "count": 5
+      },
+      {
+        "name": "먼나무",
+        "count": 5
+      },
+      {
+        "name": "히말라야시다",
+        "count": 4
+      }
+    ],
+    "meta": {
+      "lengthKm": 5
+    },
+    "geocodeQuery": "부산광역시 동래구 온천천로"
+  },
+  {
+    "name": "명륜로",
+    "lat": 35.2157222,
+    "lng": 129.0838654,
+    "trees": 235,
+    "length": 2500,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 147
+      },
+      {
+        "name": "은행나무",
+        "count": 87
+      },
+      {
+        "name": "히말라야시다",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 2.5
+    },
+    "geocodeQuery": "부산광역시 동래구 명륜로"
+  },
+  {
+    "name": "명륜로129번길",
+    "lat": 35.2052993,
+    "lng": 129.080843,
+    "trees": 13,
+    "length": 300,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 13
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.3
+    },
+    "geocodeQuery": "부산광역시 동래구 명륜로129번길"
+  },
+  {
+    "name": "동래로",
+    "lat": 35.2129985,
+    "lng": 129.0777123,
+    "trees": 223,
+    "length": 2300,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 153
+      },
+      {
+        "name": "회화나무",
+        "count": 47
+      },
+      {
+        "name": "은행나무",
+        "count": 23
+      }
+    ],
+    "meta": {
+      "lengthKm": 2.3
+    },
+    "geocodeQuery": "부산광역시 동래구 동래로"
+  },
+  {
+    "name": "수안로",
+    "lat": 35.1969098,
+    "lng": 129.0863719,
+    "trees": 98,
+    "length": 600,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 98
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.6
+    },
+    "geocodeQuery": "부산광역시 동래구 수안로"
+  },
+  {
+    "name": "낙민로",
+    "lat": 35.1977713,
+    "lng": 129.0897026,
+    "trees": 38,
+    "length": 200,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 38
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.2
+    },
+    "geocodeQuery": "부산광역시 동래구 낙민로"
+  },
+  {
+    "name": "안락로",
+    "lat": 35.1992059,
+    "lng": 129.1084722,
+    "trees": 14,
+    "length": 1400,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 14
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.4
+    },
+    "geocodeQuery": "부산광역시 동래구 안락로"
+  },
+  {
+    "name": "연안로",
+    "lat": 35.193165,
+    "lng": 129.1080876,
+    "trees": 74,
+    "length": 600,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 68
+      },
+      {
+        "name": "느티나무",
+        "count": 6
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.6
+    },
+    "geocodeQuery": "부산광역시 동래구 연안로"
+  },
+  {
+    "name": "안연로",
+    "lat": 35.1949272,
+    "lng": 129.098083,
+    "trees": 36,
+    "length": 300,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 23
+      },
+      {
+        "name": "이팝나무",
+        "count": 13
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.3
+    },
+    "geocodeQuery": "부산광역시 동래구 안연로"
+  },
+  {
+    "name": "안남로",
+    "lat": 35.1942724,
+    "lng": 129.0988072,
+    "trees": 52,
+    "length": 290,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 46
+      },
+      {
+        "name": "이팝나무",
+        "count": 6
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.29
+    },
+    "geocodeQuery": "부산광역시 동래구 안남로"
+  },
+  {
+    "name": "명장로",
+    "lat": 35.202468,
+    "lng": 129.1103978,
+    "trees": 34,
+    "length": 260,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 34
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.26
+    },
+    "geocodeQuery": "부산광역시 동래구 명장로"
+  },
+  {
+    "name": "삼어로",
+    "lat": 35.2016763,
+    "lng": 129.1157065,
+    "trees": 67,
+    "length": 400,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 67
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.4
+    },
+    "geocodeQuery": "부산광역시 동래구 삼어로"
+  },
+  {
+    "name": "복천로",
+    "lat": 35.2066038,
+    "lng": 129.0895068,
+    "trees": 46,
+    "length": 270,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 46
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.27
+    },
+    "geocodeQuery": "부산광역시 동래구 복천로"
+  },
+  {
+    "name": "복천로5번길",
+    "lat": 35.2078318,
+    "lng": 129.0872667,
+    "trees": 10,
+    "length": 120,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 10
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.12
+    },
+    "geocodeQuery": "부산광역시 동래구 복천로5번길"
+  },
+  {
+    "name": "충렬대로446번길",
+    "lat": 35.1939544,
+    "lng": 129.1059574,
+    "trees": 6,
+    "length": 80,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 6
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.08
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로446번길"
+  },
+  {
+    "name": "체육공원로",
+    "lat": 35.1932079,
+    "lng": 129.0591894,
+    "trees": 128,
+    "length": 540,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "튤립나무",
+        "count": 62
+      },
+      {
+        "name": "히말라야시다",
+        "count": 34
+      },
+      {
+        "name": "느티나무",
+        "count": 31
+      },
+      {
+        "name": "은행나무",
+        "count": 1
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.54
+    },
+    "geocodeQuery": "부산광역시 동래구 체육공원로"
+  },
+  {
+    "name": "구만덕로",
+    "lat": 35.2144951,
+    "lng": 129.0638597,
+    "trees": 24,
+    "length": 150,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "왕벚나무",
+        "count": 24
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.15
+    },
+    "geocodeQuery": "부산광역시 동래구 구만덕로"
+  },
+  {
+    "name": "시실로",
+    "lat": 35.2116885,
+    "lng": 129.0950434,
+    "trees": 196,
+    "length": 1200,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 196
+      }
+    ],
+    "meta": {
+      "lengthKm": 1.2
+    },
+    "geocodeQuery": "부산광역시 동래구 시실로"
+  },
+  {
+    "name": "문화로",
+    "lat": 35.2109726,
+    "lng": 129.0872833,
+    "trees": 227,
+    "length": 570,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 223
+      },
+      {
+        "name": "느티나무",
+        "count": 4
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.57
+    },
+    "geocodeQuery": "부산광역시 동래구 문화로"
+  },
+  {
+    "name": "충렬대로181번길",
+    "lat": 35.2057929,
+    "lng": 129.0799969,
+    "trees": 48,
+    "length": 350,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 48
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.35
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로181번길"
+  },
+  {
+    "name": "명륜로139번길",
+    "lat": 35.2063244,
+    "lng": 129.0804665,
+    "trees": 4,
+    "length": 50,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 4
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.05
+    },
+    "geocodeQuery": "부산광역시 동래구 명륜로139번길"
+  },
+  {
+    "name": "명장로51번길",
+    "lat": 35.2056567,
+    "lng": 129.1065132,
+    "trees": 20,
+    "length": 180,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 20
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.18
+    },
+    "geocodeQuery": "부산광역시 동래구 명장로51번길"
+  },
+  {
+    "name": "명장로67번길",
+    "lat": 35.2045164,
+    "lng": 129.1129549,
+    "trees": 8,
+    "length": 90,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 8
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.09
+    },
+    "geocodeQuery": "부산광역시 동래구 명장로67번길"
+  },
+  {
+    "name": "차밭골로",
+    "lat": 35.21744,
+    "lng": 129.077102,
+    "trees": 9,
+    "length": 100,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "먼나무",
+        "count": 9
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.1
+    },
+    "geocodeQuery": "부산광역시 동래구 차밭골로"
+  },
+  {
+    "name": "온천천로531번길",
+    "lat": 35.192041,
+    "lng": 129.1120197,
+    "trees": 10,
+    "length": 150,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "먼나무",
+        "count": 10
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.15
+    },
+    "geocodeQuery": "부산광역시 동래구 온천천로531번길"
+  },
+  {
+    "name": "충렬대로75번길",
+    "lat": 35.2094498,
+    "lng": 129.0693424,
+    "trees": 18,
+    "length": 240,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 18
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.24
+    },
+    "geocodeQuery": "부산광역시 동래구 충렬대로75번길"
+  },
+  {
+    "name": "명장로67번길",
+    "lat": 35.2045164,
+    "lng": 129.1129549,
+    "trees": 8,
+    "length": 90,
+    "gu": "동래구",
+    "species": [
+      {
+        "name": "이팝나무",
+        "count": 8
+      }
+    ],
+    "meta": {
+      "lengthKm": 0.09
+    },
+    "geocodeQuery": "부산광역시 동래구 명장로67번길"
+  }
+]

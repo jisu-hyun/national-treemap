@@ -1,0 +1,996 @@
+[
+  {
+    "name": "금강로",
+    "lat": 35.2261449,
+    "lng": 129.0824844,
+    "trees": 47,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 28
+      },
+      {
+        "name": "벚나무",
+        "count": 19
+      }
+    ]
+  },
+  {
+    "name": "구덕로, 중앙로,금정로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 1311,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 915
+      },
+      {
+        "name": "기타낙엽",
+        "count": 299
+      },
+      {
+        "name": "벚나무",
+        "count": 86
+      },
+      {
+        "name": "미분류",
+        "count": 9
+      },
+      {
+        "name": "느티나무",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "name": "식물원길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 88,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 88
+      }
+    ]
+  },
+  {
+    "name": "(미상)",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 2648,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 1147
+      },
+      {
+        "name": "기타",
+        "count": 644
+      },
+      {
+        "name": "미분류",
+        "count": 440
+      },
+      {
+        "name": "은행나무",
+        "count": 191
+      },
+      {
+        "name": "기타낙엽",
+        "count": 73
+      },
+      {
+        "name": "기타상록",
+        "count": 44
+      },
+      {
+        "name": "느티나무",
+        "count": 40
+      },
+      {
+        "name": "이팝나무",
+        "count": 40
+      },
+      {
+        "name": "목백합",
+        "count": 27
+      },
+      {
+        "name": "결식지",
+        "count": 1
+      },
+      {
+        "name": "해송",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "신암로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 128,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 68
+      },
+      {
+        "name": "느티나무",
+        "count": 59
+      },
+      {
+        "name": "은행나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "남산로",
+    "lat": 35.2670297,
+    "lng": 129.0854623,
+    "trees": 39,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 39
+      }
+    ]
+  },
+  {
+    "name": "체육공원로",
+    "lat": 35.2636198,
+    "lng": 129.1057546,
+    "trees": 270,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 205
+      },
+      {
+        "name": "느티나무",
+        "count": 44
+      },
+      {
+        "name": "은행나무",
+        "count": 18
+      },
+      {
+        "name": "기타낙엽",
+        "count": 2
+      },
+      {
+        "name": "버즘나무",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "경부고속도로",
+    "lat": 35.282738,
+    "lng": 129.1045634,
+    "trees": 38,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 34
+      },
+      {
+        "name": "은행나무",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "금양12로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 32,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 32
+      }
+    ]
+  },
+  {
+    "name": "구서중앙1로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 64,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 64
+      }
+    ]
+  },
+  {
+    "name": "구서중앙2로",
+    "lat": 35.2563985,
+    "lng": 129.086441,
+    "trees": 68,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 29
+      },
+      {
+        "name": "기타낙엽",
+        "count": 13
+      },
+      {
+        "name": "은행나무",
+        "count": 12
+      },
+      {
+        "name": "해송",
+        "count": 7
+      },
+      {
+        "name": "기타상록",
+        "count": 7
+      }
+    ]
+  },
+  {
+    "name": "구서전철동로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 15,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 8
+      },
+      {
+        "name": "느티나무",
+        "count": 7
+      }
+    ]
+  },
+  {
+    "name": "범어사길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 5,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 5
+      }
+    ]
+  },
+  {
+    "name": "미남로, 우장춘로,금샘길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 163,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 143
+      },
+      {
+        "name": "느티나무",
+        "count": 17
+      },
+      {
+        "name": "은행나무",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "사시골로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 61,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 61
+      }
+    ]
+  },
+  {
+    "name": "비석바위1로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 93,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 72
+      },
+      {
+        "name": "벚나무",
+        "count": 21
+      }
+    ]
+  },
+  {
+    "name": "옛냇길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 55,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 55
+      }
+    ]
+  },
+  {
+    "name": "반송로",
+    "lat": 35.2154407,
+    "lng": 129.1159477,
+    "trees": 40,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 40
+      }
+    ]
+  },
+  {
+    "name": "늘푸름길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 64,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 58
+      },
+      {
+        "name": "벚나무",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "부금로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 117,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 113
+      },
+      {
+        "name": "미분류",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "금정도서관길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 828,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 828
+      }
+    ]
+  },
+  {
+    "name": "노포마을4길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 56,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 55
+      },
+      {
+        "name": "기타낙엽",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "청룡1길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 36,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 36
+      }
+    ]
+  },
+  {
+    "name": "금샘길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 150,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 150
+      }
+    ]
+  },
+  {
+    "name": "부산대학로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 160,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 144
+      },
+      {
+        "name": "기타낙엽",
+        "count": 14
+      },
+      {
+        "name": "은행나무",
+        "count": 1
+      },
+      {
+        "name": "목백합",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "산성길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 93,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 93
+      }
+    ]
+  },
+  {
+    "name": "장전로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 312,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 115
+      },
+      {
+        "name": "은행나무",
+        "count": 99
+      },
+      {
+        "name": "목백합",
+        "count": 98
+      }
+    ]
+  },
+  {
+    "name": "고분로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 302,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 272
+      },
+      {
+        "name": "느티나무",
+        "count": 30
+      }
+    ]
+  },
+  {
+    "name": "강변1로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 41,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 41
+      }
+    ]
+  },
+  {
+    "name": "노포마을5길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 18,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 18
+      }
+    ]
+  },
+  {
+    "name": "노포로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 384,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 384
+      }
+    ]
+  },
+  {
+    "name": "노포마을3길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 12,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 12
+      }
+    ]
+  },
+  {
+    "name": "명륜로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 4,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "순구지로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 22,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 22
+      }
+    ]
+  },
+  {
+    "name": "한울1로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 21,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 21
+      }
+    ]
+  },
+  {
+    "name": "제1도시고속도로(번영로)",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 2,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 2
+      }
+    ]
+  },
+  {
+    "name": "학산6로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 1,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 1
+      }
+    ]
+  },
+  {
+    "name": "팔송3로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 15,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 15
+      }
+    ]
+  },
+  {
+    "name": "팔송로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 3,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "산성터널로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 6,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "느티나무",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "두구로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 97,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 93
+      },
+      {
+        "name": "느티나무",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "서동고갯길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 12,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 12
+      }
+    ]
+  },
+  {
+    "name": "하장안1길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 137,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 137
+      }
+    ]
+  },
+  {
+    "name": "하장안길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 176,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 134
+      },
+      {
+        "name": "미분류",
+        "count": 42
+      }
+    ]
+  },
+  {
+    "name": "상현길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 16,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 16
+      }
+    ]
+  },
+  {
+    "name": "불매등길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 12,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 12
+      }
+    ]
+  },
+  {
+    "name": "신천길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 32,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 32
+      }
+    ]
+  },
+  {
+    "name": "작장3길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 6,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "금정국민체육센터길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 20,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "미분류",
+        "count": 20
+      }
+    ]
+  },
+  {
+    "name": "개좌길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 50,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 50
+      }
+    ]
+  },
+  {
+    "name": "청송길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 6,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 6
+      }
+    ]
+  },
+  {
+    "name": "금샘길산성접속도로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 41,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "벚나무",
+        "count": 41
+      }
+    ]
+  },
+  {
+    "name": "신설로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 24,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "은행나무",
+        "count": 24
+      }
+    ]
+  },
+  {
+    "name": "청춘길",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 12,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 8
+      },
+      {
+        "name": "기타상록",
+        "count": 4
+      }
+    ]
+  },
+  {
+    "name": "비석바위3로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 38,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 38
+      }
+    ]
+  },
+  {
+    "name": "꿈나무3로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 3,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 3
+      }
+    ]
+  },
+  {
+    "name": "천지바위2로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 19,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 19
+      }
+    ]
+  },
+  {
+    "name": "천지바위1로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 9,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 9
+      }
+    ]
+  },
+  {
+    "name": "비석바위5로",
+    "lat": 35.24,
+    "lng": 129.09,
+    "trees": 3,
+    "length": 0,
+    "gu": "금정구",
+    "species": [
+      {
+        "name": "기타낙엽",
+        "count": 3
+      }
+    ]
+  }
+]
