@@ -15,9 +15,9 @@ interface TopHeaderProps {
 
 export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) {
   return (
-    <header className="flex items-center justify-between gap-2 sm:gap-4 px-3 sm:px-6 h-14 sm:h-16 bg-white border-b border-slate-200/80 shadow-sm shrink-0">
+    <header className="flex items-center justify-between gap-2 sm:gap-4 pl-6 pr-3 sm:pl-10 sm:pr-6 h-14 sm:h-16 bg-white border-b border-slate-200/80 shadow-sm shrink-0">
       <div className="flex items-center gap-2 sm:gap-6 min-w-0 flex-1">
-        {/* 로고·타이틀: 중앙 정렬(원래대로), 왼쪽 여백으로 오른쪽으로 배치 */}
+        {/* 로고·타이틀: 왼쪽 여백으로 전체를 오른쪽으로 배치 */}
         <button
           type="button"
           onClick={() => window.location.reload()}
@@ -30,11 +30,11 @@ export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) 
             className="h-7 sm:h-9 w-auto object-contain"
           />
           <h1 className="text-sm sm:text-lg font-bold text-slate-800 tracking-tight truncate max-w-[140px] sm:max-w-none">
-            전국 가로수 현황지도
+            전국 가로수 현황 지도
           </h1>
         </button>
         {/* 지도·가로수 알아보기·활용 데이터: 타이틀 오른쪽에 배치 */}
-        <nav className="flex items-center gap-0 ml-8 sm:ml-12 shrink-0">
+        <nav className="flex items-center gap-0 ml-16 sm:ml-24 shrink-0">
           {NAV_ITEMS.map((item, i) => (
             <span key={item.id} className="flex items-center">
               {i > 0 && <span className="w-px h-4 bg-slate-200 mx-2" aria-hidden />}

@@ -267,7 +267,7 @@ function MapLegendOverlay({
 
   return (
     <div
-      className="absolute left-3 sm:left-4 bottom-2 sm:bottom-3 z-[999] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-2.5 py-2 sm:px-3 sm:py-2.5 text-xs max-w-[calc(100vw-6rem)]"
+      className="absolute left-4 bottom-3 z-[999] w-[220px] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs shrink-0"
       style={{ pointerEvents: "none" }}
       aria-hidden
     >
