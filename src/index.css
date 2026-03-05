@@ -2,7 +2,8 @@
 
 :root {
   font-family: "Noto Sans KR", system-ui, -apple-system, sans-serif;
-  font-size: clamp(14px, 2.5vw + 8px, 18px);
+  /* 고정 16px: 로컬(큰 창)과 배포(작은 창)에서 글씨·레이아웃이 동일하게 보이도록 (이전: clamp(14px, 2.5vw+8px, 18px)는 넓은 뷰포트에서 18px로 커져 로컬이 더 크게 보였음) */
+  font-size: 16px;
   line-height: 1.5;
   font-weight: 400;
   color: #1a1a1a;
