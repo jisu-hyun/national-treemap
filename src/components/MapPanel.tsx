@@ -62,8 +62,10 @@ const GWACHEON_TREES_URL = `${import.meta.env.BASE_URL}data/gwacheon-trees.json?
 /** 전국 뷰에서 잡아둔 범위 — 확대했을 때도 이 범위 밖으로 패닝 불가 */
 const nationalViewBoundsRef: { current: L.LatLngBounds | null } = { current: null }
 
-/** 전국 뷰 초기 줌 (새로고침·전국 진입 시 고정). 이 줌 이하로 축소·상하좌우 이동 불가 */
+/** 전국 뷰 초기 줌 (새로고침·전국 진입 시 고정) */
 const NATIONAL_DEFAULT_ZOOM = 8
+/** 전국 뷰에서 허용하는 최소 줌. 한 단계 더 축소 가능(7), 초점·패닝 고정은 유지 */
+const NATIONAL_MIN_ZOOM = 7
 /** 전국 뷰 목표 중심 오프셋 (bounds 중심 기준). lat 음수=남쪽(제주), lng 음수=서쪽(왼쪽) */
 const NATIONAL_VIEW_CENTER_OFFSET_LAT = -0.2
 const NATIONAL_VIEW_CENTER_OFFSET_LNG = 0.28
@@ -80,9 +82,9 @@ function getNationalViewCenter(bounds: L.LatLngBounds): L.LatLngTuple {
   return [c.lat + NATIONAL_VIEW_CENTER_OFFSET_LAT, c.lng + NATIONAL_VIEW_CENTER_OFFSET_LNG]
 }
 
-/** 전국 뷰: 현재 뷰 고정 — 상하좌우 패닝·이하 축소 불가 */
+/** 전국 뷰: 현재 뷰 고정(패닝 제한). 축소는 NATIONAL_MIN_ZOOM(7)까지 허용 */
 function lockNationalView(map: L.Map) {
-  map.setMinZoom(NATIONAL_DEFAULT_ZOOM)
+  map.setMinZoom(NATIONAL_MIN_ZOOM)
   const b = map.getBounds()
   map.setMaxBounds(b)
   nationalViewBoundsRef.current = b
@@ -257,7 +259,7 @@ const BUSAN_CIRCLE_STYLE = {
   strokeWidth: 1.5,
 } as const
 
-/** 전국: 색깔 구간 범례. 부산 확대(원형 마커): 원 크기 = 그루 수 구간(100·500 그루 기준) */
+/** 전국: 색깔 구간 범례. 부산 확대(원형 마커): 원 크기 = 그루 수 구간(100·500 그루 기준). 모바일에서는 눌러야 표시 */
 function MapLegendOverlay({
   region: _region,
   nationalFourStep,
@@ -267,6 +269,7 @@ function MapLegendOverlay({
 }) {
   const map = useMap()
   const [zoom, setZoom] = useState(() => map.getZoom())
+  const [mobileLegendOpen, setMobileLegendOpen] = useState(false)
   useMapEvents({
     zoom: () => setZoom(map.getZoom()),
     zoomend: () => setZoom(map.getZoom()),
@@ -283,12 +286,8 @@ function MapLegendOverlay({
     boxSizing: "border-box" as const,
   })
 
-  return (
-    <div
-      className="absolute left-4 bottom-3 z-[999] w-[220px] bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs shrink-0"
-      style={{ pointerEvents: "none" }}
-      aria-hidden
-    >
+  const legendContent = (
+    <>
       {showCircleLegend ? (
         <>
           <div className="font-semibold text-slate-800 mb-1.5 text-[11px] tracking-wide">
@@ -338,6 +337,49 @@ function MapLegendOverlay({
           </p>
         </>
       )}
+    </>
+  )
+
+  return (
+    <div
+      className="absolute left-4 bottom-3 z-[999] w-[220px] shrink-0 sm:pointer-events-none pointer-events-auto"
+      aria-hidden
+    >
+      {/* 모바일: 닫힐 때는 버튼만 표시 */}
+      <div className="sm:hidden">
+        {!mobileLegendOpen ? (
+          <button
+            type="button"
+            onClick={() => setMobileLegendOpen(true)}
+            className="w-full bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs font-medium text-slate-700 flex items-center justify-center gap-1.5 min-h-[40px] hover:bg-white transition-colors"
+            aria-label="범례 보기"
+          >
+            <svg className="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343L12.657 5.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+            </svg>
+            범례
+          </button>
+        ) : (
+          <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs">
+            <div className="flex items-center justify-between gap-2 mb-1.5">
+              <span className="font-semibold text-slate-800 text-[11px] tracking-wide">범례</span>
+              <button
+                type="button"
+                onClick={() => setMobileLegendOpen(false)}
+                className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors -mr-1"
+                aria-label="범례 닫기"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            {legendContent}
+          </div>
+        )}
+      </div>
+      {/* 데스크톱: 항상 범례 표시 */}
+      <div className="hidden sm:block bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs">
+        {legendContent}
+      </div>
     </div>
   )
 }
@@ -446,7 +488,7 @@ function RegionZoomController({
         map.flyTo(center, NATIONAL_DEFAULT_ZOOM, opts)
         map.once("moveend", () => {
           lockNationalView(map)
-          onNationalMinZoomApplied?.(NATIONAL_DEFAULT_ZOOM)
+          onNationalMinZoomApplied?.(NATIONAL_MIN_ZOOM)
         })
       }
     } else {
@@ -1009,7 +1051,7 @@ function KoreaGeoJSONLayer({
         if (regionRef.current === "00") {
           programmaticZoomUntilRef.current = Date.now() + PROGRAMMATIC_ZOOM_COOLDOWN_MS
           applyNationalViewPosition(map, bounds)
-          onNationalMinZoomApplied?.(NATIONAL_DEFAULT_ZOOM)
+          onNationalMinZoomApplied?.(NATIONAL_MIN_ZOOM)
           nationalViewSetByGeoJSONRef.current = true
           onInitialNationalViewReady?.()
         }
@@ -1227,7 +1269,7 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
   const [gwacheonMarkers, setGwacheonMarkers] = useState<BusanSegment[]>([])
   /** 전국 뷰 적용 시 최소줌(리셋 후 축소 방지). region "00"일 때만 Map에 반영 */
   const [nationalMinZoom, setNationalMinZoom] = useState<number | null>(null)
-  const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? NATIONAL_DEFAULT_ZOOM) : 3
+  const effectiveMinZoom = region === "00" ? (nationalMinZoom ?? NATIONAL_MIN_ZOOM) : 3
   /** 전국 초기 로드: GeoJSON 적용 전까지 지도 숨김 → 새로고침 시 초점 점프 방지 */
   const [initialNationalViewReady, setInitialNationalViewReady] = useState(false)
   useEffect(() => {
