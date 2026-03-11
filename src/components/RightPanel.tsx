@@ -35,7 +35,7 @@ export function RightPanel({ mobileOpen = false, onMobileClose }: RightPanelProp
             hover:shadow-[0_4px_20px_rgba(5,46,22,0.08)] hover:-translate-y-px"
         >
           <span className="absolute left-0 right-0 text-center text-base font-semibold text-gray-800 pointer-events-none transition-all duration-300 group-hover/header:text-gray-900">
-            가로수 뉴스
+            전국 가로수 뉴스
           </span>
           <div className="ml-auto flex items-center gap-0.5">
             <button

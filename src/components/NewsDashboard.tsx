@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react"
 import { getApiBase, isStaticHost } from "../config"
 
-const NAVER_NEWS_LINK = "https://search.naver.com/search.naver?where=news&query=가로수&sort=date&nso=so%3Ad%2Cp%3Aall%2Ca%3Aall"
+/** 네이버 뉴스 검색 — 최신순: ssc=tab.news.all + nso=so:dd(날짜순),p:all */
+const NAVER_NEWS_LINK = "https://search.naver.com/search.naver?ssc=tab.news.all&where=news&query=가로수&sm=tab_opt&sort=1&nso=so%3Add%2Cp%3Aall"
+
+const NEWS_JSON_URL =
+  (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL ? import.meta.env.BASE_URL : "/") + "data/news.json"
 
 function getNewsApiUrl() {
   const base = getApiBase()
@@ -34,19 +38,23 @@ function stripHtml(html: string): string {
     .trim()
 }
 
-function formatDate(pubDate: string): string {
+function formatDate(pubDate: string): { relative: string; exact: string } {
   try {
     const d = new Date(pubDate)
+    if (Number.isNaN(d.getTime())) return { relative: "", exact: "" }
     const now = new Date()
-    const diff = now.getTime() - d.getTime()
-    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const diffMs = now.getTime() - d.getTime()
+    const diffMin = Math.floor(diffMs / (1000 * 60))
+    const hours = Math.floor(diffMs / (1000 * 60 * 60))
     const days = Math.floor(hours / 24)
-    if (hours < 1) return "방금 전"
-    if (hours < 24) return `${hours}시간 전`
-    if (days < 7) return `${days}일 전`
-    return d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" })
+    const exact = d.toLocaleDateString("ko-KR", { month: "long", day: "numeric", hour: "2-digit", minute: "2-digit" })
+    if (diffMin < 1) return { relative: "방금 전", exact }
+    if (hours < 1) return { relative: `${diffMin}분 전`, exact }
+    if (hours < 24) return { relative: `${hours}시간 전`, exact }
+    if (days < 7) return { relative: `${days}일 전`, exact }
+    return { relative: d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" }), exact }
   } catch {
-    return ""
+    return { relative: "", exact: "" }
   }
 }
 
@@ -63,41 +71,68 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
   const fetchNews = () => {
     const apiUrl = getNewsApiUrl()
     const base = getApiBase()
-    if (typeof window !== "undefined" && isStaticHost() && !base) {
-      setLoading(false)
-      setError(null)
-      setItems([])
-      return
-    }
+    const skipApi = typeof window !== "undefined" && isStaticHost() && !base
     setLoading(true)
     setError(null)
-    const params = new URLSearchParams({ query: "가로수", display: "10", sort: "date" })
-    fetch(`${apiUrl}?${params.toString()}`, { cache: "no-store" })
-      .then(async (res) => {
-        const text = await res.text()
-        let data: NaverNewsResponse
-        try {
-          data = JSON.parse(text) as NaverNewsResponse
-        } catch {
-          throw new Error(res.ok ? "응답 형식 오류" : "로드 실패")
+
+    const tryApi = (): Promise<NewsItem[]> =>
+      skipApi
+        ? Promise.resolve([])
+        : fetch(`${apiUrl}?${new URLSearchParams({ query: "가로수", display: "10", sort: "date" }).toString()}`, {
+            cache: "no-store",
+          })
+            .then(async (res) => {
+              const text = await res.text()
+              let data: NaverNewsResponse
+              try {
+                data = JSON.parse(text) as NaverNewsResponse
+              } catch {
+                throw new Error(res.ok ? "응답 형식 오류" : "로드 실패")
+              }
+              if (!res.ok) {
+                const errMsg =
+                  res.status === 503
+                    ? "API 미설정"
+                    : data?.error ?? data?.errorMessage ?? data?.errorCode ?? "로드 실패"
+                throw new Error(String(errMsg))
+              }
+              if (data.error) throw new Error(data.error)
+              if (data.errorMessage) throw new Error(data.errorMessage)
+              if (data.errorCode) throw new Error(data.errorMessage ?? data.errorCode)
+              return Array.isArray(data.items) ? data.items : Array.isArray(data.item) ? data.item : []
+            })
+
+    const tryStatic = (): Promise<NewsItem[]> =>
+      fetch(NEWS_JSON_URL, { cache: "no-store" })
+        .then((res) => (res.ok ? res.json() : Promise.reject(new Error("로드 실패"))))
+        .then((data: { items?: NewsItem[] }) => {
+          const list = Array.isArray(data?.items) ? data.items : []
+          return list
+        })
+
+    tryApi()
+      .then((list) => {
+        if (list.length > 0) {
+          setItems(list)
+          setError(null)
+          return
         }
-        if (!res.ok) {
-          const errMsg =
-            res.status === 503
-              ? "API 미설정"
-              : data?.error ?? data?.errorMessage ?? data?.errorCode ?? "로드 실패"
-          throw new Error(String(errMsg))
-        }
-        if (data.error) throw new Error(data.error)
-        if (data.errorMessage) throw new Error(data.errorMessage)
-        if (data.errorCode) throw new Error(data.errorMessage ?? data.errorCode)
-        const list = Array.isArray(data.items) ? data.items : Array.isArray(data.item) ? data.item : []
-        setItems(list)
+        return tryStatic().then((staticList) => {
+          setItems(staticList)
+          setError(staticList.length > 0 ? null : "뉴스가 없습니다.")
+        })
       })
-      .catch((e) => {
-        setError(e.message ?? "뉴스를 불러올 수 없습니다.")
-        setItems([])
-      })
+      .catch(() =>
+        tryStatic()
+          .then((staticList) => {
+            setItems(staticList)
+            setError(staticList.length > 0 ? null : "뉴스를 불러올 수 없습니다.")
+          })
+          .catch(() => {
+            setError("뉴스를 불러올 수 없습니다.")
+            setItems([])
+          })
+      )
       .finally(() => setLoading(false))
   }
 
@@ -155,7 +190,10 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
   return (
     <div className="border-t border-slate-100 pt-0">
       <ul className="space-y-3">
-        {items.map((item, i) => (
+        {items.map((item, i) => {
+          const dateLabel = formatDate(item.pubDate)
+          const timeText = dateLabel.relative || dateLabel.exact
+          return (
           <li key={i}>
             <a
               href={item.link}
@@ -164,6 +202,7 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
               className="group block rounded-xl border-2 border-emerald-200 bg-white px-4 py-3 shadow-sm
                 transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]
                 hover:scale-[1.02] hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(5,46,22,0.2)] hover:border-emerald-300"
+              title={dateLabel.exact ? `기사 시각: ${dateLabel.exact}` : undefined}
             >
               <p className="text-sm font-bold text-slate-800 line-clamp-2 group-hover:text-slate-900 leading-snug transition-colors duration-300">
                 {stripHtml(item.title)}
@@ -171,15 +210,16 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
               <p className="mt-1.5 text-xs text-slate-500 line-clamp-2 leading-relaxed group-hover:text-slate-600 transition-colors duration-300">
                 {stripHtml(item.description)}
               </p>
-              <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-400">
+              <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-400" title={dateLabel.exact}>
                 <svg className="w-3.5 h-3.5 shrink-0 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                {formatDate(item.pubDate)}
+                {timeText}
               </p>
             </a>
           </li>
-        ))}
+          )
+        })}
       </ul>
       <a
         href={NAVER_NEWS_LINK}

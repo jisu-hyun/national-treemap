@@ -7,7 +7,7 @@
     "dev": "vite --port 8000",
     "dev:fresh": "sh scripts/dev-fresh.sh",
     "server": "node server/index.mjs",
-    "build": "npm run aggregate:city-tree && tsc -b && vite build",
+    "build": "npm run aggregate:city-tree && node scripts/fetch-news-build.mjs && tsc -b && vite build",
     "deploy:worker": "wrangler deploy",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -71,7 +71,7 @@ function newsApiPlugin() {
             })
             const data = await r.json()
             res.setHeader('Content-Type', 'application/json')
-            res.setHeader('Cache-Control', 'public, max-age=300')
+            res.setHeader('Cache-Control', 'public, max-age=60')
             res.end(JSON.stringify(data))
           } catch (e) {
             res.statusCode = 500

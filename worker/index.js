@@ -36,7 +36,7 @@ export default {
           headers: { "X-Naver-Client-Id": naverId, "X-Naver-Client-Secret": naverSecret },
         })
         const data = await r.json()
-        return json(data, 200, { "Cache-Control": "public, max-age=300" })
+        return json(data, 200, { "Cache-Control": "public, max-age=60" })
       } catch (e) {
         return json({ error: (e && e.message) || "요청 실패" }, 500)
       }
