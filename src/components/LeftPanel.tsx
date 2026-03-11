@@ -3,13 +3,13 @@ import {
   SIDO_TREE_COUNTS,
   SPECIES_DATA,
   TOTAL_TREES,
-  getTopSido,
   getTopSpecies,
 } from "../data/mock"
 import {
   getTopSpeciesFromData,
   type CityTreeData,
 } from "../data/cityTreeData"
+import { getDensity } from "../data/sidoAreas"
 import type { BusanSegment } from "../data/busanSegment"
 import { SIDO_ID_SEOUL, SIDO_ID_BUSAN, SIDO_ID_JEONBUK } from "../data/sidoOverrides"
 
@@ -156,20 +156,16 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
   const topSpeciesNational = treeData
     ? getTopSpeciesFromData(treeData)
     : getTopSpecies()
-  /** 전국에서 나무가 가장 많은/적은 시·도 (전국 비교이므로 기준과 무관하게 동일) */
-  const topSido =
-    sidoCounts.length > 0 ? [...sidoCounts].sort((a, b) => b.count - a.count)[0] : getTopSido()
-  const topSidoRatio =
-    topSido && totalTrees > 0 ? (topSido.count / totalTrees * 100).toFixed(1) : "0"
-
-  const bottomSido =
-    sidoCounts.length > 0
-      ? [...sidoCounts].sort((a, b) => a.count - b.count)[0]
+  /** 단위 면적당(그루/km²) 가장 많은/적은 시·도 — 지도 색상 기준과 동일 */
+  const sidoWithDensity = sidoCounts.map((s) => ({ ...s, density: getDensity(s.count, s.id) }))
+  const topSidoByDensity =
+    sidoWithDensity.length > 0
+      ? [...sidoWithDensity].sort((a, b) => b.density - a.density)[0]
       : null
-  const bottomSidoRatio =
-    bottomSido && totalTrees > 0
-      ? (bottomSido.count / totalTrees * 100).toFixed(1)
-      : "0"
+  const bottomSidoByDensity =
+    sidoWithDensity.length > 0
+      ? [...sidoWithDensity].sort((a, b) => a.density - b.density)[0]
+      : null
 
   return (
     <>
@@ -374,12 +370,13 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4">
-          <div className="flex items-center justify-between gap-2 mb-4">
+          <div className="flex items-center justify-between gap-2 mb-2">
             <p className="text-base font-semibold text-slate-800">한눈에 보는 가로수 통계</p>
             <span className="text-xs text-slate-500 shrink-0">
               {isNationalView ? "전국 기준" : `${regionLabel} 기준`}
             </span>
           </div>
+          <p className="text-[11px] text-slate-500 mb-3">시·도 순위는 지도 색상과 동일하게 단위 면적당(그루/km²) 기준입니다.</p>
           <div className="space-y-4">
             {!isNationalView && (
               <div>
@@ -398,15 +395,21 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-600 mb-1">나무가 가장 많은 시·도</p>
+              <p className="text-xs text-slate-600 mb-1">단위 면적당 가장 많은 시·도</p>
               <p className="text-sm font-semibold text-[#166534]">
-                {topSido?.name ?? "-"} {topSidoRatio}%
+                {topSidoByDensity?.name ?? "-"}
+                {topSidoByDensity?.density != null && topSidoByDensity.density > 0
+                  ? ` ${topSidoByDensity.density.toFixed(1)} 그루/km²`
+                  : ""}
               </p>
             </div>
             <div>
-              <p className="text-xs text-slate-600 mb-1">나무가 가장 적은 시·도</p>
+              <p className="text-xs text-slate-600 mb-1">단위 면적당 가장 적은 시·도</p>
               <p className="text-sm font-semibold text-[#166534]">
-                {bottomSido?.name ?? "-"} {bottomSidoRatio}%
+                {bottomSidoByDensity?.name ?? "-"}
+                {bottomSidoByDensity?.density != null
+                  ? ` ${bottomSidoByDensity.density.toFixed(1)} 그루/km²`
+                  : ""}
               </p>
             </div>
           </div>

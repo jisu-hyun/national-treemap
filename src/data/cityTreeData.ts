@@ -1,5 +1,14 @@
 import type { SidoItem, SpeciesItem } from "./mock"
-import { SIDO_TREE_COUNTS } from "./mock"
+import { SIDO_TREE_COUNTS, TOTAL_TREES, SPECIES_DATA } from "./mock"
+
+/** JSON 시도별 집계가 전국 수준인지 판별 (서울·총합 기준). 불완전하면 mock 시도/총합 사용 */
+function isCompleteNationwideData(raw: CityTreeData): boolean {
+  const total = raw.total ?? 0
+  if (total < 500_000) return false
+  const seoul = raw.sidoCounts?.find((s) => s.id === "11")
+  if (!seoul || seoul.count < 50_000) return false
+  return true
+}
 
 const COL_SIGUNGU = 0
 const COL_SPECIES = 4
@@ -116,10 +125,18 @@ export async function loadCityTreeData(): Promise<CityTreeData> {
   const res = await fetch(SUMMARY_JSON_URL)
   if (!res.ok) throw new Error("도시숲 가로수 데이터 로드 실패")
   const raw = (await res.json()) as CityTreeData
-  cached = {
-    total: raw.total,
-    sidoCounts: raw.sidoCounts ?? [],
-    species: raw.species ?? [],
+  if (isCompleteNationwideData(raw)) {
+    cached = {
+      total: raw.total,
+      sidoCounts: raw.sidoCounts ?? [],
+      species: raw.species ?? [],
+    }
+  } else {
+    cached = {
+      total: TOTAL_TREES,
+      sidoCounts: SIDO_TREE_COUNTS,
+      species: Array.isArray(raw.species) && raw.species.length > 0 ? raw.species : SPECIES_DATA,
+    }
   }
   return cached
 }

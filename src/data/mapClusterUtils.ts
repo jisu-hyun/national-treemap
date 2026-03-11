@@ -7,6 +7,11 @@ export const FOUR_STEP_COLORS = [
   "#2e7d32",
 ]
 
+/**
+ * 값 배열의 4분위로 색 구간 경계 계산.
+ * sorted = 오름차순 정렬된 값들 → min, 25%위(q1), 50%위(q2), 75%위(q3).
+ * 반환 breaks: [min, q1, q2, q3]. getStepIndex(value, breaks)로 0~3 인덱스 결정.
+ */
 export function getFourStepScale(
   values: number[]
 ): { breaks: [number, number, number, number]; colors: string[] } {
@@ -43,5 +48,17 @@ export function getFourStepLabels(breaks: [number, number, number, number]): str
     `${(q1 + 1).toLocaleString()} – ${q2.toLocaleString()}`,
     `${(q2 + 1).toLocaleString()} – ${q3.toLocaleString()}`,
     `${(q3 + 1).toLocaleString()} 이상`,
+  ]
+}
+
+/** 단위 면적당(그루/km²) 구간 라벨. 소수점 한 자리로 표시 */
+export function getFourStepLabelsDensity(breaks: [number, number, number, number]): string[] {
+  const fmt = (v: number) => (v < 0.1 && v >= 0 ? v.toFixed(2) : v.toFixed(1))
+  const [min, q1, q2, q3] = breaks
+  return [
+    `${fmt(min)} – ${fmt(q1)} 그루/km²`,
+    `${fmt(q1)} – ${fmt(q2)} 그루/km²`,
+    `${fmt(q2)} – ${fmt(q3)} 그루/km²`,
+    `${fmt(q3)} 그루/km² 이상`,
   ]
 }

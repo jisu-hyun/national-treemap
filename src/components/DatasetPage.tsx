@@ -7,6 +7,7 @@ import { useRef, useState, useEffect } from "react"
 
 /** 공공데이터포털 가로수 데이터 링크 */
 const DATA_SOURCES = [
+  { name: "통계청 KOSIS_지역별 면적(행정구역)", url: "https://kosis.kr/statHtml/statHtml.do?tblId=DT_1ZGA17&orgId=101" },
   { name: "산림청_도시숲가로수관리 가로수 현황", url: "https://www.data.go.kr/data/15120900/fileData.do?recommendDataYn=Y" },
   { name: "부산광역시_부산진구_가로수현황", url: "https://www.data.go.kr/data/15037889/fileData.do" },
   { name: "부산광역시_사하구_가로수현황", url: "https://www.data.go.kr/data/3079307/fileData.do" },
@@ -43,7 +44,7 @@ interface DatasetPageProps {
 
 /** 지도 구축 요약 */
 const SECTIONS = [
-  { id: "base", title: "전국 기준", summary: "산림청 도시숲 가로수 현황으로 시도별 집계, 지도 색상·전국 통계에 반영" },
+  { id: "base", title: "전국 기준", summary: "산림청 도시숲 가로수 현황으로 시도별 집계, 지도 색상(단위 면적당)·전국 통계에 반영. 시·도별 면적은 통계청 KOSIS 지역별 면적을 사용" },
   { id: "seoul", title: "서울", summary: "서울시 트리맵 데이터로 전국 집계의 서울 값을 대체" },
   { id: "busan", title: "부산 (진구·사하·중구·동래·영도)", summary: "구별 CSV/지오코딩으로 마커 표시, 전국 합계에 반영" },
   { id: "jeonbuk", title: "전북 (전주·정읍·완주)", summary: "시군별 CSV 파싱 후 마커 표시, 전국 합계에 반영" },
@@ -128,17 +129,18 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
               <div className="w-full h-0.5 bg-emerald-500/80 rounded-full" />
             </div>
           </div>
-          <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {SECTIONS.map((section) => (
               <article
                 key={section.id}
-                className={`dataset-summary-card group w-full text-center p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-300/80 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-400 ease-out flex flex-col items-center justify-center ${summaryVisible ? "is-visible" : ""}`}
+                className={`dataset-summary-card group w-full text-left p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/80 hover:border-emerald-300/70 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 ease-out flex flex-col min-h-[140px] sm:min-h-[160px] ${summaryVisible ? "is-visible" : ""} ${section.id === "base" ? "sm:col-span-2 lg:col-span-3" : ""} ${section.id === "gyeonggi" ? "sm:col-span-2 lg:col-span-3" : ""}`}
               >
-                <div className="flex flex-col items-center gap-0 w-full">
-                  <h3 className="font-semibold text-slate-800 text-xl sm:text-[1.25rem] tracking-tight mb-3 group-hover:text-slate-900 transition-colors duration-400">
+                <div className="flex flex-col gap-1 w-full flex-1">
+                  <h3 className="flex items-center gap-2 font-semibold text-slate-800 text-base sm:text-lg tracking-tight group-hover:text-emerald-800 transition-colors duration-300">
+                    <span className="flex h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-500/80 group-hover:bg-emerald-500" aria-hidden />
                     {section.title}
                   </h3>
-                  <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed">
+                  <p className="text-[12px] sm:text-sm text-slate-600 leading-relaxed sm:leading-relaxed flex-1">
                     {section.summary}
                   </p>
                 </div>

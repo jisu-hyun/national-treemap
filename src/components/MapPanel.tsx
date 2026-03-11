@@ -12,10 +12,11 @@ import { buildGrayMaskGeoJSON } from "../data/grayMaskUtils"
 import {
   getFourStepScale,
   getStepIndex,
-  getFourStepLabels,
+  getFourStepLabelsDensity,
   FOUR_STEP_COLORS,
   NO_DATA_COLOR,
 } from "../data/mapClusterUtils"
+import { getDensity } from "../data/sidoAreas"
 /** KOSTAT 2013: 통계청 행정경계. 로컬 우선(강원 등 안정적 로드) */
 const KOREA_GEOJSON_URL =
   `${import.meta.env.BASE_URL}data/skorea_provinces_geo_simple.json`
@@ -324,14 +325,14 @@ function MapLegendOverlay({
       ) : (
         <>
           <div className="font-semibold text-slate-800 mb-1.5 text-[13px] tracking-wide">
-            색깔 설명 (단위: 그루)
+            색깔 설명 (단위: 그루/km²)
           </div>
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: NO_DATA_COLOR }} />
               <span className="text-[12px] text-slate-600 leading-tight">0 (데이터 없음)</span>
             </div>
-            {getFourStepLabels(nationalFourStep.breaks).map((label, i) => (
+            {getFourStepLabelsDensity(nationalFourStep.breaks).map((label, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: nationalFourStep.colors[i] }} />
                 <span className="text-[12px] text-slate-600 leading-tight">{label}</span>
@@ -339,7 +340,7 @@ function MapLegendOverlay({
             ))}
           </div>
           <p className="text-[12px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1.5 py-0.5 leading-tight">
-            색이 <strong className="font-semibold">진할수록</strong> 나무가 더 많아요.
+            색이 <strong className="font-semibold">진할수록</strong> 단위 면적당 가로수가 많습니다.
           </p>
         </>
       )}
@@ -1262,7 +1263,9 @@ function KoreaGeoJSONLayer({
   }, [zoomLevel, reapplyActiveHighlight])
   const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && zoomLevel < DETAIL_MARKER_ZOOM
   const sidoCountsMap = Object.fromEntries(sidoCounts.map((s) => [s.name, s.count]))
-  const nationalScale = getFourStepScale(sidoCounts.map((s) => s.count))
+  const densities = sidoCounts.map((s) => getDensity(s.count, s.id))
+  const nationalScale = getFourStepScale(densities)
+  const sidoDensityMap = Object.fromEntries(sidoCounts.map((s) => [s.name, getDensity(s.count, s.id)]))
 
   useEffect(() => {
     fetch(KOREA_GEOJSON_URL)
@@ -1317,9 +1320,9 @@ function KoreaGeoJSONLayer({
       style={(feature) => {
         const hideFill = zoomLevel >= DETAIL_MARKER_ZOOM
         const name = getFeatureName(feature?.properties as Record<string, unknown>)
-        const count = sidoCountsMap[name] ?? 0
+        const density = sidoDensityMap[name] ?? 0
         return {
-          fillColor: getColorNational(count, nationalScale),
+          fillColor: getColorNational(density, nationalScale),
           weight: 1.2,
           opacity: 0.95,
           color: hideFill ? "#64748b" : "#f1f5f9",
@@ -1329,6 +1332,7 @@ function KoreaGeoJSONLayer({
       onEachFeature={(feature, layer) => {
         const name = getFeatureName(feature?.properties as Record<string, unknown>)
         const count = sidoCountsMap[name] ?? 0
+        const density = sidoDensityMap[name] ?? 0
         const id = getFeatureAppId(feature?.properties as Record<string, unknown>)
 
         const hideDetailTooltip = (id === "26" || id === "45" || id === "41") && zoomLevel >= DETAIL_MARKER_ZOOM
@@ -1338,8 +1342,9 @@ function KoreaGeoJSONLayer({
           const noDetailHint = !hasDetail
             ? '<br/><span class="region-tooltip-no-detail">이 지역은 구간별 가로수 데이터가 없습니다.</span>'
             : ""
+          const densityStr = density > 0 ? `${density.toFixed(1)} 그루/km²` : "—"
           layer.bindTooltip(
-            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong>${noDetailHint}</div>`,
+            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong> (${densityStr})${noDetailHint}</div>`,
             {
               permanent: false,
               direction: "bottom",
@@ -1837,7 +1842,7 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
       jeonbukTreeCount,
     ]
   )
-  const nationalFourStep = getFourStepScale(sidoCounts.map((s) => s.count))
+  const nationalFourStep = getFourStepScale(sidoCounts.map((s) => getDensity(s.count, s.id)))
 
   return (
     <main className="flex-1 flex flex-col min-w-0 min-h-0 bg-slate-100 relative">
