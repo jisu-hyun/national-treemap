@@ -8,11 +8,11 @@
 npm run convert:csv
 ```
 
-→ 원본 파일을 UTF-8로 변환하여 한글이 정상 표시됩니다. (덮어쓰기)
+원본을 UTF-8로 변환해 덮어쓰기.
 
 ## 데이터 구조
 
-→ `DATA_STRUCTURE.md` 참고 (컬럼 14개, 각 행 = 가로수 1그루)
+`DATA_STRUCTURE.md` 참고.
 
 ## 배포 흐름 (자동 반영)
 

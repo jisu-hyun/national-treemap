@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-# Sitemap URL을 실제 배포 도메인으로 바꿔주세요 (선택)
-# Sitemap: https://your-domain.pages.dev/sitemap.xml
+Sitemap: https://national-treemap.hyunjisu99.pages.dev/sitemap.xml
