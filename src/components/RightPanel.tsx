@@ -63,7 +63,7 @@ export function RightPanel({ mobileOpen = false, onMobileClose }: RightPanelProp
             )}
           </div>
         </div>
-        <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent">
+        <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent dashboard-scroll">
           <NewsDashboard refreshKey={refreshKey} />
         </div>
       </aside>

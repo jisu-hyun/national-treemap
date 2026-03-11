@@ -251,6 +251,15 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
                 >
                   서울시 가로수 트리맵
                 </a>
+                <span className="text-slate-300 select-none" aria-hidden>·</span>
+                <a
+                  href="https://nurse-treemap.pages.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-600 transition-colors underline underline-offset-2"
+                >
+                  전국 보호수 현황지도
+                </a>
               </div>
             </div>
             {/* 제작 크레딧 (오른쪽 끝) */}

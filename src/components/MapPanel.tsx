@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useState, useRef, useMemo, useCallback } from "react"
-import { MapContainer, TileLayer, GeoJSON, CircleMarker, Pane, useMap, useMapEvents, ZoomControl } from "react-leaflet"
+import { MapContainer, TileLayer, GeoJSON, Marker, Pane, useMap, useMapEvents, ZoomControl } from "react-leaflet"
 import { centroid } from "@turf/centroid"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
@@ -231,6 +231,12 @@ const koreaBoundsRef: { current: L.LatLngBounds | null } = { current: null }
 /** 부산·전주 등 구간 원형 마커 표시 줌 (이 이상이면 그레이 마스크·배경 숨김). 10 = 덜 확대 */
 const DETAIL_MARKER_ZOOM = 10
 const BUSAN_MARKER_ZOOM = DETAIL_MARKER_ZOOM
+/** 이 줌 이상이면 원클러스터 대신 개별 원(구간별 원 마커) 표시 */
+const INDIVIDUAL_MARKER_ZOOM = 13
+/** 구간별 가로수 데이터가 있는 시도 (부산·전북·경기). 이외 지역은 세부 데이터 없음 안내 표시 */
+const REGIONS_WITH_DETAIL = ["26", "45", "41"]
+/** 개별 원 표시 시 화면 내 마커만 렌더, 이 개수 초과 시 잘라서 렉 방지 */
+const MAX_VISIBLE_INDIVIDUAL_MARKERS = 500
 
 /** 기본·확대 공통: CARTO Voyager(따뜻한 톤, 자연스러운 지형). Light 대비 시인성·디자인 개선 */
 const TILE_CARTO_VOYAGER = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png"
@@ -290,49 +296,49 @@ function MapLegendOverlay({
     <>
       {showCircleLegend ? (
         <>
-          <div className="font-semibold text-slate-800 mb-1.5 text-[11px] tracking-wide">
+          <div className="font-semibold text-slate-800 mb-1.5 text-[13px] tracking-wide">
             원 크기 설명 (단위: 그루)
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.small)} />
-              <span className="text-[10px] text-slate-600 leading-tight">0 ~ {low.toLocaleString()} 그루</span>
+              <span className="text-[12px] text-slate-600 leading-tight">0 ~ {low.toLocaleString()} 그루</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.medium)} />
-              <span className="text-[10px] text-slate-600 leading-tight">{(low + 1).toLocaleString()} ~ {high.toLocaleString()} 그루</span>
+              <span className="text-[12px] text-slate-600 leading-tight">{(low + 1).toLocaleString()} ~ {high.toLocaleString()} 그루</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.large)} />
-              <span className="text-[10px] text-slate-600 leading-tight">{(high + 1).toLocaleString()} ~ {xlarge.toLocaleString()} 그루</span>
+              <span className="text-[12px] text-slate-600 leading-tight">{(high + 1).toLocaleString()} ~ {xlarge.toLocaleString()} 그루</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="inline-block shrink-0" style={legendCircleStyle(r.xlarge)} />
-              <span className="text-[10px] text-slate-600 leading-tight">{(xlarge + 1).toLocaleString()} 그루 이상</span>
+              <span className="text-[12px] text-slate-600 leading-tight">{(xlarge + 1).toLocaleString()} 그루 이상</span>
             </div>
           </div>
-          <p className="text-[10px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1 py-0.5 leading-tight">
+          <p className="text-[12px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1.5 py-0.5 leading-tight">
             원이 <strong className="font-semibold">클수록</strong> 나무가 더 많아요.
           </p>
         </>
       ) : (
         <>
-          <div className="font-semibold text-slate-800 mb-1.5 text-[11px] tracking-wide">
+          <div className="font-semibold text-slate-800 mb-1.5 text-[13px] tracking-wide">
             색깔 설명 (단위: 그루)
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1.5">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: NO_DATA_COLOR }} />
-              <span className="text-[10px] text-slate-600 leading-tight">0 (데이터 없음)</span>
+              <span className="text-[12px] text-slate-600 leading-tight">0 (데이터 없음)</span>
             </div>
             {getFourStepLabels(nationalFourStep.breaks).map((label, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="w-2.5 h-2.5 rounded-sm border border-slate-300 shrink-0" style={{ backgroundColor: nationalFourStep.colors[i] }} />
-                <span className="text-[10px] text-slate-600 leading-tight">{label}</span>
+                <span className="text-[12px] text-slate-600 leading-tight">{label}</span>
               </div>
             ))}
           </div>
-          <p className="text-[10px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1 py-0.5 leading-tight">
+          <p className="text-[12px] text-amber-700 mt-1.5 bg-amber-50 rounded px-1.5 py-0.5 leading-tight">
             색이 <strong className="font-semibold">진할수록</strong> 나무가 더 많아요.
           </p>
         </>
@@ -362,7 +368,7 @@ function MapLegendOverlay({
         ) : (
           <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-slate-200/80 px-3 py-2.5 text-xs">
             <div className="flex items-center justify-between gap-2 mb-1.5">
-              <span className="font-semibold text-slate-800 text-[11px] tracking-wide">범례</span>
+              <span className="font-semibold text-slate-800 text-[13px] tracking-wide">범례</span>
               <button
                 type="button"
                 onClick={() => setMobileLegendOpen(false)}
@@ -462,7 +468,8 @@ function RegionZoomController({
 
   useLayoutEffect(() => {
     if (region !== "00") {
-      const bounds = nationalViewBoundsRef.current ?? koreaBoundsRef.current
+      // 지역 선택 시 한반도 전체 범위 안에서 자유롭게 패닝 (창 크기와 무관)
+      const bounds = koreaBoundsRef.current
       if (bounds?.isValid?.()) map.setMaxBounds(bounds)
       if (!boundsReady) return
     } else if (!boundsReady) return
@@ -523,6 +530,19 @@ function getBusanRadius(trees: number): number {
   return BUSAN_CIRCLE_RADIUS.xlarge
 }
 
+/** 개별 원 마커용 divIcon — 최신형 디자인·모션 적용 */
+function getIndividualCircleDivIcon(m: BusanSegment, selected: boolean): L.DivIcon {
+  const radius = getBusanRadius(m.trees)
+  const size = radius * 2
+  const selectedClass = selected ? " is-selected" : ""
+  return L.divIcon({
+    html: `<div class="street-tree-individual-circle${selectedClass}" style="width:${size}px;height:${size}px;min-width:${size}px;min-height:${size}px;--individual-size:${size}px" aria-label="${m.trees}그루"></div>`,
+    className: "street-tree-individual-marker",
+    iconSize: [size, size],
+    iconAnchor: [radius, radius],
+  })
+}
+
 function isSameSegment(a: BusanSegment | null, b: BusanSegment): boolean {
   return a != null && a.lat === b.lat && a.lng === b.lng && a.name === b.name
 }
@@ -542,9 +562,114 @@ function isInBusanBounds(m: BusanSegment): boolean {
   return lat >= BUSAN_BOUNDS.latMin && lat <= BUSAN_BOUNDS.latMax && lng >= BUSAN_BOUNDS.lngMin && lng <= BUSAN_BOUNDS.lngMax
 }
 
+/** 그리드 클러스터: bounds를 격자로 나누고 구간을 셀에 모아 합계·중심·셀 인덱스 반환 (원클러스터용) */
+export type ClusterPoint = { lat: number; lng: number; trees: number; cellR: number; cellC: number }
+function gridCluster(segments: BusanSegment[], bounds: L.LatLngBounds, zoom: number): ClusterPoint[] {
+  const ne = bounds.getNorthEast()
+  const sw = bounds.getSouthWest()
+  const latMin = sw.lat
+  const latMax = ne.lat
+  const lngMin = sw.lng
+  const lngMax = ne.lng
+  const gridN = Math.min(24, Math.max(4, 4 * 2 ** (zoom - DETAIL_MARKER_ZOOM)))
+  const cellLat = (latMax - latMin) / gridN
+  const cellLng = (lngMax - lngMin) / gridN
+  const key = (r: number, c: number) => `${r},${c}`
+  const cells = new Map<string, { latSum: number; lngSum: number; trees: number; count: number; cellR: number; cellC: number }>()
+  for (const m of segments) {
+    const [lat, lng] = segmentCenter(m)
+    if (!bounds.contains([lat, lng])) continue
+    const r = Math.min(gridN - 1, Math.floor((lat - latMin) / cellLat))
+    const c = Math.min(gridN - 1, Math.floor((lng - lngMin) / cellLng))
+    const k = key(r, c)
+    const cur = cells.get(k)
+    if (!cur) {
+      cells.set(k, { latSum: lat, lngSum: lng, trees: m.trees, count: 1, cellR: r, cellC: c })
+    } else {
+      cur.latSum += lat
+      cur.lngSum += lng
+      cur.trees += m.trees
+      cur.count += 1
+    }
+  }
+  const out: ClusterPoint[] = []
+  cells.forEach((v) => {
+    out.push({
+      lat: v.latSum / v.count,
+      lng: v.lngSum / v.count,
+      trees: v.trees,
+      cellR: v.cellR,
+      cellC: v.cellC,
+    })
+  })
+  return out
+}
+
+function getCellForSegment(m: BusanSegment, bounds: L.LatLngBounds, zoom: number): { r: number; c: number } | null {
+  const [lat, lng] = segmentCenter(m)
+  if (!bounds.contains([lat, lng])) return null
+  const ne = bounds.getNorthEast()
+  const sw = bounds.getSouthWest()
+  const gridN = Math.min(24, Math.max(4, 4 * 2 ** (zoom - DETAIL_MARKER_ZOOM)))
+  const cellLat = (ne.lat - sw.lat) / gridN
+  const cellLng = (ne.lng - sw.lng) / gridN
+  const r = Math.min(gridN - 1, Math.floor((lat - sw.lat) / cellLat))
+  const c = Math.min(gridN - 1, Math.floor((lng - sw.lng) / cellLng))
+  return { r, c }
+}
+
+function getSegmentsInCell(segments: BusanSegment[], bounds: L.LatLngBounds, zoom: number, cellR: number, cellC: number): BusanSegment[] {
+  return segments.filter((m) => {
+    const cell = getCellForSegment(m, bounds, zoom)
+    return cell != null && cell.r === cellR && cell.c === cellC
+  })
+}
+
+/** 화면 내 마커만 남기고, 개수 제한 초과 시 선택된 구간은 유지한 채 잘라서 반환 (렉 방지) */
+function getVisibleCappedMarkers(
+  markers: BusanSegment[],
+  bounds: L.LatLngBounds | null,
+  selectedSegment: BusanSegment | null,
+  max: number
+): BusanSegment[] {
+  const visible = bounds?.isValid?.()
+    ? markers.filter((m) => bounds.contains(segmentCenter(m)))
+    : markers
+  if (visible.length <= max) return visible
+  const selectedInVisible = selectedSegment && visible.some((m) => isSameSegment(selectedSegment, m))
+  if (!selectedInVisible) return visible.slice(0, max)
+  return [
+    selectedSegment,
+    ...visible.filter((m) => !isSameSegment(selectedSegment, m)).slice(0, max - 1),
+  ]
+}
+
+/** 원클러스터용 원 반지름 (그루 수). 글자 크기 확보·가독성 위해 개별 원보다 크게 */
+function getClusterRadius(trees: number): number {
+  if (trees <= BUSAN_LEGEND_BREAKS.low) return 20
+  if (trees <= BUSAN_LEGEND_BREAKS.high) return 28
+  if (trees <= BUSAN_LEGEND_BREAKS.xlarge) return 36
+  return 46
+}
+
+/** 원클러스터 마커용 divIcon (원 안에 숫자) */
+function getClusterDivIcon(trees: number, selected: boolean): L.DivIcon {
+  const radius = getClusterRadius(trees)
+  const size = radius * 2
+  const countStr = Number(trees).toLocaleString()
+  const selectedClass = selected ? " is-selected" : ""
+  return L.divIcon({
+    html: `<div class="street-tree-cluster-circle${selectedClass}" style="--cluster-size:${size}px;width:${size}px;height:${size}px;min-width:${size}px;min-height:${size}px"><span class="street-tree-cluster-count">${countStr}</span><span class="street-tree-cluster-unit">그루</span></div>`,
+    className: "street-tree-cluster-marker",
+    iconSize: [size, size],
+    iconAnchor: [radius, radius],
+  })
+}
+
 function BusanJinguMarkers({
   region: _region,
   zoom,
+  bounds,
   markers,
   selectedSegment,
   onSegmentSelect,
@@ -552,31 +677,60 @@ function BusanJinguMarkers({
 }: {
   region: string
   zoom: number
+  bounds: L.LatLngBounds | null
   markers: BusanSegment[]
   selectedSegment: BusanSegment | null
   onSegmentSelect: (s: BusanSegment) => void
   onOpenLeft?: () => void
 }) {
+  const map = useMap()
+  const inBounds = useMemo(() => markers.filter(isInBusanBounds), [markers])
+  const boundsKey = bounds?.isValid?.() ? `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}` : ""
+  const clusters = useMemo(
+    () => (zoom < INDIVIDUAL_MARKER_ZOOM && bounds?.isValid?.() ? gridCluster(inBounds, bounds, zoom) : []),
+    [inBounds, boundsKey, zoom]
+  )
+
   if (markers.length === 0) return null
   if (zoom < BUSAN_MARKER_ZOOM) return null
 
-  const inBounds = markers.filter(isInBusanBounds)
+  if (zoom < INDIVIDUAL_MARKER_ZOOM && bounds?.isValid?.()) {
+    const selectedCell = selectedSegment ? getCellForSegment(selectedSegment, bounds, zoom) : null
+    return (
+      <Pane name="busan-markers" style={{ zIndex: 600 }}>
+        {clusters.map((cl, i) => {
+          const selected = selectedCell != null && cl.cellR === selectedCell.r && cl.cellC === selectedCell.c
+          return (
+            <Marker
+              key={`${cl.cellR}-${cl.cellC}-${i}`}
+              position={[cl.lat, cl.lng]}
+              icon={getClusterDivIcon(cl.trees, selected)}
+              eventHandlers={{
+                click: () => {
+                  map.flyTo([cl.lat, cl.lng], INDIVIDUAL_MARKER_ZOOM, { duration: FLY_DURATION })
+                  const segs = getSegmentsInCell(inBounds, bounds, zoom, cl.cellR, cl.cellC)
+                  const best = segs.length ? segs.reduce((a, b) => (a.trees >= b.trees ? a : b)) : null
+                  if (best) onSegmentSelect(best)
+                  onOpenLeft?.()
+                },
+              }}
+            />
+          )
+        })}
+      </Pane>
+    )
+  }
+
+  const toRender = getVisibleCappedMarkers(inBounds, bounds, selectedSegment, MAX_VISIBLE_INDIVIDUAL_MARKERS)
   return (
     <Pane name="busan-markers" style={{ zIndex: 600 }}>
-      {inBounds.map((m, i) => {
-        const radius = getBusanRadius(m.trees)
+      {toRender.map((m, i) => {
         const selected = isSameSegment(selectedSegment, m)
         return (
-          <CircleMarker
+          <Marker
             key={`${m.lat}-${m.lng}-${i}`}
-            center={segmentCenter(m)}
-            radius={radius}
-            pathOptions={{
-              fillColor: selected ? "#047857" : BUSAN_CIRCLE_STYLE.fill,
-              color: selected ? "#065f46" : BUSAN_CIRCLE_STYLE.stroke,
-              weight: selected ? 2.5 : BUSAN_CIRCLE_STYLE.strokeWidth,
-              fillOpacity: BUSAN_CIRCLE_STYLE.fillOpacity,
-            }}
+            position={segmentCenter(m)}
+            icon={getIndividualCircleDivIcon(m, selected)}
             eventHandlers={{
               click: () => {
                 onSegmentSelect(m)
@@ -590,10 +744,11 @@ function BusanJinguMarkers({
   )
 }
 
-/** 전주·정읍·완주·경기 광주 구간 마커 (줌 일정 이상이면 표시) */
+/** 전주·정읍·완주·경기 광주 구간 마커 (줌 일정 이상: 원클러스터 → 더 확대 시 개별 원) */
 function Region45Markers({
   region: _region,
   zoom,
+  bounds,
   markers,
   selectedSegment,
   onSegmentSelect,
@@ -602,6 +757,7 @@ function Region45Markers({
 }: {
   region: string
   zoom: number
+  bounds: L.LatLngBounds | null
   markers: BusanSegment[]
   selectedSegment: BusanSegment | null
   onSegmentSelect: (s: BusanSegment) => void
@@ -609,25 +765,53 @@ function Region45Markers({
   paneName: string
   regionId?: string
 }) {
+  const map = useMap()
+  const boundsKey = bounds?.isValid?.() ? `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}` : ""
+  const clusters = useMemo(
+    () => (zoom < INDIVIDUAL_MARKER_ZOOM && bounds?.isValid?.() ? gridCluster(markers, bounds, zoom) : []),
+    [markers, boundsKey, zoom]
+  )
+
   if (markers.length === 0) return null
   if (zoom < DETAIL_MARKER_ZOOM) return null
 
+  if (zoom < INDIVIDUAL_MARKER_ZOOM && bounds?.isValid?.()) {
+    const selectedCell = selectedSegment ? getCellForSegment(selectedSegment, bounds, zoom) : null
+    return (
+      <Pane name={paneName} style={{ zIndex: 600 }}>
+        {clusters.map((cl, i) => {
+          const selected = selectedCell != null && cl.cellR === selectedCell.r && cl.cellC === selectedCell.c
+          return (
+            <Marker
+              key={`${cl.cellR}-${cl.cellC}-${paneName}-${i}`}
+              position={[cl.lat, cl.lng]}
+              icon={getClusterDivIcon(cl.trees, selected)}
+              eventHandlers={{
+                click: () => {
+                  map.flyTo([cl.lat, cl.lng], INDIVIDUAL_MARKER_ZOOM, { duration: FLY_DURATION })
+                  const segs = getSegmentsInCell(markers, bounds, zoom, cl.cellR, cl.cellC)
+                  const best = segs.length ? segs.reduce((a, b) => (a.trees >= b.trees ? a : b)) : null
+                  if (best) onSegmentSelect(best)
+                  onOpenLeft?.()
+                },
+              }}
+            />
+          )
+        })}
+      </Pane>
+    )
+  }
+
+  const toRender = getVisibleCappedMarkers(markers, bounds, selectedSegment, MAX_VISIBLE_INDIVIDUAL_MARKERS)
   return (
     <Pane name={paneName} style={{ zIndex: 600 }}>
-      {markers.map((m, i) => {
-        const radius = getBusanRadius(m.trees)
+      {toRender.map((m, i) => {
         const selected = isSameSegment(selectedSegment, m)
         return (
-          <CircleMarker
+          <Marker
             key={`${m.lat}-${m.lng}-${m.name}-${i}`}
-            center={segmentCenter(m)}
-            radius={radius}
-            pathOptions={{
-              fillColor: selected ? "#047857" : BUSAN_CIRCLE_STYLE.fill,
-              color: selected ? "#065f46" : BUSAN_CIRCLE_STYLE.stroke,
-              weight: selected ? 2.5 : BUSAN_CIRCLE_STYLE.strokeWidth,
-              fillOpacity: BUSAN_CIRCLE_STYLE.fillOpacity,
-            }}
+            position={segmentCenter(m)}
+            icon={getIndividualCircleDivIcon(m, selected)}
             eventHandlers={{
               click: () => {
                 onSegmentSelect(m)
@@ -747,10 +931,21 @@ function MapContent({
   const map = useMap()
   const [boundsReady, setBoundsReady] = useState(false)
   const [zoom, setZoom] = useState(() => map.getZoom())
+  const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(() => map.getBounds())
+  const boundsRafRef = useRef<number | null>(null)
+  const setBoundsDeferred = useCallback(() => {
+    if (boundsRafRef.current != null) return
+    boundsRafRef.current = requestAnimationFrame(() => {
+      boundsRafRef.current = null
+      setMapBounds(map.getBounds())
+    })
+  }, [map])
   useMapEvents({
     zoom: () => setZoom(map.getZoom()),
+    moveend: () => setBoundsDeferred(),
     zoomend: () => {
       setZoom(map.getZoom())
+      setMapBounds(map.getBounds())
       if (Date.now() < programmaticZoomUntilRef.current) return
       const z = map.getZoom()
       if (region !== "00" && z < 8) {
@@ -779,6 +974,7 @@ function MapContent({
       <BusanJinguMarkers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={busanMarkers}
         selectedSegment={selectedBusanSegment}
         onSegmentSelect={onBusanSegmentSelect}
@@ -787,6 +983,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={jeonjuMarkers}
         selectedSegment={selectedJeonjuSegment}
         onSegmentSelect={onJeonjuSegmentSelect}
@@ -796,6 +993,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={jeongeupMarkers}
         selectedSegment={selectedJeongeupSegment}
         onSegmentSelect={onJeongeupSegmentSelect}
@@ -805,6 +1003,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={wanjuMarkers}
         selectedSegment={selectedWanjuSegment}
         onSegmentSelect={onWanjuSegmentSelect}
@@ -814,6 +1013,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={gwangjuMarkers}
         selectedSegment={selectedGwangjuSegment}
         onSegmentSelect={onGwangjuSegmentSelect}
@@ -823,6 +1023,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={yonginMarkers}
         selectedSegment={selectedYonginSegment}
         onSegmentSelect={onYonginSegmentSelect}
@@ -832,6 +1033,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={gwangmyeongMarkers}
         selectedSegment={selectedGwangmyeongSegment}
         onSegmentSelect={onGwangmyeongSegmentSelect}
@@ -841,6 +1043,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={anyangMarkers}
         selectedSegment={selectedAnyangSegment}
         onSegmentSelect={onAnyangSegmentSelect}
@@ -850,6 +1053,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={yangpyeongMarkers}
         selectedSegment={selectedYangpyeongSegment}
         onSegmentSelect={onYangpyeongSegmentSelect}
@@ -859,6 +1063,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={uijeongbuMarkers}
         selectedSegment={selectedUijeongbuSegment}
         onSegmentSelect={onUijeongbuSegmentSelect}
@@ -868,6 +1073,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={goyangMarkers}
         selectedSegment={selectedGoyangSegment}
         onSegmentSelect={onGoyangSegmentSelect}
@@ -877,6 +1083,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={ansanMarkers}
         selectedSegment={selectedAnsanSegment}
         onSegmentSelect={onAnsanSegmentSelect}
@@ -886,6 +1093,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={uiwangMarkers}
         selectedSegment={selectedUiwangSegment}
         onSegmentSelect={onUiwangSegmentSelect}
@@ -895,6 +1103,7 @@ function MapContent({
       <Region45Markers
         region={region}
         zoom={zoom}
+        bounds={mapBounds}
         markers={gwacheonMarkers}
         selectedSegment={selectedGwacheonSegment}
         onSegmentSelect={onGwacheonSegmentSelect}
@@ -1032,10 +1241,25 @@ function KoreaGeoJSONLayer({
 }) {
   const regionRef = useRef(region)
   regionRef.current = region
+  const activeTooltipLayerRef = useRef<L.Layer | null>(null)
   const [geojson, setGeojson] = useState<GeoJSON.GeoJsonObject | null>(null)
   const map = useMap()
   const [zoomLevel, setZoomLevel] = useState(() => map.getZoom())
   useMapEvents({ zoom: () => setZoomLevel(map.getZoom()), zoomend: () => setZoomLevel(map.getZoom()) })
+  const reapplyActiveHighlight = useCallback(() => {
+    const layer = activeTooltipLayerRef.current
+    if (layer && (layer as L.Path).setStyle) {
+      ;(layer as L.Path).bringToFront()
+      ;(layer as L.Path).setStyle({ color: "#0ea5e9", weight: 2.2, opacity: 1 })
+    }
+  }, [])
+  useMapEvents({
+    moveend: reapplyActiveHighlight,
+    zoomend: reapplyActiveHighlight,
+  })
+  useEffect(() => {
+    reapplyActiveHighlight()
+  }, [zoomLevel, reapplyActiveHighlight])
   const showLabels = zoomLevel >= LABEL_ZOOM_THRESHOLD && zoomLevel < DETAIL_MARKER_ZOOM
   const sidoCountsMap = Object.fromEntries(sidoCounts.map((s) => [s.name, s.count]))
   const nationalScale = getFourStepScale(sidoCounts.map((s) => s.count))
@@ -1107,31 +1331,67 @@ function KoreaGeoJSONLayer({
         const count = sidoCountsMap[name] ?? 0
         const id = getFeatureAppId(feature?.properties as Record<string, unknown>)
 
-        const setTooltipLatLng = () => {
-          const tooltip = (layer as L.GeoJSON).getTooltip()
-          if (tooltip?.setLatLng) {
-            const pt = getFeatureLabelPoint(feature as GeoJSON.Feature, id)
-            if (pt) {
-              const [lat, lng] = pt
-              tooltip.setLatLng([lat, lng])
-            }
-          }
-        }
-
         const hideDetailTooltip = (id === "26" || id === "45" || id === "41") && zoomLevel >= DETAIL_MARKER_ZOOM
         const hideTooltip = hideDetailTooltip && zoomLevel >= DETAIL_MARKER_ZOOM
         if (!showLabels && !hideTooltip) {
-          const isGyeonggi = id === "41"
+          const hasDetail = id != null && REGIONS_WITH_DETAIL.includes(id)
+          const noDetailHint = !hasDetail
+            ? '<br/><span class="region-tooltip-no-detail">이 지역은 구간별 가로수 데이터가 없어요.</span>'
+            : ""
           layer.bindTooltip(
-            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong></div>`,
+            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong>${noDetailHint}</div>`,
             {
               permanent: false,
-              direction: isGyeonggi ? "bottom" : "center",
-              offset: isGyeonggi ? [40, 50] : [0, 0],
-              className: "font-sans text-sm font-medium",
+              direction: "bottom",
+              offset: [0, 26],
+              className: "font-sans text-sm font-medium region-tooltip",
+              sticky: false,
             }
           )
-          layer.on("tooltipopen", setTooltipLatLng)
+          const setTooltipToLabel = () => {
+            const tooltip = (layer as L.GeoJSON).getTooltip()
+            if (tooltip?.setLatLng) {
+              const pt = getFeatureLabelPoint(feature as GeoJSON.Feature, id)
+              if (pt) tooltip.setLatLng(pt)
+            }
+          }
+          const onMouseMove = (e: L.LeafletMouseEvent) => {
+            const tooltip = (layer as L.GeoJSON).getTooltip()
+            if (tooltip?.setLatLng) tooltip.setLatLng(e.latlng)
+          }
+          let moveBound: ((e: L.LeafletMouseEvent) => void) | null = null
+          const getDefaultStroke = () => {
+            const hideFill = zoomLevel >= DETAIL_MARKER_ZOOM
+            return {
+              color: hideFill ? "#64748b" : "#f1f5f9",
+              weight: 1.2,
+              opacity: 0.95,
+            }
+          }
+          layer.on("tooltipopen", () => {
+            activeTooltipLayerRef.current = layer
+            ;(layer as L.Path).bringToFront()
+            ;(layer as L.Path).setStyle({
+              color: "#0ea5e9",
+              weight: 2.2,
+              opacity: 1,
+            })
+            if (map.getZoom() >= DETAIL_MARKER_ZOOM) {
+              moveBound = onMouseMove
+              layer.on("mousemove", moveBound)
+            } else {
+              setTooltipToLabel()
+            }
+          })
+          layer.on("tooltipclose", () => {
+            activeTooltipLayerRef.current = null
+            ;(layer as L.Path).setStyle(getDefaultStroke())
+            ;(layer as L.Path).bringToBack()
+            if (moveBound) {
+              layer.off("mousemove", moveBound)
+              moveBound = null
+            }
+          })
         }
 
         // 부산 확대·가로수 마커 표시 시: 부산 폴리곤은 클릭 비활성화 → 원형 마커 클릭이 왼쪽 팝업으로 전달되도록

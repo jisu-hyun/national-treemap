@@ -239,8 +239,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
                 여름에는 그늘을 만들어 도시의 더위를 줄여주고, 공기를 정화하며, 계절마다 다양한 풍경을 만들어 도시의 거리를 더욱 아름답게 만듭니다.
                 <br />
                 또한 도심 속에서 자연을 느낄 수 있게 해주는 중요한 역할도 합니다.
-                <br /><br />
-                이 페이지에서는 가로수가 어떤 역할을 하는지, 어떻게 관리되는지, 그리고 우리가 알아두면 좋은 내용을 쉽게 정리했습니다.
               </p>
             </div>
           </div>
@@ -651,6 +649,15 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
                   className="hover:text-emerald-600 transition-colors underline underline-offset-2"
                 >
                   서울시 가로수 트리맵
+                </a>
+                <span className="text-slate-300 select-none" aria-hidden>·</span>
+                <a
+                  href="https://nurse-treemap.pages.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-emerald-600 transition-colors underline underline-offset-2"
+                >
+                  전국 보호수 현황지도
                 </a>
               </div>
             </div>
