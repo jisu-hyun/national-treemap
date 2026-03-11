@@ -1485,6 +1485,8 @@ interface MapPanelProps {
   onJeonbukDetailCountsLoad?: (counts: { jeonju: number; jeongeup: number; wanju: number }) => void
   onOpenLeft?: () => void
   onOpenRight?: () => void
+  /** 모바일에서 가로수 정보 시트 닫기(선택 해제) 시 호출 */
+  onClearSegment?: () => void
   selectedBusanSegment?: BusanSegment | null
   onBusanSegmentSelect?: (s: BusanSegment) => void
   selectedJeonjuSegment?: BusanSegment | null
@@ -1515,9 +1517,35 @@ interface MapPanelProps {
   onGwacheonSegmentSelect?: (s: BusanSegment) => void
 }
 
-export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onJeonbukTreeCountLoad, onGyeonggiDetailCountsLoad, onJeonbukDetailCountsLoad, onOpenLeft, onOpenRight, selectedBusanSegment = null, onBusanSegmentSelect, selectedJeonjuSegment = null, onJeonjuSegmentSelect, selectedJeongeupSegment = null, onJeongeupSegmentSelect, selectedWanjuSegment = null, onWanjuSegmentSelect, selectedGwangjuSegment = null, onGwangjuSegmentSelect, selectedYonginSegment = null, onYonginSegmentSelect, selectedGwangmyeongSegment = null, onGwangmyeongSegmentSelect, selectedAnyangSegment = null, onAnyangSegmentSelect, selectedYangpyeongSegment = null, onYangpyeongSegmentSelect, selectedUijeongbuSegment = null, onUijeongbuSegmentSelect, selectedGoyangSegment = null, onGoyangSegmentSelect, selectedAnsanSegment = null, onAnsanSegmentSelect, selectedUiwangSegment = null, onUiwangSegmentSelect, selectedGwacheonSegment = null, onGwacheonSegmentSelect }: MapPanelProps) {
+export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onBusanTreeCountLoad, onJeonbukTreeCountLoad, onGyeonggiDetailCountsLoad, onJeonbukDetailCountsLoad, onOpenLeft, onOpenRight, onClearSegment, selectedBusanSegment = null, onBusanSegmentSelect, selectedJeonjuSegment = null, onJeonjuSegmentSelect, selectedJeongeupSegment = null, onJeongeupSegmentSelect, selectedWanjuSegment = null, onWanjuSegmentSelect, selectedGwangjuSegment = null, onGwangjuSegmentSelect, selectedYonginSegment = null, onYonginSegmentSelect, selectedGwangmyeongSegment = null, onGwangmyeongSegmentSelect, selectedAnyangSegment = null, onAnyangSegmentSelect, selectedYangpyeongSegment = null, onYangpyeongSegmentSelect, selectedUijeongbuSegment = null, onUijeongbuSegmentSelect, selectedGoyangSegment = null, onGoyangSegmentSelect, selectedAnsanSegment = null, onAnsanSegmentSelect, selectedUiwangSegment = null, onUiwangSegmentSelect, selectedGwacheonSegment = null, onGwacheonSegmentSelect }: MapPanelProps) {
   const dataAttribution = "데이터 출처: 공공데이터포털"
   const mapRef = useRef<L.Map | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)")
+    const set = () => setIsMobile(mq.matches)
+    set()
+    mq.addEventListener("change", set)
+    return () => mq.removeEventListener("change", set)
+  }, [])
+  const openLeftOnSegmentSelect = isMobile ? undefined : onOpenLeft
+  const mobileSegment = selectedBusanSegment ?? selectedJeonjuSegment ?? selectedJeongeupSegment ?? selectedWanjuSegment ?? selectedGwangjuSegment ?? selectedYonginSegment ?? selectedGwangmyeongSegment ?? selectedAnyangSegment ?? selectedYangpyeongSegment ?? selectedUijeongbuSegment ?? selectedGoyangSegment ?? selectedAnsanSegment ?? selectedUiwangSegment ?? selectedGwacheonSegment ?? null
+  const mobileSegmentRegionLabel =
+    selectedBusanSegment ? `부산광역시 ${mobileSegment?.gu}` :
+    selectedGwangjuSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedYonginSegment ? `경기도 용인시 ${mobileSegment?.gu}` :
+    selectedGwangmyeongSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedAnyangSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedYangpyeongSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedUijeongbuSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedGoyangSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedAnsanSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedUiwangSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedGwacheonSegment ? `경기도 ${mobileSegment?.gu}` :
+    selectedJeonjuSegment ? `전북특별자치도 전주시 ${mobileSegment?.gu}` :
+    selectedJeongeupSegment ? `전북특별자치도 정읍시${mobileSegment?.gu ? ` ${mobileSegment.gu}` : ""}` :
+    selectedWanjuSegment ? `전북특별자치도 완주군${mobileSegment?.gu ? ` ${mobileSegment.gu}` : ""}` :
+    mobileSegment?.gu ?? ""
   const [busanMarkers, setBusanMarkers] = useState<BusanSegment[]>([])
   const [jeonjuMarkers, setJeonjuMarkers] = useState<BusanSegment[]>([])
   const [jeongeupMarkers, setJeongeupMarkers] = useState<BusanSegment[]>([])
@@ -1945,7 +1973,7 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
             onAnsanSegmentSelect={onAnsanSegmentSelect ?? (() => {})}
             onUiwangSegmentSelect={onUiwangSegmentSelect ?? (() => {})}
             onGwacheonSegmentSelect={onGwacheonSegmentSelect ?? (() => {})}
-            onOpenLeft={onOpenLeft}
+            onOpenLeft={openLeftOnSegmentSelect}
             onNationalMinZoomApplied={setNationalMinZoom}
             effectiveMinZoom={effectiveMinZoom}
             onInitialNationalViewReady={() => setInitialNationalViewReady(true)}
@@ -1954,6 +1982,55 @@ export function MapPanel({ region, onRegionChange, treeData, seoulTreeCount, onB
           <SeoulTreemapButton region={region} />
         </MapContainer>
       </div>
+
+      {isMobile && mobileSegment && onClearSegment && (
+        <div className="lg:hidden fixed left-0 right-0 bottom-0 z-[1200] max-h-[55vh] overflow-hidden flex flex-col rounded-t-2xl bg-white border border-b-0 border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.12)]">
+          <div className="flex items-center justify-center py-2 shrink-0 bg-slate-100/80">
+            <span className="w-10 h-1 rounded-full bg-slate-300" aria-hidden />
+          </div>
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#166534] shrink-0">
+            <h3 className="text-sm font-semibold text-white">가로수 정보</h3>
+            <button
+              type="button"
+              onClick={onClearSegment}
+              className="p-1.5 rounded-lg hover:bg-white/15 text-white transition-colors"
+              aria-label="닫기"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="flex-1 min-h-0 overflow-y-auto p-4 pb-6">
+            <p className="text-base font-bold text-[#166534] mb-3 truncate">{mobileSegment.name}</p>
+            <ul className="space-y-2 text-sm text-slate-800">
+              <li><span className="text-[#166534] font-medium">[지역]</span> {mobileSegmentRegionLabel}</li>
+              <li><span className="text-[#166534] font-medium">[도로명]</span> {mobileSegment.name}</li>
+              <li><span className="text-[#166534] font-medium">[가로수]</span> {mobileSegment.trees.toLocaleString()}그루</li>
+              <li>
+                <span className="text-[#166534] font-medium">[식재거리]</span>{" "}
+                {mobileSegment.length > 0 ? `${mobileSegment.length.toLocaleString()}m` : <span className="text-slate-400">정보 없음</span>}
+              </li>
+            </ul>
+            <div className="pt-3 mt-3 border-t border-slate-200">
+              <p className="text-[#166534] font-semibold text-sm mb-2">[수종별]</p>
+              {mobileSegment.species && mobileSegment.species.length > 0 ? (
+                <ul className="space-y-1.5 text-sm text-slate-800">
+                  {mobileSegment.species.map((s) => (
+                    <li key={s.name} className="flex justify-between gap-3 items-center py-0.5">
+                      <span className="truncate">{s.name}</span>
+                      <span className="tabular-nums shrink-0 font-medium">{s.count.toLocaleString()}그루</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-slate-400 text-sm">수종 정보 없음</p>
+              )}
+            </div>
+            <p className="text-xs text-slate-500 mt-4">다른 마커를 누르면 여기 내용이 바뀝니다.</p>
+          </div>
+        </div>
+      )}
 
       <div className="h-6 sm:h-7 shrink-0 flex items-center justify-center gap-1.5 py-0.5 bg-white/80 border-t border-slate-200/80 text-[10px] sm:text-[11px] text-slate-500 tracking-wide px-2">
         <svg className="w-3 h-3 text-slate-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>

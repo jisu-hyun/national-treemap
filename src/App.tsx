@@ -166,6 +166,22 @@ function App() {
             onJeonbukDetailCountsLoad={setJeonbukDetailCounts}
             onOpenLeft={() => setLeftOpen(true)}
             onOpenRight={() => setRightOpen(true)}
+            onClearSegment={() => {
+              setSelectedBusanSegment(null)
+              setSelectedJeonjuSegment(null)
+              setSelectedJeongeupSegment(null)
+              setSelectedWanjuSegment(null)
+              setSelectedGwangjuSegment(null)
+              setSelectedYonginSegment(null)
+              setSelectedGwangmyeongSegment(null)
+              setSelectedAnyangSegment(null)
+              setSelectedYangpyeongSegment(null)
+              setSelectedUijeongbuSegment(null)
+              setSelectedGoyangSegment(null)
+              setSelectedAnsanSegment(null)
+              setSelectedUiwangSegment(null)
+              setSelectedGwacheonSegment(null)
+            }}
             selectedBusanSegment={selectedBusanSegment}
             onBusanSegmentSelect={(s) => {
               setSelectedBusanSegment(s)
