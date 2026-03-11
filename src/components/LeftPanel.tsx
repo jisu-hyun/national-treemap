@@ -370,13 +370,12 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         </div>
 
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4">
-          <div className="flex items-center justify-between gap-2 mb-2">
+          <div className="flex items-center justify-between gap-2 mb-4">
             <p className="text-base font-semibold text-slate-800">한눈에 보는 가로수 통계</p>
             <span className="text-xs text-slate-500 shrink-0">
               {isNationalView ? "전국 기준" : `${regionLabel} 기준`}
             </span>
           </div>
-          <p className="text-[11px] text-slate-500 mb-3">시·도 순위는 지도 색상과 동일하게 단위 면적당(그루/km²) 기준입니다.</p>
           <div className="space-y-4">
             {!isNationalView && (
               <div>

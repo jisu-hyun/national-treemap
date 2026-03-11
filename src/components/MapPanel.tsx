@@ -1342,9 +1342,8 @@ function KoreaGeoJSONLayer({
           const noDetailHint = !hasDetail
             ? '<br/><span class="region-tooltip-no-detail">이 지역은 구간별 가로수 데이터가 없습니다.</span>'
             : ""
-          const densityStr = density > 0 ? `${density.toFixed(1)} 그루/km²` : "—"
           layer.bindTooltip(
-            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong> (${densityStr})${noDetailHint}</div>`,
+            `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong>${noDetailHint}</div>`,
             {
               permanent: false,
               direction: "bottom",
