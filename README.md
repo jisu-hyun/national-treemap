@@ -1,4 +1,4 @@
-# 전국 가로수 현황 지도
+# 전국 가로수 현황지도
 
 시도별 가로수 개수 보여주는 지도 웹앱이에요.
 
@@ -20,11 +20,11 @@ npm run dev
 
 - `index.html`: title, meta description, keywords, Open Graph
 - `public/robots.txt`: 크롤러 허용
-- `public/sitemap.xml`: 배포 후 실제 도메인으로 `<loc>` URL 수정 권장
+- `public/sitemap.xml`: 배포 후 도메인에 맞게 `<loc>` 수정
 
 ## Cloudflare Pages 배포 (Private 저장소 지원)
 
-**Private 저장소** 그대로 두고 배포할 수 있어요.
+Private 저장소도 그대로 배포 가능.
 
 ### 1. Cloudflare Dashboard 설정
 
@@ -41,8 +41,7 @@ npm run dev
 | Build output directory | `dist` |
 | **Root directory** | **반드시 비워 두기** (비어 있지 않으면 `package.json`을 찾지 못해 빌드 실패) |
 
-**`package.json`을 찾을 수 없다는 빌드 실패가 나면**  
-Cloudflare Pages → 해당 프로젝트 → **Settings** → **Builds & deployments** → **Build configuration**에서 **Root directory**를 확인하세요. 값이 있으면 지우고 비운 뒤 저장하고 다시 배포하세요.
+빌드 실패 시 **Settings → Build configuration**에서 **Root directory**가 비어 있는지 확인.
 
 ### 2. 환경 변수 (Build time)
 
@@ -53,14 +52,12 @@ Cloudflare Pages → 해당 프로젝트 → **Settings** → **Builds & deploym
 | `VITE_CF_API_URL` | `https://national-treemap-api.내계정.workers.dev` | Production |
 | `NODE_VERSION` | `20` | (선택) Node 18 기본값 |
 
-Worker URL은 `npm run deploy:worker` 후 wrangler가 알려주는 주소를 넣으세요.
+Worker URL은 `npm run deploy:worker` 실행 후 출력되는 주소 사용.
 
 ### 3. 배포
 
-**방법 A – Git push (권장)**  
-- **Save** 후 자동 빌드 시작  
-- 이후 `main` 브랜치에 push할 때마다 자동 배포  
-- 배포된 URL: `https://national-treemap.내계정.pages.dev`
+**방법 A – Git push**  
+Save 후 자동 빌드. `main`에 push할 때마다 자동 배포. URL: `https://national-treemap.내계정.pages.dev`
 
 **방법 B – 로컬에서 빌드물만 올리기**  
 ```bash
@@ -71,7 +68,7 @@ npx wrangler pages deploy dist --project-name=national-treemap
 
 ### 4. GitHub Actions 비활성화 (선택)
 
-Cloudflare Pages로 완전 전환했다면 GitHub 저장소 **Settings** → **Actions** → **General**에서 워크플로를 비활성화하거나, `.github/workflows/deploy.yml`을 삭제/수정할 수 있어요.
+Cloudflare만 쓸 경우 GitHub **Settings → Actions**에서 워크플로 비활성화하거나 `.github/workflows/deploy.yml` 삭제.
 
 ---
 
@@ -115,7 +112,7 @@ Cloudflare Pages로 완전 전환했다면 GitHub 저장소 **Settings** → **A
 
 ## 뉴스·서울 가로수 API (Cloudflare Worker)
 
-GitHub Pages에서는 API가 없어서 뉴스와 서울 가로수 실시간 조회가 안 됩니다. Cloudflare Worker로 API를 배포하면 됩니다.
+GitHub Pages는 API 미지원. 뉴스·서울 가로수 조회는 Cloudflare Worker로 API 배포 필요.
 
 1. [Cloudflare](https://dash.cloudflare.com) 로그인 후 Workers & Pages에서 새 Worker 생성
 2. 로컬에서 Worker 배포:

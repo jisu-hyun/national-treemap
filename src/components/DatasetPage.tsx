@@ -1,11 +1,11 @@
 /**
- * 활용 데이터 페이지: 전국 가로수 현황 지도에 사용한 데이터 출처와 구축 방법 안내
+ * 활용 데이터 페이지: 전국 가로수 현황지도에 사용한 데이터 출처와 구축 방법 안내
  * 모든 데이터는 공공데이터포털(data.go.kr)에서 제공하는 자료를 활용했습니다.
  */
 
 import { useRef, useState, useEffect } from "react"
 
-/** 공공데이터포털 활용 데이터 목록 (제공 링크 기준) */
+/** 공공데이터포털 가로수 데이터 링크 */
 const DATA_SOURCES = [
   { name: "산림청_도시숲가로수관리 가로수 현황", url: "https://www.data.go.kr/data/15120900/fileData.do?recommendDataYn=Y" },
   { name: "부산광역시_부산진구_가로수현황", url: "https://www.data.go.kr/data/15037889/fileData.do" },
@@ -34,7 +34,6 @@ const IconExternal = () => (
   </svg>
 )
 
-/** 맨 아래 제작자 표시 */
 const CREATOR_NAME = "현지구"
 
 interface DatasetPageProps {
@@ -42,7 +41,7 @@ interface DatasetPageProps {
   creatorName?: string
 }
 
-/** 구축 요약: 지도에서 어떻게 쓰이는지 구역별 설명 */
+/** 지도 구축 요약 */
 const SECTIONS = [
   { id: "base", title: "전국 기준", summary: "산림청 도시숲 가로수 현황으로 시도별 집계, 지도 색상·전국 통계에 반영" },
   { id: "seoul", title: "서울", summary: "서울시 트리맵 데이터로 전국 집계의 서울 값을 대체" },
@@ -92,7 +91,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
 
   return (
     <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto bg-white relative">
-      {/* Hero - 가로수 알아보기와 동일한 패딩·너비 */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-slate-800 to-slate-900 px-4 sm:px-6 lg:px-8 pt-28 sm:pt-40 pb-14 sm:pb-20 min-h-[25rem] sm:min-h-[30rem] flex flex-col">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/30 blur-3xl" />
@@ -121,7 +119,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
       </section>
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 pb-16 relative">
-        {/* 지도 구축 요약 — 먼저 표시 */}
         <section ref={summaryRef} className="mt-16 mb-28">
           <div className="mb-8">
             <div className="inline-block">
@@ -150,7 +147,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
           </div>
         </section>
 
-        {/* 지도로 이동 버튼 */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-4 mb-28">
           {onGoToMap && (
             <button
@@ -163,7 +159,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
           )}
         </div>
 
-        {/* 활용 데이터 목록 — 위와 동일한 제목·설명 스타일 */}
         <section className="mb-28">
           <div className="mb-8">
             <div className="inline-block">
@@ -198,27 +193,18 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
         </section>
 
         <footer className="mt-32 pt-12 pb-8 border-t border-slate-200/80">
-          {/* 구글 광고 영역 — 회색 선과 본문 사이 */}
-          <div
-            id="footer-ad-slot"
-            className="min-h-[90px] w-full mb-6 flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200/80"
-            aria-label="광고"
-          >
-            {/* 구글 애드센스 등 스크립트 삽입 시 이 영역에 배치 */}
-          </div>
+          <div id="footer-ad-slot" className="min-h-[90px] w-full mb-6 flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200/80" aria-label="광고" />
           <div className="space-y-8">
-            {/* 서비스명 + 한줄 소개 */}
             <div>
               <p className="text-sm font-medium text-slate-700">
-                전국 가로수 현황 지도
+                전국 가로수 현황지도
               </p>
               <p className="text-xs text-slate-500 mt-1">
-                공공데이터를 활용한 참고용 서비스입니다.
+                공공데이터를 활용한 서비스입니다.
                 <br />
-                지도와 수치는 공개 자료 기준이며, 공식 통계·행정 자료와 다를 수 있습니다. 정확한 내용 및 데이터 이용 시 공공데이터포털과 각 제공 기관 안내를 확인해 주세요.
+                지도와 수치는 공개 자료 기준이며, 공식 통계·행정 자료와 다를 수 있습니다. 정확한 내용은 공공데이터포털 및 제공 기관 안내를 참고하세요.
               </p>
             </div>
-            {/* 관련 링크 */}
             <div>
               <p className="text-xs font-medium text-slate-600 mb-2">바로가기</p>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500">
@@ -262,7 +248,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
                 </a>
               </div>
             </div>
-            {/* 제작 크레딧 (오른쪽 끝) */}
             <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2 text-xs text-slate-500 pt-2">
               <span className="shrink-0">
                 제작 <span className="text-slate-300 select-none" aria-hidden>|</span> {creatorName ?? CREATOR_NAME}
@@ -271,7 +256,6 @@ export function DatasetPage({ onGoToMap, creatorName }: DatasetPageProps) {
           </div>
         </footer>
       </div>
-      {/* 위로 가기 / 아래로 가기 — 각각 고정 위치, 맨 위/맨 아래일 때만 숨김 */}
       <button
         type="button"
         onClick={() => mainRef.current?.scrollTo({ top: 0, behavior: "smooth" })}

@@ -14,7 +14,7 @@ export function Header(): ReactElement {
           className="h-7 w-auto object-contain block shrink-0"
         />
         <span className="text-base font-bold text-gray-900 tracking-tight whitespace-nowrap">
-          전국 가로수 현황 지도
+          전국 가로수 현황지도
         </span>
       </button>
     </header>

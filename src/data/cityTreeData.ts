@@ -114,7 +114,7 @@ const SUMMARY_JSON_URL = `${import.meta.env.BASE_URL}data/city-tree-summary.json
 export async function loadCityTreeData(): Promise<CityTreeData> {
   if (cached) return cached
   const res = await fetch(SUMMARY_JSON_URL)
-  if (!res.ok) throw new Error("도시숲 가로수 데이터를 불러올 수 없어요.")
+  if (!res.ok) throw new Error("도시숲 가로수 데이터 로드 실패")
   const raw = (await res.json()) as CityTreeData
   cached = {
     total: raw.total,

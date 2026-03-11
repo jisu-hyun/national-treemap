@@ -219,7 +219,7 @@ for (let i = 1; i < lines.length; i++) {
     length: dist,
     gu: "사하구",
     species: species.length > 0 ? species : undefined,
-    // 참고용 필드 (앱은 무시해도 됨)
+    // 앱에서 미사용
     meta: { org, start, end, date },
     geocodeQuery: usedQuery,
   })

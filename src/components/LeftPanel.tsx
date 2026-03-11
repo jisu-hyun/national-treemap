@@ -173,7 +173,6 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
 
   return (
     <>
-      {/* 백드롭: 모바일에서 패널 열렸을 때 (지도 오버레이 z-[1000]보다 위에) */}
       {(mobileOpen) && (
         <button
           type="button"
@@ -247,7 +246,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
             ))}
           </select>
         </div>
-        <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있어요</p>
+        <p className="text-xs text-gray-500 mt-1.5 px-0.5">지역을 선택하면 지도에서 확인할 수 있습니다.</p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto p-4 bg-white lg:bg-transparent dashboard-scroll">
@@ -327,12 +326,12 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
         })()}
         {treeData === null && !treeDataError && (
           <div className="py-3 text-base text-gray-600">
-            데이터 불러오는 중…
+            데이터 로딩 중…
           </div>
         )}
         {treeDataError && (
           <div className="py-3 text-base font-medium text-amber-700 bg-amber-50">
-            {treeDataError} (목업 데이터로 표시 중)
+            {treeDataError} (기본 데이터로 표시 중)
           </div>
         )}
         <div className="mb-4 bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
@@ -413,7 +412,7 @@ export function LeftPanel({ region, onRegionChange, treeData, treeDataError, seo
           </div>
         </div>
 
-        {/* 같은 형식의 다른 지도 — 위쪽 간격으로 구분, 디자인 정리 */}
+        {/* 다른 지도 링크 */}
         <div className="mt-8 pt-2">
           <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">다른 지도</p>
           <a

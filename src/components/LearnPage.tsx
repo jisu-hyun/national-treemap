@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react"
 import { SIDO_CONTACTS } from "../data/sidoContacts"
 import streetTreeImg from "../data/가로수 사진.jpg"
 
-/* Premium line icons - clean stroke style */
 const IconThermometer = ({ className }: { className?: string }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" />
@@ -23,7 +22,6 @@ const IconFlower = ({ className }: { className?: string }) => (
     <path d="M12 22a10 10 0 1 0-10-10 10 10 0 0 0 10 10Z" /><path d="M12 8a4 4 0 1 1-4 4" /><path d="M12 8v4" /><path d="m14.5 10 1-1" /><path d="m9.5 10-1-1" /><path d="m12 6 0-1" /><path d="m14 10 1 0" /><path d="m10 10-1 0" />
   </svg>
 )
-/* 시민 섹션 아이콘 - 아웃라인 스타일 (가로수의 기능 아이콘과 톤 맞춤) */
 const IconAlert = ({ className }: { className?: string }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
     <path d="M12 9v4" />
@@ -216,7 +214,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
 
   return (
     <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto bg-white relative">
-      {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-800 px-4 sm:px-6 lg:px-8 pt-28 sm:pt-40 pb-14 sm:pb-20">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white/30 blur-3xl" />
@@ -246,7 +243,7 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
       </section>
 
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 pb-16 relative">
-        {/* Section: 가로수의 기능 - 고급스러운 카드 구성 */}
+        {/* 가로수의 기능 */}
         <section className="mt-16 mb-28">
           <div className="mb-12">
             <div className="inline-block">
@@ -293,7 +290,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
             })}
           </div>
 
-          {/* 카드뉴스 팝업: 카드 영역 위에 오버레이 */}
           {selectedRole && (() => {
             const Icon = selectedRole.Icon
             return (
@@ -343,7 +339,7 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
           })()}
         </section>
 
-        {/* Section: 시민이 할 수 있는 일 - 가로수의 기능과 동일한 여백 구조 */}
+        {/* 시민이 할 수 있는 일 */}
         <section className="mb-28">
           <div className="mb-12">
             <div className="inline-block">
@@ -360,7 +356,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
             </div>
           </div>
           <div ref={citizenCardsRef} className="flex flex-col gap-3">
-            {/* 이상 발견 시 신고 */}
             <div className={`citizen-card-reveal w-full flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-white border border-slate-200/80 text-left ${citizenCardsVisible ? "is-visible" : ""}`}>
               <div className="shrink-0 w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
                 <IconAlert className="w-5 h-5 text-amber-700/90" />
@@ -371,7 +366,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
               </div>
             </div>
 
-            {/* 가로수 훼손 금지 */}
             <div className={`citizen-card-reveal w-full flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-white border border-slate-200/80 text-left ${citizenCardsVisible ? "is-visible" : ""}`}>
               <div className="shrink-0 w-10 h-10 rounded-xl bg-slate-200/50 flex items-center justify-center">
                 <IconShield className="w-5 h-5 text-slate-600" />
@@ -382,7 +376,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
               </div>
             </div>
 
-            {/* 주변 환경 유지 */}
             <div className={`citizen-card-reveal w-full flex items-start gap-4 px-5 py-4 sm:px-6 sm:py-5 rounded-2xl bg-white border border-slate-200/80 text-left ${citizenCardsVisible ? "is-visible" : ""}`}>
               <div className="shrink-0 w-10 h-10 rounded-xl bg-teal-100/80 flex items-center justify-center">
                 <IconSparkles className="w-5 h-5 text-teal-700/80" />
@@ -393,7 +386,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
               </div>
             </div>
 
-            {/* 관할 기관 문의 - 안내 + 행동 유도 */}
             <button
               type="button"
               onClick={() => setSelectedCitizen(CITIZEN_ACTIONS.find((c) => c.hasContactUI)!)}
@@ -415,7 +407,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
             </button>
           </div>
 
-          {/* 관할 기관 문의 팝업 */}
           {selectedCitizen?.hasContactUI && (() => {
             const Icon = selectedCitizen.Icon
             const contact = SIDO_CONTACTS[citizenRegion]
@@ -510,7 +501,7 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
           })()}
         </section>
 
-        {/* Section: FAQ */}
+        {/* FAQ */}
         <section className="mb-24">
           <div className="mb-6">
             <div className="inline-block">
@@ -599,23 +590,16 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
         </section>
 
         <footer className="mt-32 pt-12 pb-8 border-t border-slate-200/80">
-          {/* 구글 광고 영역 — 회색 선과 본문 사이 */}
-          <div
-            id="footer-ad-slot"
-            className="min-h-[90px] w-full mb-6 flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200/80"
-            aria-label="광고"
-          >
-            {/* 구글 애드센스 등 스크립트 삽입 시 이 영역에 배치 */}
-          </div>
+          <div id="footer-ad-slot" className="min-h-[90px] w-full mb-6 flex items-center justify-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200/80" aria-label="광고" />
           <div className="space-y-8">
             <div>
               <p className="text-sm font-medium text-slate-700">
-                전국 가로수 현황 지도
+                전국 가로수 현황지도
               </p>
               <p className="text-xs text-slate-500 mt-1">
-                공공데이터를 활용한 참고용 서비스입니다.
+                공공데이터를 활용한 서비스입니다.
               <br />
-              지도와 수치는 공개 자료 기준이며, 공식 통계·행정 자료와 다를 수 있습니다. 정확한 내용 및 데이터 이용 시 공공데이터포털과 각 제공 기관 안내를 확인해 주세요.
+              지도와 수치는 공개 자료 기준이며, 공식 통계·행정 자료와 다를 수 있습니다. 정확한 내용은 공공데이터포털 및 제공 기관 안내를 참고하세요.
               </p>
             </div>
             <div>
@@ -669,7 +653,6 @@ export function LearnPage({ onGoToMapWithRegion, onGoToMap }: LearnPageProps) {
           </div>
         </footer>
       </div>
-      {/* 위로 가기 / 아래로 가기 — 각각 고정 위치, 맨 위/맨 아래일 때만 숨김 */}
       <button
         type="button"
         onClick={() => mainRef.current?.scrollTo({ top: 0, behavior: "smooth" })}

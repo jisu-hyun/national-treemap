@@ -90,7 +90,7 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
         setItems(data.items ?? [])
       })
       .catch((e) => {
-        setError(e.message ?? "뉴스를 불러올 수 없어요.")
+        setError(e.message ?? "뉴스를 불러올 수 없습니다.")
         setItems([])
       })
       .finally(() => setLoading(false))
@@ -127,10 +127,10 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
           <div className="mt-3 space-y-1">
             <p className="text-xs text-slate-500">
               {error === "API 미설정"
-                ? ".env에 네이버 API 키를 넣었다면 개발 서버(npm run dev)를 재시작한 뒤 아래 버튼을 눌러 보세요."
+                ? "API 키 설정 후 개발 서버를 재시작하세요."
                 : error === "로드 실패" && isStaticHost() && !getApiBase()
-                  ? "Cloudflare Worker 배포 후 Pages 환경변수에 VITE_CF_API_URL을 설정하고 다시 배포하세요. 아래 버튼에서 네이버 뉴스로 이동할 수 있어요."
-                  : "연결에 실패했어요. 아래에서 다시 시도해 보세요."}
+                  ? "API가 설정되지 않았습니다. 네이버 뉴스에서 확인할 수 있습니다."
+                  : "연결에 실패했습니다. 다시 시도해 보세요."}
             </p>
             {(!isStaticHost() || getApiBase()) && (
               <button

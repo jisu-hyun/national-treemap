@@ -16,9 +16,7 @@ interface TopHeaderProps {
 export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) {
   return (
     <header className="flex items-center justify-between gap-2 sm:gap-4 pl-3 pr-3 sm:pl-10 sm:pr-6 min-h-14 sm:h-16 py-2 sm:py-0 bg-white border-b border-slate-200/80 shadow-sm shrink-0">
-      {/* 모바일: 가로 스크롤 허용해 네비(가로수 등) 잘리지 않게 */}
       <div className="flex items-center gap-1 sm:gap-6 min-w-0 flex-1 overflow-x-auto overflow-y-hidden sm:overflow-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        {/* 로고·타이틀: 잘리지 않게 전체 표시(모바일은 두 줄 허용) */}
         <button
           type="button"
           onClick={() => window.location.reload()}
@@ -31,10 +29,9 @@ export function TopHeader({ activeView = "map", onViewChange }: TopHeaderProps) 
             className="h-6 sm:h-9 w-auto object-contain shrink-0"
           />
           <h1 className="text-xs sm:text-lg font-bold text-slate-800 tracking-tight max-w-[10em] sm:max-w-none whitespace-normal sm:whitespace-nowrap leading-tight">
-            전국 가로수 현황 지도
+            전국 가로수 현황지도
           </h1>
         </button>
-        {/* 지도·가로수 알아보기·활용 데이터: 모바일에서 짧은 레이블 */}
         <nav className="flex items-center gap-0 ml-2 sm:ml-24 shrink-0" aria-label="메인 메뉴">
           {NAV_ITEMS.map((item, i) => (
             <span key={item.id} className="flex items-center shrink-0">

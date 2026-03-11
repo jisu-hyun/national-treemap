@@ -238,7 +238,7 @@ const REGIONS_WITH_DETAIL = ["26", "45", "41"]
 /** 개별 원 표시 시 화면 내 마커만 렌더, 이 개수 초과 시 잘라서 렉 방지 */
 const MAX_VISIBLE_INDIVIDUAL_MARKERS = 500
 
-/** 기본·확대 공통: CARTO Voyager(따뜻한 톤, 자연스러운 지형). Light 대비 시인성·디자인 개선 */
+/** 지도 타일: CARTO Voyager */
 const TILE_CARTO_VOYAGER = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png"
 
 function TileLayerByView() {
@@ -530,7 +530,7 @@ function getBusanRadius(trees: number): number {
   return BUSAN_CIRCLE_RADIUS.xlarge
 }
 
-/** 개별 원 마커용 divIcon — 최신형 디자인·모션 적용 */
+/** 개별 원 마커용 divIcon */
 function getIndividualCircleDivIcon(m: BusanSegment, selected: boolean): L.DivIcon {
   const radius = getBusanRadius(m.trees)
   const size = radius * 2
@@ -1336,7 +1336,7 @@ function KoreaGeoJSONLayer({
         if (!showLabels && !hideTooltip) {
           const hasDetail = id != null && REGIONS_WITH_DETAIL.includes(id)
           const noDetailHint = !hasDetail
-            ? '<br/><span class="region-tooltip-no-detail">이 지역은 구간별 가로수 데이터가 없어요.</span>'
+            ? '<br/><span class="region-tooltip-no-detail">이 지역은 구간별 가로수 데이터가 없습니다.</span>'
             : ""
           layer.bindTooltip(
             `<div style="text-align: center">${name}<br/><strong>${count.toLocaleString()}그루</strong>${noDetailHint}</div>`,
