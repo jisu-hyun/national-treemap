@@ -18,6 +18,7 @@ interface NewsItem {
 
 interface NaverNewsResponse {
   items?: NewsItem[]
+  item?: NewsItem[]
   error?: string
   errorMessage?: string
   errorCode?: string
@@ -70,24 +71,28 @@ export function NewsDashboard({ refreshKey = 0 }: NewsDashboardProps) {
     }
     setLoading(true)
     setError(null)
-    fetch(`${apiUrl}?query=가로수&display=10&sort=date`, { cache: "no-store" })
+    const params = new URLSearchParams({ query: "가로수", display: "10", sort: "date" })
+    fetch(`${apiUrl}?${params.toString()}`, { cache: "no-store" })
       .then(async (res) => {
-        if (!res.ok) {
-          const text = await res.text()
-          let errMsg = res.status === 503 ? "API 미설정" : "로드 실패"
-          try {
-            const json = JSON.parse(text)
-            if (json?.error) errMsg = json.error
-            else if (json?.errorMessage) errMsg = json.errorMessage
-          } catch {}
-          throw new Error(errMsg)
+        const text = await res.text()
+        let data: NaverNewsResponse
+        try {
+          data = JSON.parse(text) as NaverNewsResponse
+        } catch {
+          throw new Error(res.ok ? "응답 형식 오류" : "로드 실패")
         }
-        return res.json()
-      })
-      .then((data: NaverNewsResponse) => {
+        if (!res.ok) {
+          const errMsg =
+            res.status === 503
+              ? "API 미설정"
+              : data?.error ?? data?.errorMessage ?? data?.errorCode ?? "로드 실패"
+          throw new Error(String(errMsg))
+        }
         if (data.error) throw new Error(data.error)
         if (data.errorMessage) throw new Error(data.errorMessage)
-        setItems(data.items ?? [])
+        if (data.errorCode) throw new Error(data.errorMessage ?? data.errorCode)
+        const list = Array.isArray(data.items) ? data.items : Array.isArray(data.item) ? data.item : []
+        setItems(list)
       })
       .catch((e) => {
         setError(e.message ?? "뉴스를 불러올 수 없습니다.")
