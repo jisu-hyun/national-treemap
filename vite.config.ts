@@ -101,11 +101,6 @@ export default defineConfig({
   server: {
     port: 8000,
     strictPort: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      },
-    },
+    // /api/news, /api/seoul-tree-count는 newsApiPlugin에서 처리. proxy 쓰면 요청이 3001로 가서 실패함.
   },
 })
